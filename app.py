@@ -171,7 +171,21 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8000)
     a = ap.parse_args()
-    mode = f"LIVE agent available ({MODEL})" if HAS_KEY else "DRY-RUN only (no ANTHROPIC_API_KEY)"
+    live_ready = HAS_KEY
+    if HAS_KEY:
+        try:
+            import anthropic  # noqa: F401
+        except ImportError:
+            live_ready = False
+            print("WARNING: ANTHROPIC_API_KEY is set but the 'anthropic' package is not installed in\n"
+                  "         this Python — the live agent will fall back to the dry-run template.\n"
+                  "         Start it with:  uv run --with anthropic python app.py   (or pip install anthropic)")
+    if live_ready:
+        mode = f"LIVE agent available ({MODEL})"
+    elif HAS_KEY:
+        mode = "DRY-RUN only (anthropic not installed — see warning above)"
+    else:
+        mode = "DRY-RUN only (no ANTHROPIC_API_KEY)"
     print(f"PreChart web app → http://localhost:{a.port}   [{mode}]")
     ThreadingHTTPServer(("0.0.0.0", a.port), Handler).serve_forever()
 

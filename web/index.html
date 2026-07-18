@@ -178,7 +178,7 @@ function render(d){
   nr.appendChild(el('span','pids',
     `MRN ${pt.mrn||'—'}   ·   DOB ${pt.dob||'—'}` + (pt.age!=null?`  (${pt.age} y)`:'') + (pt.sex?`   ·   ${pt.sex}`:'')));
   demo.appendChild(nr);
-  demo.appendChild(el('div','vmeta', `${m.visit_title}   ·   ${m.date}   ·   ${m.specialty}`));
+  demo.appendChild(el('div','vmeta', `${m.date}   ·   ${m.specialty}`));
   const badges = el('div','badges');
   badges.appendChild(el('span','badge '+(m.is_dry?'dry':'agent'), m.mode));
   if(m.temporal_removed>0) badges.appendChild(el('span','badge guard', `Temporal guard: ${m.temporal_removed} future artifact(s) withheld`));
