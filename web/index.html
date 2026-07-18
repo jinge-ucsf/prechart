@@ -81,6 +81,30 @@
   .why{font-size:13px;color:#555;font-style:italic}
   .ev{margin:6px 0 0;padding-left:16px;font-size:12px;color:#6b7783}
   .next{background:#fff7ed;border-left:3px solid var(--UNRESOLVED);padding:5px 9px;font-size:12.5px;color:#7a5b00;margin-top:7px;border-radius:5px}
+
+  /* section 3 — conflict cards (agent's pick highlighted) */
+  .ccard{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:11px;padding:12px 14px;margin-bottom:12px}
+  .chd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .ctopic{font-weight:700;font-size:14.5px}
+  .sigflag{background:#fdecea;color:#c0392b;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px}
+  .accounts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:560px){ .accounts{grid-template-columns:1fr} }
+  .side{border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:#fafbfc}
+  .side.win{border-color:#2f855a;background:#eefaf1;box-shadow:inset 0 0 0 1px #2f855a}
+  .side.dim{opacity:.5}
+  .sidehd{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px}
+  .side.win .sidehd{color:#2f855a}
+  .pick{background:#2f855a;color:#fff;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px;text-transform:none;letter-spacing:0}
+  .sideval{font-size:13px;color:var(--ink)}
+  .call{margin-top:10px;padding:8px 11px;border-radius:7px;font-size:13px}
+  .call.resolved{background:#eefaf1;color:#22543d}
+  .call.open{background:#fff7ed;color:#7a5b00}
+  .whybox{border:0;background:transparent;margin:6px 0 0;border-radius:0}
+  .whybox>summary{padding:4px 0;font-size:12px;color:var(--muted);font-weight:600}
+  .whybox .body{padding:0}
+  .routinelist{margin:0;padding:0;list-style:none;font-size:13px}
+  .routinelist li{padding:4px 0;border-bottom:1px solid var(--line)}
+  .minichip{color:#fff;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:5px;margin-right:6px;text-transform:lowercase}
   .empty{color:var(--muted);padding:40px 0;text-align:center}
   .spinner{width:16px;height:16px;border:2px solid #cbd5e1;border-top-color:var(--blue);border-radius:50%;
     display:inline-block;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:8px}
@@ -219,13 +243,31 @@ function render(d){
   rh.innerHTML = '<span class="secnum">3</span>Conflicts &amp; adjudication <span class="hint">— each discrepancy with the evidence behind the agent\'s call</span>';
   out.appendChild(rh);
 
-  // ledger — conflicts first (ORDER puts CONTRADICTED/UNRESOLVED on top)
+  // conflicts shown as cards; routine (agreed / not discussed) collapsed — streamlined
   const byState = {}; ORDER.forEach(st=>byState[st]=[]);
   d.proposals.forEach(p=>{ (byState[p.state]||(byState[p.state]=[])).push(p); });
-  ORDER.forEach(st=>{
-    byState[st].sort((a,b)=> (a.topic||'').localeCompare(b.topic||''));
-    byState[st].forEach(p=> out.appendChild(rowFor(p, st)));
-  });
+  const CONFLICTS = ["CONTRADICTED","UNRESOLVED","ELABORATED","NEW"];
+  const conflicts = CONFLICTS.flatMap(st => byState[st].sort((a,b)=>(a.topic||'').localeCompare(b.topic||'')));
+  if(conflicts.length){
+    conflicts.forEach(p => out.appendChild(conflictCard(p)));
+  } else {
+    out.appendChild(el('div','empty','No conflicts — the chart and the room agree.'));
+  }
+  const routine = [...byState.CONFIRMED, ...byState.UNADDRESSED];
+  if(routine.length){
+    const det = el('details');
+    const sm = el('summary');
+    sm.innerHTML = `Routine <span class="hint">— ${byState.CONFIRMED.length} confirmed · ${byState.UNADDRESSED.length} charted but not discussed</span>`;
+    det.appendChild(sm);
+    const b = el('div','body'); const ul = el('ul','routinelist');
+    routine.forEach(p=>{
+      const li = el('li');
+      const chip = el('span','minichip', p.state.toLowerCase()); chip.style.background=`var(--${p.state})`;
+      li.appendChild(chip); li.appendChild(document.createTextNode(' ' + (p.topic||'')));
+      ul.appendChild(li);
+    });
+    b.appendChild(ul); det.appendChild(b); out.appendChild(det);
+  }
 
   // investigation trace (the tool calls the agent made — secondary evidence)
   if(d.trace && d.trace.length){
@@ -270,28 +312,56 @@ function render(d){
   }
 }
 
-function rowFor(p, st){
-  const row = el('div','row');
-  const chip = el('span','chip', st); chip.style.background=`var(--${st})`; row.appendChild(chip);
-  const b = el('div','rbody');
-  const topic = el('div','topic', p.topic||'');
-  if(p.requires_signoff) topic.appendChild(el('span','so','sign-off'));
-  b.appendChild(topic);
-  const sides = el('div','sides');
-  const room = el('div'); room.innerHTML='<b>Room:</b> '; room.appendChild(document.createTextNode(p.spoken_side||'—'));
-  const chart = el('div'); chart.innerHTML='<b>Chart:</b> '; chart.appendChild(document.createTextNode(p.chart_side||'—'));
-  const t=el('span','tier',' '+(p.provenance_tier||'')); chart.appendChild(t);
-  sides.appendChild(room); sides.appendChild(chart); b.appendChild(sides);
-  b.appendChild(el('div','verdict', `likely correct: ${p.likely_correct} · ${p.confidence} confidence · ${p.clinical_significance} significance → ${p.proposed_action}`));
-  b.appendChild(el('div','why', p.reasoning||''));
-  if(p.evidence_dossier && p.evidence_dossier.length){
-    const ul = el('ul','ev');
-    p.evidence_dossier.forEach(x=>{ const li=el('li'); li.innerHTML=`<b>${x.source||''}:</b> `; li.appendChild(document.createTextNode(x.finding||'')); ul.appendChild(li); });
-    b.appendChild(ul);
+function sideBox(label, value, isWin, isDim, tier){
+  const b = el('div','side' + (isWin?' win':'') + (isDim?' dim':''));
+  const h = el('div','sidehd', label);
+  if(isWin) h.appendChild(el('span','pick','✓ agent’s call'));
+  b.appendChild(h);
+  b.appendChild(el('div','sideval', value || (label==='Chart' ? '— not in chart' : '— not mentioned')));
+  if(tier && value) b.appendChild(el('span','tier', tier));
+  return b;
+}
+
+function conflictCard(p){
+  const winner = p.likely_correct==='patient' ? 'room' : p.likely_correct==='chart' ? 'chart' : null;
+  const card = el('div','ccard'); card.style.borderLeftColor = `var(--${p.state})`;
+
+  const hd = el('div','chd');
+  const chip = el('span','chip', p.state); chip.style.background=`var(--${p.state})`; hd.appendChild(chip);
+  hd.appendChild(el('span','ctopic', p.topic||''));
+  if((p.clinical_significance||'')==='high') hd.appendChild(el('span','sigflag','high significance'));
+  if(p.requires_signoff) hd.appendChild(el('span','so','sign-off'));
+  card.appendChild(hd);
+
+  const acc = el('div','accounts');   // agent's pick highlighted, the other dimmed
+  acc.appendChild(sideBox('Room', p.spoken_side, winner==='room', winner==='chart'));
+  acc.appendChild(sideBox('Chart', p.chart_side, winner==='chart', winner==='room', p.provenance_tier));
+  card.appendChild(acc);
+
+  const verdict = p.state==='NEW' ? 'New — surfaced in the room'
+                : p.state==='ELABORATED' ? 'Room adds detail'
+                : winner==='room' ? 'Agent trusts the room'
+                : winner==='chart' ? 'Agent trusts the chart'
+                : 'Unresolved — won’t guess';
+  const call = el('div','call ' + (winner || p.state==='NEW' || p.state==='ELABORATED' ? 'resolved' : 'open'));
+  call.innerHTML = `<b>${verdict}</b>` + (p.confidence?` · ${p.confidence} confidence`:'')
+                 + (p.proposed_action?` → <b>${p.proposed_action}</b>`:'');
+  card.appendChild(call);
+  if(p.recommended_next_data) card.appendChild(el('div','next','needs → '+p.recommended_next_data));
+
+  if(p.reasoning || (p.evidence_dossier && p.evidence_dossier.length)){
+    const det = el('details','whybox');
+    det.appendChild(el('summary', null, 'Why'));
+    const b = el('div','body');
+    if(p.reasoning) b.appendChild(el('div','why', p.reasoning));
+    if(p.evidence_dossier && p.evidence_dossier.length){
+      const ul = el('ul','ev');
+      p.evidence_dossier.forEach(x=>{ const li=el('li'); li.innerHTML=`<b>${x.source||''}:</b> `; li.appendChild(document.createTextNode(x.finding||'')); ul.appendChild(li); });
+      b.appendChild(ul);
+    }
+    det.appendChild(b); card.appendChild(det);
   }
-  if(p.recommended_next_data) b.appendChild(el('div','next', 'needs → '+p.recommended_next_data));
-  row.appendChild(b);
-  return row;
+  return card;
 }
 
 $('#run').addEventListener('click', run);
