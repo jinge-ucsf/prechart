@@ -1,132 +1,120 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" font-family="-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
   <defs>
     <marker id="ah" markerWidth="11" markerHeight="11" refX="8" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#16283a"/></marker>
-    <marker id="ahB" markerWidth="11" markerHeight="11" refX="8" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#17557a"/></marker>
-    <marker id="ahA" markerWidth="11" markerHeight="11" refX="8" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#a35f06"/></marker>
+    <marker id="ahG" markerWidth="11" markerHeight="11" refX="8" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#2f855a"/></marker>
   </defs>
-
   <rect x="0" y="0" width="1280" height="720" fill="#ffffff"/>
 
-  <!-- ================= HEADER ================= -->
-  <text x="44" y="48" font-size="27" font-weight="700" fill="#16283a">PreChart — the agent that cross-examines the chart</text>
-  <text x="1238" y="42" text-anchor="end" font-size="22" font-weight="800" fill="#16283a">UCSF <tspan fill="#17557a">GI</tspan></text>
-  <text x="1238" y="60" text-anchor="end" font-size="10" fill="#61707d">GI Procedure Suite</text>
-  <text x="44" y="76" font-size="13" fill="#61707d">Two fallible witnesses, gated to the visit date — a model-directed loop summons a third the body can't coach, then refuses to guess and never auto-writes.</text>
-  <line x1="40" y1="88" x2="1240" y2="88" stroke="#dbe2e8" stroke-width="1"/>
+  <!-- HEADER -->
+  <text x="44" y="46" font-size="24" font-weight="800" fill="#16283a">PreChart — cross-examine the chart, steer the truth</text>
+  <text x="1238" y="42" text-anchor="end" font-size="20" font-weight="800" fill="#16283a">UCSF <tspan fill="#17557a">GI</tspan></text>
+  <text x="1238" y="59" text-anchor="end" font-size="10" fill="#5b6b7a">GI Procedure Suite</text>
+  <text x="44" y="72" font-size="12.5" fill="#5b6b7a">Two fallible witnesses in, gated to the visit. The agent gathers objective evidence, proposes the truth per claim, and refuses when it can't — the clinician steers, and the note updates to match.</text>
+  <line x1="40" y1="86" x2="1240" y2="86" stroke="#dbe2e8" stroke-width="1"/>
+  <rect x="40" y="96" width="1200" height="26" rx="6" fill="#eaf1f8"/>
+  <text x="640" y="113" text-anchor="middle" font-size="12.5" font-weight="600" fill="#17557a">Not a pipeline · not a summarizer (it refuses) · the clinician adjudicates, and the note stays coherent</text>
 
-  <!-- thesis strip -->
-  <rect x="40" y="98" width="1200" height="28" rx="6" fill="#eaf1f8"/>
-  <text x="640" y="117" text-anchor="middle" font-size="13" font-weight="600" fill="#17557a">Not a pipeline — it loops.     Not a summarizer — it distrusts its inputs and refuses.     Not a workflow — the model directs it.</text>
+  <!-- stage-connecting arrows -->
+  <line x1="323" y1="345" x2="345" y2="345" stroke="#16283a" stroke-width="1.6" marker-end="url(#ah)"/>
+  <line x1="631" y1="345" x2="653" y2="345" stroke="#16283a" stroke-width="1.6" marker-end="url(#ah)"/>
+  <line x1="939" y1="345" x2="961" y2="345" stroke="#2f855a" stroke-width="1.8" marker-end="url(#ahG)"/>
 
-  <!-- ================= INPUTS ================= -->
-  <!-- CHART -->
-  <rect x="44" y="158" width="200" height="140" rx="10" fill="#ffffff" stroke="#cdd7df" stroke-width="1.5"/>
-  <text x="62" y="188" font-size="15" font-weight="700" fill="#16283a">CHART <tspan font-size="10.5" font-weight="400" fill="#61707d">(FHIR R4)</tspan></text>
-  <text x="62" y="211" font-size="10.5" fill="#61707d">Problem / med / lab list —</text>
-  <text x="62" y="226" font-size="10.5" fill="#61707d">goes stale, copies forward,</text>
-  <text x="62" y="241" font-size="10.5" fill="#61707d">miscodes.</text>
-  <rect x="62" y="258" width="120" height="22" rx="5" fill="#fbecea" stroke="#c0392b" stroke-width="1"/>
-  <text x="122" y="273" text-anchor="middle" font-size="9.5" font-weight="700" fill="#c0392b">CAN BE WRONG</text>
+  <!-- ================= (1) TWO FALLIBLE WITNESSES ================= -->
+  <rect x="40" y="150" width="282" height="390" rx="12" fill="#ffffff" stroke="#cdd7df" stroke-width="1.5"/>
+  <circle cx="66" cy="176" r="12" fill="#17557a"/><text x="66" y="180" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">1</text>
+  <text x="86" y="181" font-size="14.5" font-weight="700" fill="#16283a">Two fallible witnesses</text>
 
-  <!-- ROOM -->
-  <rect x="44" y="322" width="200" height="140" rx="10" fill="#ffffff" stroke="#cdd7df" stroke-width="1.5"/>
-  <text x="62" y="352" font-size="15" font-weight="700" fill="#16283a">ROOM <tspan font-size="10.5" font-weight="400" fill="#61707d">(ambient)</tspan></text>
-  <text x="62" y="375" font-size="10.5" fill="#61707d">Speaker-labeled speech —</text>
-  <text x="62" y="390" font-size="10.5" fill="#61707d">misremembers, lay terms</text>
-  <text x="62" y="405" font-size="10.5" fill="#61707d">('water pill'), mistranscribed.</text>
-  <rect x="62" y="420" width="120" height="22" rx="5" fill="#fbecea" stroke="#c0392b" stroke-width="1"/>
-  <text x="122" y="435" text-anchor="middle" font-size="9.5" font-weight="700" fill="#c0392b">CAN BE WRONG</text>
+  <rect x="56" y="206" width="250" height="80" rx="8" fill="#fafbfc" stroke="#e2e8ee"/>
+  <text x="70" y="228" font-size="13" font-weight="700" fill="#16283a">CHART</text>
+  <text x="70" y="246" font-size="10.5" fill="#5b6b7a">FHIR · meds · labs · imaging · prior notes</text>
+  <text x="70" y="261" font-size="10.5" fill="#5b6b7a">goes stale · copy-forward · miscodes</text>
+  <rect x="70" y="268" width="104" height="16" rx="4" fill="#fbecea"/><text x="122" y="280" text-anchor="middle" font-size="9" font-weight="700" fill="#c0392b">CAN BE WRONG</text>
 
-  <!-- ================= TEMPORAL GUARD (gate) ================= -->
-  <rect x="258" y="158" width="40" height="304" rx="10" fill="#eaf1f8" stroke="#17557a" stroke-width="1.5"/>
-  <text transform="translate(274,310) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700" fill="#17557a">TEMPORAL GUARD</text>
-  <text transform="translate(289,310) rotate(-90)" text-anchor="middle" font-size="8.5" fill="#61707d">future withheld</text>
-  <!-- inputs -> gate -->
-  <line x1="244" y1="228" x2="256" y2="244" stroke="#16283a" stroke-width="1.4" marker-end="url(#ah)"/>
-  <line x1="244" y1="392" x2="256" y2="388" stroke="#16283a" stroke-width="1.4" marker-end="url(#ah)"/>
-  <!-- gate -> hub -->
-  <line x1="298" y1="300" x2="386" y2="234" stroke="#17557a" stroke-width="1.8" marker-end="url(#ahB)"/>
-  <text x="332" y="300" font-size="9.5" font-weight="600" fill="#17557a">as-of-visit only</text>
+  <rect x="56" y="298" width="250" height="80" rx="8" fill="#fafbfc" stroke="#e2e8ee"/>
+  <text x="70" y="320" font-size="13" font-weight="700" fill="#16283a">ROOM</text>
+  <text x="70" y="338" font-size="10.5" fill="#5b6b7a">ambient transcript of the visit</text>
+  <text x="70" y="353" font-size="10.5" fill="#5b6b7a">misremembers · lay terms · mis-heard</text>
+  <rect x="70" y="360" width="104" height="16" rx="4" fill="#fbecea"/><text x="122" y="372" text-anchor="middle" font-size="9" font-weight="700" fill="#c0392b">CAN BE WRONG</text>
 
-  <!-- ================= AGENT HUB ================= -->
-  <rect x="392" y="158" width="368" height="132" rx="12" fill="#eaf1f8" stroke="#17557a" stroke-width="2.5"/>
-  <text x="414" y="190" font-size="16" font-weight="800" fill="#17557a">CLAUDE OPUS <tspan font-size="13" font-weight="600" fill="#16283a">— the agent</tspan></text>
-  <text x="414" y="214" font-size="11" fill="#16283a">Every claim — from either side — is a</text>
-  <text x="414" y="230" font-size="11" fill="#16283a">hypothesis. The model picks which claims</text>
-  <text x="414" y="246" font-size="11" fill="#16283a">to probe, which tool to call, in what order,</text>
-  <text x="414" y="262" font-size="11" fill="#16283a">and when it has enough.</text>
-  <!-- loop tag -->
-  <rect x="628" y="147" width="128" height="22" rx="11" fill="#17557a"/>
-  <text x="692" y="162" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">↻ loops · ≤ 12 turns</text>
+  <rect x="56" y="404" width="250" height="46" rx="8" fill="#eaf1f8" stroke="#17557a" stroke-width="1.2"/>
+  <text x="181" y="424" text-anchor="middle" font-size="11.5" font-weight="700" fill="#17557a">Temporal guard</text>
+  <text x="181" y="440" text-anchor="middle" font-size="10" fill="#5b6b7a">only what's knowable as-of the visit</text>
 
-  <!-- hub <-> tools (the loop) -->
-  <line x1="452" y1="290" x2="452" y2="335" stroke="#16283a" stroke-width="1.4" marker-end="url(#ah)"/>
-  <line x1="505" y1="335" x2="505" y2="292" stroke="#16283a" stroke-width="1.4" marker-end="url(#ah)"/>
-  <line x1="625" y1="335" x2="625" y2="292" stroke="#16283a" stroke-width="1.4" marker-end="url(#ah)"/>
-  <line x1="672" y1="290" x2="672" y2="335" stroke="#16283a" stroke-width="1.4" marker-end="url(#ah)"/>
-  <rect x="479" y="305" width="166" height="15" rx="3" fill="#ffffff"/>
-  <text x="562" y="315" text-anchor="middle" font-size="9.5" font-weight="600" fill="#61707d">model chooses which tool &amp; when</text>
+  <!-- ================= (2) THE AGENT ADJUDICATES ================= -->
+  <rect x="348" y="150" width="282" height="390" rx="12" fill="#ffffff" stroke="#17557a" stroke-width="2"/>
+  <circle cx="374" cy="176" r="12" fill="#17557a"/><text x="374" y="180" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">2</text>
+  <text x="394" y="181" font-size="14.5" font-weight="700" fill="#16283a">The agent adjudicates</text>
 
-  <!-- ================= TOOLS ================= -->
-  <!-- triangulate -->
-  <rect x="396" y="338" width="172" height="150" rx="10" fill="#ffffff" stroke="#17557a" stroke-width="1.8"/>
-  <text x="410" y="366" font-size="12" font-weight="700" font-family="'SF Mono',Menlo,Consolas,monospace" fill="#17557a">triangulate_</text>
-  <text x="410" y="382" font-size="12" font-weight="700" font-family="'SF Mono',Menlo,Consolas,monospace" fill="#17557a">chart_evidence</text>
-  <text x="410" y="408" font-size="10" fill="#61707d">The chart's OWN signals —</text>
-  <text x="410" y="423" font-size="10" fill="#61707d">refill recency · related labs</text>
-  <text x="410" y="438" font-size="10" fill="#61707d">· duplicate therapy</text>
-  <text x="410" y="453" font-size="10" fill="#61707d">· label-only status</text>
+  <text x="364" y="206" font-size="11" fill="#16283a">Gathers objective evidence for each</text>
+  <text x="364" y="221" font-size="11" fill="#16283a">claim, then proposes the likely truth.</text>
 
-  <!-- body / third witness -->
-  <rect x="584" y="338" width="176" height="150" rx="10" fill="#e2f2f3" stroke="#0e7c86" stroke-width="2.5"/>
-  <rect x="594" y="347" width="156" height="20" rx="10" fill="#0e7c86"/>
-  <text x="672" y="361" text-anchor="middle" font-size="9" font-weight="700" fill="#ffffff">THE THIRD WITNESS · THE BODY</text>
-  <text x="598" y="389" font-size="11" font-weight="700" font-family="'SF Mono',Menlo,Consolas,monospace" fill="#0e7c86">check_physiologic_</text>
-  <text x="598" y="404" font-size="11" font-weight="700" font-family="'SF Mono',Menlo,Consolas,monospace" fill="#0e7c86">markers</text>
-  <text x="598" y="427" font-size="9.5" fill="#16283a">The body neither side controls:</text>
-  <text x="598" y="442" font-size="9.5" fill="#16283a">warfarin→INR · statin→LDL ·</text>
-  <text x="598" y="457" font-size="9.5" fill="#16283a">metformin→A1c.</text>
-  <text x="598" y="475" font-size="10" font-weight="700" fill="#0e7c86">backs one, both, or NEITHER</text>
+  <rect x="364" y="234" width="250" height="42" rx="8" fill="#ffffff" stroke="#17557a" stroke-width="1.4"/>
+  <text x="376" y="252" font-size="11" font-weight="700" font-family="'SF Mono',Menlo,Consolas,monospace" fill="#17557a">triangulate_chart_evidence</text>
+  <text x="376" y="268" font-size="9.5" fill="#5b6b7a">the chart's own signals (order gaps, labs)</text>
 
-  <!-- ================= EXITS ================= -->
-  <!-- RESOLVED -->
-  <rect x="832" y="158" width="408" height="132" rx="10" fill="#ffffff" stroke="#cdd7df" stroke-width="1.5"/>
-  <text x="852" y="186" font-size="15" font-weight="700" fill="#16283a">RESOLVED <tspan font-size="10.5" font-weight="400" fill="#61707d">— one of six reconciliation states</tspan></text>
-  <!-- chip row 1 -->
-  <rect x="852" y="198" width="80" height="20" rx="5" fill="#4a5568"/><text x="892" y="212" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff">CONFIRMED</text>
-  <rect x="940" y="198" width="100" height="20" rx="5" fill="#c0392b"/><text x="990" y="212" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff">CONTRADICTED</text>
-  <rect x="1048" y="198" width="88" height="20" rx="5" fill="#2b6cb0"/><text x="1092" y="212" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff">ELABORATED</text>
-  <!-- chip row 2 -->
-  <rect x="852" y="224" width="46" height="20" rx="5" fill="#2f855a"/><text x="875" y="238" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff">NEW</text>
-  <rect x="906" y="224" width="98" height="20" rx="5" fill="#718096"/><text x="955" y="238" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff">UNADDRESSED</text>
-  <text x="852" y="266" font-size="10" fill="#61707d">+ likely_correct (chart · patient · neither · unknown) + proposed_action</text>
+  <rect x="364" y="282" width="250" height="56" rx="8" fill="#e2f2f3" stroke="#0e7c86" stroke-width="2"/>
+  <rect x="376" y="290" width="182" height="16" rx="8" fill="#0e7c86"/><text x="467" y="302" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">THE THIRD WITNESS · THE BODY</text>
+  <text x="376" y="322" font-size="11" font-weight="700" font-family="'SF Mono',Menlo,Consolas,monospace" fill="#0e7c86">check_physiologic_markers</text>
+  <text x="376" y="334" font-size="9" fill="#16283a">INR · LDL · A1c — backs one, both, or NEITHER</text>
 
-  <!-- UNRESOLVED (indented, leaving a drop channel on its left) -->
-  <rect x="900" y="322" width="340" height="132" rx="10" fill="#fdf3e3" stroke="#b26a09" stroke-width="2.5"/>
-  <rect x="918" y="332" width="104" height="22" rx="6" fill="#d98a0b"/>
-  <text x="970" y="347" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">UNRESOLVED</text>
-  <text x="1032" y="349" font-size="12" font-weight="700" fill="#a35f06">— refuses to guess</text>
-  <text x="918" y="378" font-size="10.5" fill="#16283a">The 6th state. Evidence insufficient →</text>
-  <text x="918" y="394" font-size="10.5" fill="#16283a">recommended_next_data: the one datum</text>
-  <text x="918" y="410" font-size="10.5" fill="#16283a">that would settle it — e.g. "order INR today".</text>
+  <text x="364" y="360" font-size="10.5" font-weight="600" fill="#5b6b7a">proposes one state per claim:</text>
+  <rect x="364" y="368" width="76" height="18" rx="5" fill="#4a5568"/><text x="402" y="381" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">CONFIRMED</text>
+  <rect x="444" y="368" width="94" height="18" rx="5" fill="#c0392b"/><text x="491" y="381" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">CONTRADICTED</text>
+  <rect x="542" y="368" width="80" height="18" rx="5" fill="#2b6cb0"/><text x="582" y="381" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">ELABORATED</text>
+  <rect x="364" y="390" width="44" height="18" rx="5" fill="#2f855a"/><text x="386" y="403" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">NEW</text>
+  <rect x="412" y="390" width="94" height="18" rx="5" fill="#718096"/><text x="459" y="403" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">UNADDRESSED</text>
+  <rect x="510" y="390" width="86" height="18" rx="5" fill="#e08e0b"/><text x="553" y="403" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">UNRESOLVED</text>
 
-  <!-- hub -> exits (fork) -->
-  <line x1="760" y1="204" x2="828" y2="210" stroke="#17557a" stroke-width="1.8" marker-end="url(#ahB)"/>
-  <text x="772" y="199" font-size="9.5" fill="#61707d">settles it</text>
-  <path d="M760,248 C 820,300 850,330 896,376" fill="none" stroke="#a35f06" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#ahA)"/>
-  <text x="782" y="332" font-size="9.5" font-weight="600" fill="#a35f06">nothing settles it → won't guess</text>
+  <rect x="364" y="418" width="250" height="34" rx="8" fill="#fafbfc" stroke="#e2e8ee"/>
+  <text x="376" y="439" font-size="9.5" fill="#5b6b7a">Fast one-shot by default; full tool-use loop optional.</text>
 
-  <!-- exits -> ribbon -->
-  <line x1="862" y1="290" x2="862" y2="588" stroke="#16283a" stroke-width="1.3" marker-end="url(#ah)"/>
-  <text x="870" y="556" font-size="9" fill="#61707d">→ sign-off</text>
-  <line x1="1070" y1="454" x2="1070" y2="588" stroke="#a35f06" stroke-width="1.4" marker-end="url(#ahA)"/>
-  <text x="1078" y="556" font-size="9" fill="#61707d">clinician acts on the ask</text>
+  <!-- ================= (3) CLINICIAN STEERS ================= -->
+  <rect x="656" y="150" width="282" height="390" rx="12" fill="#ffffff" stroke="#cdd7df" stroke-width="1.5"/>
+  <circle cx="682" cy="176" r="12" fill="#17557a"/><text x="682" y="180" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">3</text>
+  <text x="702" y="181" font-size="14.5" font-weight="700" fill="#16283a">Clinician steers</text>
+  <text x="672" y="205" font-size="10.5" font-weight="600" fill="#5b6b7a">select the truth — agent pre-picks, you can override</text>
+  <text x="672" y="226" font-size="10.5" fill="#16283a">e.g. Anticoagulation — chart lists warfarin active</text>
+
+  <rect x="672" y="238" width="250" height="44" rx="8" fill="#eefaf1" stroke="#2f855a" stroke-width="1.8"/>
+  <text x="684" y="256" font-size="10" font-weight="700" fill="#2f855a">ROOM  ✓ agent's pick</text>
+  <text x="684" y="273" font-size="10.5" fill="#16283a">switched off warfarin → apixaban</text>
+
+  <rect x="672" y="290" width="250" height="34" rx="8" fill="#fafbfc" stroke="#e2e8ee"/>
+  <text x="684" y="304" font-size="10" font-weight="700" fill="#5b6b7a">CHART</text>
+  <text x="684" y="317" font-size="10.5" fill="#16283a">warfarin 5 mg active</text>
+
+  <rect x="672" y="332" width="250" height="34" rx="8" fill="#fdf3e3" stroke="#b26a09" stroke-width="1.2"/>
+  <text x="684" y="346" font-size="10" font-weight="700" fill="#b26a09">UNRESOLVED</text>
+  <text x="684" y="359" font-size="10.5" fill="#16283a">defer → order INR (won't guess)</text>
+
+  <text x="672" y="392" font-size="10.5" fill="#5b6b7a">Refusal is a feature: when nothing settles it,</text>
+  <text x="672" y="407" font-size="10.5" fill="#5b6b7a">it names the one datum that would — and waits.</text>
+
+  <!-- ================= (4) THE NOTE FOLLOWS ================= -->
+  <rect x="964" y="150" width="276" height="390" rx="12" fill="#ffffff" stroke="#cdd7df" stroke-width="1.5"/>
+  <circle cx="990" cy="176" r="12" fill="#17557a"/><text x="990" y="180" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">4</text>
+  <text x="1010" y="181" font-size="14.5" font-weight="700" fill="#16283a">The note follows</text>
+
+  <rect x="980" y="200" width="244" height="250" rx="8" fill="#fbfcfe" stroke="#e2e8ee"/>
+  <text x="994" y="221" font-size="10" font-weight="700" fill="#17557a">HISTORY OF PRESENT ILLNESS</text>
+  <text x="994" y="237" font-size="10" fill="#16283a">64M, Barrett's surveillance, peri-</text>
+  <text x="994" y="250" font-size="10" fill="#16283a">procedural anticoagulation review…</text>
+  <text x="994" y="272" font-size="10" font-weight="700" fill="#17557a">OUTSIDE DATA (CARE EVERYWHERE)</text>
+  <text x="994" y="288" font-size="10" fill="#16283a">INR 2.4 (2026-01-15) — stale</text>
+  <text x="994" y="310" font-size="10" font-weight="700" fill="#17557a">ASSESSMENT &amp; PLAN</text>
+  <text x="994" y="327" font-size="10" fill="#16283a">**Anticoagulation: off warfarin,</text>
+  <text x="994" y="340" font-size="10" fill="#16283a">on apixaban per today's visit.</text>
+  <text x="1000" y="355" font-size="10" fill="#16283a">- hold apixaban 2 days pre-procedure</text>
+  <text x="1000" y="368" font-size="10" fill="#16283a">- resume 24h post if hemostasis ok</text>
+  <rect x="994" y="384" width="216" height="50" rx="6" fill="#eefaf1" stroke="#2f855a" stroke-width="1.2"/>
+  <text x="1102" y="405" text-anchor="middle" font-size="10.5" font-weight="700" fill="#2f855a">↻ updates live</text>
+  <text x="1102" y="421" text-anchor="middle" font-size="9.5" fill="#22543d">to reflect the chosen truth</text>
 
   <!-- ================= SIGN-OFF RIBBON ================= -->
-  <rect x="40" y="590" width="1200" height="46" rx="8" fill="#17557a"/>
-  <text x="640" y="618" text-anchor="middle" font-size="12.5" fill="#ffffff"><tspan font-weight="800">requires_signoff</tspan>  —  dose · active/inactive med · allergy · anticoagulation are never auto-written.   The agent PROPOSES; the clinician SIGNS.</text>
+  <rect x="40" y="558" width="1200" height="44" rx="8" fill="#17557a"/>
+  <text x="640" y="585" text-anchor="middle" font-size="12.5" fill="#ffffff"><tspan font-weight="800">requires sign-off</tspan> — dose · med status · allergy · anticoagulation are never auto-written.  The agent proposes; the clinician signs.</text>
 
   <!-- ================= FOOTNOTE ================= -->
-  <text x="44" y="662" font-size="10" font-style="italic" fill="#8896a2">The two tools are deterministic — the agency is the model's choice of when to call them and when to stop, not the tools. The body is not an oracle; it can resolve neither account.</text>
-  <text x="44" y="678" font-size="10" font-style="italic" fill="#8896a2">Future / post-visit artifacts are withheld by the Temporal Guard (they belong to a later agent, LeftBehind). The live agent runs Claude Opus; --dry-run is scaffolding, not the agent.</text>
+  <text x="44" y="628" font-size="10" font-style="italic" fill="#8896a2">The two tools are deterministic — the agency is the model's judgment over the evidence and its choice to refuse. The body is not an oracle; it can support neither account.</text>
+  <text x="44" y="644" font-size="10" font-style="italic" fill="#8896a2">Synthetic data — no PHI. Fast one-shot adjudication by default (the full multi-turn tool-use loop is available). Part of the UCSF GI procedure-journey suite.</text>
 </svg>
