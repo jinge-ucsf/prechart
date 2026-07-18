@@ -12,7 +12,7 @@ import json
 from tools import (TOOL_SCHEMAS, triangulate_chart_evidence,
                    check_physiologic_markers, find_chart_item)
 from models import Proposal
-from config import MODEL, thinking_kwargs
+from config import MODEL, thinking_kwargs, AGENTIC_LOOP
 
 SYSTEM = """You are PreChart's evidence-gathering agent for a clinic visit.
 
@@ -63,10 +63,62 @@ def adjudicate(rec, chart_items, spoken, dry_run=False, specialty=None, trace=No
     """Reconcile the two witnesses into a list of Proposals.
 
     trace: optional list; if given, each tool invocation (the agent's investigation
-    steps) is appended as {tool, target, result} so a UI can show the loop working."""
+    steps) is appended as {tool, target, result} so a UI can show the work.
+
+    Default live path is single-shot (fast): the deterministic tools are pre-run and
+    handed to one model call. PRECHART_AGENTIC_LOOP=1 uses the multi-turn tool-use loop."""
     if dry_run:
         return _dry_run(rec, chart_items, spoken, specialty, trace)
-    return _run_agent(rec, chart_items, spoken, specialty, trace)
+    if AGENTIC_LOOP:
+        return _run_agent(rec, chart_items, spoken, specialty, trace)
+    return _run_oneshot(rec, chart_items, spoken, specialty, trace)
+
+
+def _gather_evidence(rec, chart_items, trace=None):
+    """Run the deterministic tools for every chart item up front (fast), recording
+    each into the trace so the UI still shows the investigation."""
+    evidence = []
+    for it in chart_items:
+        ev = triangulate_chart_evidence(it, rec)
+        entry = {"item": it["label"], "kind": it["kind"], "signals": ev.get("signals", [])}
+        if trace is not None and ev.get("signals"):
+            trace.append({"tool": "triangulate_chart_evidence", "target": it["label"],
+                          "result": _trace_summary("triangulate_chart_evidence", ev)})
+        if it["kind"] == "medication":
+            phys = check_physiologic_markers(it, rec)
+            if phys and phys.get("read") not in (None, "no-physiologic-marker-for-this-item"):
+                entry["physiologic_marker"] = {k: phys.get(k) for k in ("marker", "value", "unit", "read", "date")}
+                if trace is not None:
+                    trace.append({"tool": "check_physiologic_markers", "target": it["label"],
+                                  "result": _trace_summary("check_physiologic_markers", phys)})
+        evidence.append(entry)
+    return evidence
+
+
+def _run_oneshot(rec, chart_items, spoken, specialty=None, trace=None):
+    """Fast path: pre-gather the tool evidence, then adjudicate in ONE model call."""
+    import anthropic  # lazy: live path only
+    client = anthropic.Anthropic()
+    evidence = _gather_evidence(rec, chart_items, trace)
+    payload = {
+        "chart_items": [{k: v for k, v in it.items() if k != "_raw"} for it in chart_items],
+        "spoken_assertions": spoken,
+        "pre_gathered_evidence": evidence,
+    }
+    system = SYSTEM + _specialty_framing(specialty) + (
+        "\n\nThe deterministic evidence (order recency, related labs, physiologic markers, "
+        "duplicate therapy) has ALREADY been gathered for every chart item and is provided as "
+        "pre_gathered_evidence — reason from it directly; no tools are available. "
+        "Return ONLY the JSON array of proposals.")
+    msg = client.messages.create(
+        model=MODEL, max_tokens=16000, system=system,
+        messages=[{"role": "user", "content":
+                   "Reconcile these two witnesses using the pre-gathered evidence and return the "
+                   "JSON array of proposals.\n\n" + json.dumps(payload, indent=1)}],
+        **thinking_kwargs())
+    if msg.stop_reason == "max_tokens":
+        raise RuntimeError("adjudication truncated (max_tokens) — raise max_tokens")
+    return _parse(_final_text(msg))
 
 
 def _specialty_framing(specialty):
