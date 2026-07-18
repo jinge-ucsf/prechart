@@ -1,0 +1,8 @@
+{
+  "key": "hepatology",
+  "name": "Hepatology",
+  "visit_framing": "a hepatology visit. Prioritize hepatic dosing and hepatotoxic medications, anticoagulation in cirrhosis, diuretics for ascites, non-selective beta-blockers for varices, lactulose/rifaximin for encephalopathy, and immunosuppression in transplant.",
+  "priority_meds": ["lactulose", "rifaximin", "furosemide", "spironolactone", "propranolol", "nadolol", "carvedilol", "tacrolimus", "warfarin", "apixaban", "acetaminophen"],
+  "priority_problems": ["cirrhosis", "varices", "ascites", "encephalopathy", "hepat", "fibrosis", "hepatocellular", "hcc", "transplant", "hepatitis"],
+  "high_significance_flags": ["acetaminophen", "warfarin", "apixaban", "anticoag", "tacrolimus", "lactulose", "allergy", "hepatotoxic", "potassium", "diuretic"]
+}

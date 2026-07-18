@@ -1,0 +1,3711 @@
+{
+ "total_discrepancies": 367,
+ "by_expected_state": {
+  "CONFIRMED": 191,
+  "NEW": 105,
+  "CONTRADICTED": 56,
+  "UNADDRESSED": 15
+ },
+ "by_source_of_error": {
+  "none": 202,
+  "patient": 34,
+  "chart": 131
+ },
+ "patients": {
+  "PT-001": [
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "lisinopril 10 mg daily = active",
+    "spoken_truth": "patient confirms taking lisinopril every morning for blood pressure",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "medication list matches patient report"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no anticoagulant or antiplatelet on file",
+    "spoken_truth": "patient confirms no blood thinners, no aspirin; takes a daily multivitamin only",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "anticoagulation/anesthesia clearance \u2014 no agents to hold; routine confirmation, no fish-oil or 'blood thinner' trap present"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Hypertension (well controlled) = active",
+    "spoken_truth": "patient confirms hypertension, home readings around 120s/70s on lisinopril",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "stable comorbidity; no anesthesia concern"
+   },
+   {
+    "id": "C4",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no GI symptoms documented; average-risk screening indication",
+    "spoken_truth": "patient denies rectal bleeding, weight loss, change in bowel habits, or abdominal pain",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "average-risk screening indication upheld by interview"
+   },
+   {
+    "id": "C5",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "patient reports no known drug allergies",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "no allergy discrepancy; NKDA confirmed"
+   }
+  ],
+  "PT-002": [
+   {
+    "id": "D1",
+    "type": "blood_thinner_terminology",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant/antiplatelet other than aspirin 81 mg; no fish oil documented",
+    "spoken_truth": "patient calls his OTC fish oil a 'blood thinner' and takes ~1000 mg daily; it is a supplement, not an anticoagulant",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "TRAP: 'blood thinner' = fish oil. Clarify so it is not mis-coded as a therapeutic anticoagulant triggering an unnecessary hold; fish oil itself does not require a hold per protocol but should be added to the supplement list."
+   },
+   {
+    "id": "D2",
+    "type": "medication_undocumented",
+    "source_of_error": "chart",
+    "chart_state": "no NSAID on file",
+    "spoken_truth": "takes OTC ibuprofen 400 mg several times a week for knee pain",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Undocumented OTC NSAID relevant to peri-procedural bleeding risk and polypectomy; advise hold around procedure."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "aspirin 81 mg daily = active (primary prevention)",
+    "spoken_truth": "patient confirms daily low-dose aspirin; started on his own for heart health, no cardiac stent or prior event",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Aspirin only \u2014 no dose-hold indicated per protocol; confirmed indication is primary prevention."
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "atorvastatin 40 mg daily = active",
+    "spoken_truth": "patient confirms taking it nightly for cholesterol",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed_negative",
+    "source_of_error": "none",
+    "chart_state": "no GI bleeding, no weight loss documented; average-risk screening",
+    "spoken_truth": "denies melena, hematochezia, and weight loss; feels well",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Alarm-symptom negatives confirmed; remains average-risk screening indication."
+   }
+  ],
+  "PT-003": [
+   {
+    "id": "D1",
+    "type": "family_history_misattribution",
+    "source_of_error": "chart",
+    "chart_state": "Condition 'Malignant tumor of colon' listed on patient's active problem list (personal history)",
+    "spoken_truth": "patient has NO personal cancer history; the colon cancer is her father's, diagnosed at age 72",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "family history mis-coded as a personal diagnosis; would wrongly alter risk stratification and surveillance interval if uncorrected"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "FamilyMemberHistory: father with colon cancer at 72",
+    "spoken_truth": "patient confirms father had colon cancer, diagnosed around age 72",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "correctly captured family history; single first-degree relative dx >60"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "metformin 1000 mg BID = active",
+    "spoken_truth": "patient confirms taking it twice daily",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "levothyroxine 75 mcg = active",
+    "spoken_truth": "patient confirms taking it every morning",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C4",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "prior 2 tubular adenomas (2021), surveillance due 2026; asymptomatic",
+    "spoken_truth": "patient confirms no bleeding, no bowel changes, no weight loss \u2014 asymptomatic",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "routine surveillance indication confirmed"
+   }
+  ],
+  "PT-004": [
+   {
+    "id": "D1",
+    "type": "anticoagulation_misconception",
+    "source_of_error": "patient",
+    "chart_state": "MedicationRequest fish oil (omega-3) = active; no anticoagulant on file",
+    "spoken_truth": "patient calls the fish oil his 'blood thinner' and stopped it to prep for the scope; it is fish oil, not a true anticoagulant/antiplatelet",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "Trap: 'blood thinner' = fish oil. No anticoagulation/anesthesia hold required. Reassure patient; fish oil does not need to be held for colonoscopy and does not warrant bridging."
+   },
+   {
+    "id": "D2",
+    "type": "symptom_negation",
+    "source_of_error": "none",
+    "chart_state": "referral documents 'denies rectal bleeding'",
+    "spoken_truth": "patient confirms no rectal bleeding, no dark stools, no change in bowel habits",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Negation trap: chart negative is confirmed by patient; do not convert to a positive finding."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "history of sessile serrated polyp 2023",
+    "spoken_truth": "patient confirms polyp found and removed in 2023, told to come back in 3 years",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Surveillance indication confirmed."
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "amlodipine 5 mg = active",
+    "spoken_truth": "patient confirms taking amlodipine daily for blood pressure",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "patient reports no known drug allergies",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "No-known-allergy status confirmed by patient."
+   }
+  ],
+  "PT-005": [
+   {
+    "id": "D1",
+    "type": "symptom_attribution",
+    "source_of_error": "chart",
+    "chart_state": "IDA framed against a background of menorrhagia; menstrual blood loss implied as likely source",
+    "spoken_truth": "menorrhagia resolved after 2024 endometrial ablation; periods now minimal to none, so a menstrual source is no longer plausible for ongoing severe IDA (ferritin 6)",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "Menorrhagia resolution is CONFIRMED, but it removes the menstrual explanation and makes unexplained IDA \u2014 strengthens the case for bidirectional endoscopy rather than colonoscopy alone as the referral hedged."
+   },
+   {
+    "id": "D2",
+    "type": "missing_medication",
+    "source_of_error": "chart",
+    "chart_state": "no antiplatelet on file; med list = ferrous sulfate, omeprazole",
+    "spoken_truth": "patient takes daily 81 mg aspirin on her own ('baby aspirin for my heart, my dad had a heart attack')",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "Self-directed antiplatelet, family-history attribution. Relevant as an occult GI blood-loss contributor AND for pre-procedure/polypectomy antiplatelet management. Not therapeutic anticoagulation."
+   },
+   {
+    "id": "D3",
+    "type": "missing_medication",
+    "source_of_error": "chart",
+    "chart_state": "no NSAID on file",
+    "spoken_truth": "patient takes OTC ibuprofen 200-400 mg several times weekly for knee pain",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Regular NSAID use is a plausible source of occult upper-GI blood loss and mucosal injury; reinforces need for upper endoscopy."
+   },
+   {
+    "id": "D4",
+    "type": "new_symptom",
+    "source_of_error": "patient",
+    "chart_state": "referral states 'no visible bleeding reported'",
+    "spoken_truth": "patient describes intermittently dark/black stools she dismissed as an iron-pill effect",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Hedged/collateral detail. Possible melena vs. iron effect \u2014 should not be assumed benign; supports upper-GI evaluation."
+   },
+   {
+    "id": "D5",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "sulfa antibiotic (sulfamethoxazole) caused a rash",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Chart incomplete; medication-safety gap."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "omeprazole 20 mg = active",
+    "spoken_truth": "patient confirms taking omeprazole every morning for reflux",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "ferrous sulfate 325 mg = active",
+    "spoken_truth": "patient confirms taking iron daily, though she takes it with tea and has poor tolerance",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Absorption may be blunted by tea co-administration; adherence intact."
+   }
+  ],
+  "PT-006": [
+   {
+    "id": "D1",
+    "type": "blood_thinner_is_supplement",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant/antiplatelet on file",
+    "spoken_truth": "patient says he takes a 'blood thinner' but on questioning it is over-the-counter fish oil (omega-3), not a true anticoagulant",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "trap: patient's term 'blood thinner' = fish oil; does not mandate periprocedural holding as a true anticoagulant would \u2014 must be clarified so it is not mismanaged as therapeutic anticoagulation"
+   },
+   {
+    "id": "D2",
+    "type": "missing_medication",
+    "source_of_error": "chart",
+    "chart_state": "med list shows only tamsulosin",
+    "spoken_truth": "patient takes daily low-dose aspirin 81 mg (self-started for heart health)",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "true antiplatelet absent from chart; relevant to polypectomy bleeding risk and pre-procedure hold instructions"
+   },
+   {
+    "id": "D3",
+    "type": "new_family_history",
+    "source_of_error": "chart",
+    "chart_state": "no family history of GI malignancy documented",
+    "spoken_truth": "father had colon cancer in his 60s (reported by patient and daughter)",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "collateral/family-history attribution; raises pretest probability and reinforces urgency of the diagnostic colonoscopy"
+   },
+   {
+    "id": "D4",
+    "type": "confirmed_alarm_feature",
+    "source_of_error": "none",
+    "chart_state": "referral notes 8 lb unintentional weight loss",
+    "spoken_truth": "patient confirms clothes looser, ~8 lb down over 3 months without trying",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "alarm feature confirmed by patient"
+   },
+   {
+    "id": "D5",
+    "type": "confirmed_alarm_feature",
+    "source_of_error": "none",
+    "chart_state": "referral notes pencil-thin/caliber change of stool x3 months",
+    "spoken_truth": "patient confirms stools narrower for a few months plus looser bowel habits",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "caliber change confirmed; correctly flagged as expedite"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "tamsulosin 0.4 mg active for BPH",
+    "spoken_truth": "patient confirms taking tamsulosin nightly for urinary symptoms",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "former smoker, 30 pack-years, quit 2010",
+    "spoken_truth": "patient confirms quit smoking in 2010 after ~30 years",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-007": [
+   {
+    "id": "D1",
+    "type": "mischaracterized_history",
+    "source_of_error": "chart",
+    "chart_state": "Condition + referral document reaction to 2019 anesthesia as 'motion sickness'",
+    "spoken_truth": "patient describes waking from general anesthesia and vomiting repeatedly in recovery \u2014 classic postoperative nausea and vomiting (PONV), not motion sickness",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "drives peri-procedural anti-emetic prophylaxis planning; mislabel could cause the risk to be under-weighted"
+   },
+   {
+    "id": "D2",
+    "type": "family_history",
+    "source_of_error": "chart",
+    "chart_state": "referral states 'average risk'; no family history of colorectal cancer documented",
+    "spoken_truth": "patient reports her father was diagnosed with colon cancer at about age 68",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "first-degree relative with CRC reclassifies patient above average risk; affects screening interval and possibly start-age justification"
+   },
+   {
+    "id": "D3",
+    "type": "medication_dose_changed",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest sertraline 100 mg daily = active",
+    "spoken_truth": "psychiatrist increased sertraline to 150 mg daily about 2 months ago",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "chart dose is stale; reconcile for accuracy"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "lorazepam 0.5 mg PRN, last used ~monthly",
+    "spoken_truth": "patient confirms PRN use roughly monthly and took one this morning for appointment anxiety",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "benzodiazepine use and same-day dose are relevant to sedation planning and driving/escort instructions"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Generalized anxiety disorder = active",
+    "spoken_truth": "patient confirms GAD, currently anxious specifically about sedation",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-008": [
+   {
+    "id": "D1",
+    "type": "medication_omitted_nsaid",
+    "source_of_error": "chart",
+    "chart_state": "Referral: 'Meds: None' and 'Denies NSAID use'; no MedicationRequest on file",
+    "spoken_truth": "patient takes OTC ibuprofen 400-600 mg roughly 3-4 times/week for chronic low back pain",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "chart negation is wrong; regular NSAID is a plausible contributor to lower GI bleeding and must be captured/held periprocedurally"
+   },
+   {
+    "id": "D2",
+    "type": "blood_thinner_is_supplement",
+    "source_of_error": "patient",
+    "chart_state": "no MedicationRequest; supplement not documented",
+    "spoken_truth": "patient takes daily fish oil and calls it his 'blood thinner'; it is a supplement, not an anticoagulant",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "language trap \u2014 'blood thinner' = fish oil, not warfarin/DOAC; document as supplement, no special anticoagulation hold required, but clarify to avoid mislabeling anticoagulation status"
+   },
+   {
+    "id": "D3",
+    "type": "suspected_diagnosis_unconfirmed",
+    "source_of_error": "chart",
+    "chart_state": "PMH lists hemorrhoids (patient-reported), Condition on file as diagnosis; never scoped",
+    "spoken_truth": "patient was never actually evaluated/diagnosed; bleeding now coats the stool (not just on paper) and is different from before",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "anchoring/premature-closure risk \u2014 unverified hemorrhoid label could prematurely explain bleeding in a 45M; features atypical for simple hemorrhoids"
+   },
+   {
+    "id": "D4",
+    "type": "family_history_new",
+    "source_of_error": "chart",
+    "chart_state": "no family history documented",
+    "spoken_truth": "father diagnosed with colon cancer around age 50",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "first-degree relative with colorectal cancer raises pretest probability and future surveillance interval; not in chart"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Referral: active low-volume hematochezia x2 weeks, blood coating stool",
+    "spoken_truth": "patient confirms ~2 weeks of bright red blood coating the stool, ongoing",
+    "significance": "medium",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Referral: no hemodynamic symptoms",
+    "spoken_truth": "patient denies lightheadedness, syncope, or shortness of breath; recent Hgb normal",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-009": [
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "losartan 50 mg = active",
+    "spoken_truth": "patient confirms taking losartan every morning for blood pressure",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "routine medication reconciliation, no conflict"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "calcium/vitamin D = active",
+    "spoken_truth": "patient confirms taking calcium with vitamin D for bones",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "over-the-counter supplement, matches chart"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no colon cancer screening on file; referral for first-time screening colonoscopy",
+    "spoken_truth": "patient confirms she has never had a colonoscopy or stool test",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "genuinely never screened; reason for referral"
+   },
+   {
+    "id": "C4",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "patient reports no known drug allergies",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "nil-known-allergy confirmed, not a documentation gap"
+   },
+   {
+    "id": "F1",
+    "type": "shared_decision_flag",
+    "source_of_error": "none",
+    "chart_state": "referral for routine screening colonoscopy at age 76",
+    "spoken_truth": "patient is 76, robust (independent ADLs, walks 2 miles daily), never screened, and wants to proceed after discussing risks/benefits",
+    "significance": "medium",
+    "expected_state": "UNADDRESSED",
+    "note": "USPSTF grades routine screening 76-85 as C (individualized, selective); appropriateness hinges on health status and life expectancy, not an age cutoff \u2014 requires documented shared decision-making rather than a chart correction"
+   }
+  ],
+  "PT-010": [
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no active medications on file",
+    "spoken_truth": "patient confirms he takes no prescription or over-the-counter medications, no supplements",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "medication list accurate; no anticoagulant/antiplatelet reconciliation needed before scope"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "referral documents average risk, no family history of colorectal cancer",
+    "spoken_truth": "patient confirms no family history of colon cancer or polyps; father had type 2 diabetes only",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "average-risk screening indication confirmed; no interval change warranted"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no allergies on file",
+    "spoken_truth": "patient confirms no known drug allergies",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "allergy list accurate"
+   },
+   {
+    "id": "S1",
+    "type": "scheduling_logistics",
+    "source_of_error": "none",
+    "chart_state": "no fasting/observance note; standard prep instructions on file",
+    "spoken_truth": "patient observes voluntary weekly religious fasts (Mondays and Thursdays) and asks how the clear-liquid prep and split-dose bowel prep interact with fasting",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "not a chart-vs-truth conflict \u2014 a logistics need newly surfaced; schedule procedure on a non-fasting day and coordinate prep timing"
+   },
+   {
+    "id": "S2",
+    "type": "care_coordination_flag",
+    "source_of_error": "none",
+    "chart_state": "portal (MyChart) messaging is the default outreach channel",
+    "spoken_truth": "patient does not check the patient portal; requests phone contact for scheduling and prep instructions",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "communication-preference flag; portal-only outreach would fail \u2014 route scheduling/prep to phone"
+   }
+  ],
+  "PT-011": [
+   {
+    "id": "D1",
+    "type": "medication_conflict",
+    "source_of_error": "chart",
+    "chart_state": "Referral narrative states 'no anticoagulation'; medication reconciliation and pharmacy fill history list warfarin 5 mg daily for atrial fibrillation",
+    "spoken_truth": "patient confirms she takes warfarin 5 mg every evening for her atrial fibrillation and had an INR check at the anticoagulation clinic two weeks ago",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Internal referral contradiction; the narrative 'no anticoagulation' is WRONG. Patient is anticoagulated. Critical for peri-procedure bridging/hold planning; do not protocol until warfarin hold and INR timing are arranged."
+   },
+   {
+    "id": "D2",
+    "type": "confirmed_medication",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest warfarin 5 mg daily = active",
+    "spoken_truth": "patient confirms warfarin 5 mg every evening, managed by anticoagulation clinic",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "Pharmacy fill history is the accurate source; warfarin is genuinely active."
+   },
+   {
+    "id": "D3",
+    "type": "confirmed_medication",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest metoprolol tartrate 50 mg = active",
+    "spoken_truth": "patient confirms metoprolol twice daily for rate control",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "D4",
+    "type": "confirmed_condition",
+    "source_of_error": "none",
+    "chart_state": "Condition atrial fibrillation active, CHA2DS2-VASc 4",
+    "spoken_truth": "patient confirms long-standing atrial fibrillation on rate control and blood thinner",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "High stroke risk (CHA2DS2-VASc 4) makes anticoagulation management the central peri-procedure issue."
+   },
+   {
+    "id": "D5",
+    "type": "lab_value",
+    "source_of_error": "none",
+    "chart_state": "INR 2.6 from 2 weeks ago (2026-07-03)",
+    "spoken_truth": "patient reports recent INR check at anticoagulation clinic; in therapeutic range",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Therapeutic INR consistent with active warfarin; reinforces that 'no anticoagulation' is incorrect and repeat INR needed near procedure."
+   }
+  ],
+  "PT-012": [
+   {
+    "id": "D1",
+    "type": "condition_misattribution",
+    "source_of_error": "chart",
+    "chart_state": "Condition Clostridioides difficile infection = active, confirmed (coded from intake note mentioning household contact)",
+    "spoken_truth": "patient's WIFE was treated for C. diff; patient himself is asymptomatic with no diarrhea and was never diagnosed",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "family-history/exposure mis-attributed to patient as an active infection; negation trap; could inappropriately delay the scope or trigger unneeded stool testing/isolation"
+   },
+   {
+    "id": "D2",
+    "type": "new_medication",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest list shows rosuvastatin only; no antiplatelet documented",
+    "spoken_truth": "patient takes OTC low-dose aspirin 81 mg daily on his own 'for the heart'",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "undocumented antiplatelet; relevant to polypectomy bleeding risk and periprocedural hold decision \u2014 the 'blood thinner' trap (real antiplatelet, not a supplement)"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "rosuvastatin 20 mg = active",
+    "spoken_truth": "patient confirms taking it nightly",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed_negation",
+    "source_of_error": "none",
+    "chart_state": "CAD (coronary arteriosclerosis) without prior MI and without stents",
+    "spoken_truth": "patient confirms he has never had a heart attack and has no stents; normal stress test 2025",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "negation correctly reflected in chart; supports anesthesia clearance"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "positive FIT; asymptomatic; routine priority per FIT-positive protocol",
+    "spoken_truth": "patient denies rectal bleeding, weight loss, or bowel changes; here for screening follow-up of positive stool test",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "urgency correctly labeled routine; no red-flag symptoms elicited"
+   }
+  ],
+  "PT-013": [
+   {
+    "id": "D1",
+    "type": "medication_nonadherence",
+    "source_of_error": "chart",
+    "chart_state": "pantoprazole 40 mg ordered BID; referral labels reflux 'refractory despite BID PPI x4 months'",
+    "spoken_truth": "patient takes pantoprazole only once daily (morning, with or after breakfast), frequently forgets the second dose, and does not take it before meals",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "true PPI failure vs undertreatment/mistiming; alters interpretation of 'refractory' and whether EGD vs optimization is next step"
+   },
+   {
+    "id": "D2",
+    "type": "new_medication",
+    "source_of_error": "chart",
+    "chart_state": "no NSAID on medication list",
+    "spoken_truth": "patient takes OTC ibuprofen 200 mg, 2-3 tablets several times a week for chronic headaches",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "plausible alternative/contributor to erosive disease; important to elicit before EGD"
+   },
+   {
+    "id": "D3",
+    "type": "medication_stopped",
+    "source_of_error": "chart",
+    "chart_state": "famotidine 20 mg qHS = active",
+    "spoken_truth": "patient stopped famotidine ~2 months ago because it did not help",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "chart is stale; medication list conflict per referral"
+   },
+   {
+    "id": "D4",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "sulfa antibiotic (sulfamethoxazole) caused a rash",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "chart incomplete; medication safety"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "pantoprazole 40 mg = active for GERD",
+    "spoken_truth": "patient confirms taking pantoprazole for reflux",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed_negative",
+    "source_of_error": "none",
+    "chart_state": "referral: no dysphagia, no weight loss, denies melena",
+    "spoken_truth": "patient confirms no trouble swallowing, no weight loss, no black/tarry stools",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "alarm features negative; supports elective (not urgent) EGD"
+   }
+  ],
+  "PT-014": [
+   {
+    "id": "D1",
+    "type": "missing_medication",
+    "source_of_error": "chart",
+    "chart_state": "Medication list = None; no MedicationRequest on file",
+    "spoken_truth": "patient takes OTC aspirin 81 mg daily (self-purchased, not considered a 'medication')",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "antiplatelet not on chart; alters periprocedural biopsy/bleeding-risk and hold instructions for EGD"
+   },
+   {
+    "id": "D2",
+    "type": "anticoagulant_mislabel",
+    "source_of_error": "patient",
+    "chart_state": "none documented",
+    "spoken_truth": "patient states he is 'on a blood thinner'; on interview this is fish oil / omega-3 supplement, not a true anticoagulant",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "'blood thinner' = fish oil trap; do NOT delay anesthesia/procedure for a non-anticoagulant supplement"
+   },
+   {
+    "id": "D3",
+    "type": "history_underestimate",
+    "source_of_error": "chart",
+    "chart_state": "EtOH ~4 drinks/day",
+    "spoken_truth": "collateral (spouse) reports ~6-8 drinks/day, sometimes more on weekends",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "heavier intake than charted; sedation/withdrawal risk and possible varices \u2014 relevant to procedure planning"
+   },
+   {
+    "id": "D4",
+    "type": "symptom_severity_understated",
+    "source_of_error": "chart",
+    "chart_state": "5 lb weight loss over 2 months",
+    "spoken_truth": "patient reports ~15 lb loss over the same period",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "greater weight loss than charted; strengthens alarm picture"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Progressive solid-food dysphagia x2 months, food sticking mid-chest",
+    "spoken_truth": "patient confirms solids sticking mid-chest, progressive, now needs water to push food down",
+    "significance": "high",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Active smoker, ~20 pack-year",
+    "spoken_truth": "patient confirms still smoking about a pack a day for ~40 years",
+    "significance": "medium",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed_urgency",
+    "source_of_error": "none",
+    "chart_state": "ALARM \u2014 progressive dysphagia + weight loss + risk factors; EXPEDITE",
+    "spoken_truth": "clinical picture supports expedited EGD; urgency correctly labeled",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "urgency flag is appropriate, not mislabeled"
+   }
+  ],
+  "PT-015": [
+   {
+    "id": "D1",
+    "type": "medication_dose_conflict",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest apixaban 5 mg PO BID = active",
+    "spoken_truth": "cardiology reduced her to apixaban 2.5 mg BID ~3 months ago (low body weight + reduced renal function)",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "reduced-dose criteria signal impaired clearance; wrong dose in chart corrupts the periprocedural hold interval and bleed-risk estimate"
+   },
+   {
+    "id": "D2",
+    "type": "missing_lab_data",
+    "source_of_error": "chart",
+    "chart_state": "no current CrCl/eGFR on file; most recent creatinine is stale (2025-06, 1.5 mg/dL)",
+    "spoken_truth": "renal function never rechecked before scheduling; hold interval cannot be set without it",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "apixaban hold duration for a high-bleed-risk procedure is keyed to CrCl; must obtain current renal function before dilation"
+   },
+   {
+    "id": "D3",
+    "type": "anticoagulation_timing",
+    "source_of_error": "patient",
+    "chart_state": "no last-dose date recorded",
+    "spoken_truth": "patient took her apixaban this morning; last dose = day of visit AM",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "hold plan must be keyed to actual last-dose date/time; this establishes the clock"
+   },
+   {
+    "id": "D4",
+    "type": "new_medication",
+    "source_of_error": "chart",
+    "chart_state": "no antiplatelet on file",
+    "spoken_truth": "patient takes daily aspirin 81 mg she started on her own for her heart",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "concurrent antiplatelet compounds bleed risk for dilation; not in chart, must reconcile and decide on hold"
+   },
+   {
+    "id": "D5",
+    "type": "new_medication",
+    "source_of_error": "chart",
+    "chart_state": "no antihypertensive on file despite documented HTN",
+    "spoken_truth": "patient takes amlodipine 5 mg daily for blood pressure",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "chart medication list incomplete; reconcile"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "omeprazole 40 mg = active",
+    "spoken_truth": "patient confirms taking it every morning for reflux/stricture",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "peptic esophageal stricture with recurrent dysphagia; last dilation ~14 months ago",
+    "spoken_truth": "patient confirms solid-food sticking has returned over the last 6\u20138 weeks, similar to before",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "atrial fibrillation = active",
+    "spoken_truth": "patient confirms afib, followed by cardiology, on a blood thinner",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-016": [
+   {
+    "id": "D1",
+    "type": "diagnostic_yield_flag",
+    "source_of_error": "none",
+    "chart_state": "referral notes gluten-containing diet confirmed ongoing",
+    "spoken_truth": "patient confirms still eating bread/pasta daily, has NOT started a gluten-free diet",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "Critical pre-biopsy condition \u2014 duodenal biopsy for celiac must be done on a gluten-containing diet or it may be falsely negative. Confirmed true."
+   },
+   {
+    "id": "D2",
+    "type": "blood_thinner_confusion",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant/antiplatelet on file; no OTC supplements listed",
+    "spoken_truth": "patient says he takes a 'blood thinner' which on clarification is OTC fish oil (omega-3), not a true anticoagulant",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Classic trap: 'blood thinner' = fish oil. No true anticoagulant; no periprocedural hold required, but OTC supplement should be added to the med list."
+   },
+   {
+    "id": "D3",
+    "type": "suspected_not_confirmed",
+    "source_of_error": "chart",
+    "chart_state": "problem list carries Celiac disease as an active/confirmed diagnosis",
+    "spoken_truth": "diagnosis is serology-suspected only; confirmatory duodenal biopsy is the reason for this visit and has not been done",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "Serology-positive but histologically unconfirmed; diagnosis should read provisional/suspected until biopsy."
+   },
+   {
+    "id": "D4",
+    "type": "new_family_history",
+    "source_of_error": "chart",
+    "chart_state": "no family history documented",
+    "spoken_truth": "patient reports an older sister with biopsy-confirmed celiac disease",
+    "significance": "low",
+    "expected_state": "NEW",
+    "note": "Supportive family history not previously captured; strengthens pretest probability."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "multivitamin with iron (MVI with iron) = active",
+    "spoken_truth": "patient confirms taking a daily multivitamin that contains iron",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no drug allergies on file",
+    "spoken_truth": "patient confirms no known drug allergies",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-017": [
+   {
+    "id": "D1",
+    "type": "blood_thinner_confusion",
+    "source_of_error": "patient",
+    "chart_state": "no antiplatelet/anticoagulant on file",
+    "spoken_truth": "patient calls her OTC fish oil (omega-3) a 'blood thinner'; not a true anticoagulant, no prescription blood thinner",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "trap: 'blood thinner' language + elevated INR could be misread as anticoagulation requiring hold/reversal; fish oil does not require holding for anticoagulation, but should be reconciled before procedure"
+   },
+   {
+    "id": "D2",
+    "type": "lab_misattribution",
+    "source_of_error": "none",
+    "chart_state": "INR 1.4 elevated",
+    "spoken_truth": "elevated INR reflects hepatic synthetic dysfunction (cirrhosis), not anticoagulation; patient on no anticoagulant",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "do not misattribute INR elevation to a blood thinner; relevant to procedural bleeding risk and anesthesia review"
+   },
+   {
+    "id": "D3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "platelets 88k (thrombocytopenia)",
+    "spoken_truth": "consistent with hypersplenism from portal hypertension; patient unaware but confirmed on labs",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "genuine; anesthesia/procedure bleeding-risk relevant"
+   },
+   {
+    "id": "D4",
+    "type": "undocumented_diagnosis",
+    "source_of_error": "chart",
+    "chart_state": "rifaximin active but PMH silent on hepatic encephalopathy; ascites and T2DM only",
+    "spoken_truth": "daughter reports an episode of confusion/disorientation ~2 months ago that prompted rifaximin; hepatic encephalopathy not on problem list",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "collateral/family history; explains rifaximin; HE affects sedation planning"
+   },
+   {
+    "id": "D5",
+    "type": "medication_dose_conflict",
+    "source_of_error": "chart",
+    "chart_state": "spironolactone 100 mg daily = active",
+    "spoken_truth": "patient cut it to 50 mg on her own weeks ago due to breast tenderness and lightheadedness; not taking 100 mg",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "narrative-vs-chart dose conflict; relevant to ascites control and volume/electrolyte status pre-sedation"
+   },
+   {
+    "id": "D6",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "referral states 'no prior bleed'; denies hematemesis or melena",
+    "spoken_truth": "patient recalls one black, tarry stool ~2 weeks ago that she dismissed; still denies vomiting blood",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "possible prior variceal/UGI bleed; reinforces urgency of variceal screening and changes risk framing"
+   },
+   {
+    "id": "D7",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "prior severe nausea and slow awakening after anesthesia (per daughter); no drug allergy but adverse anesthesia reaction",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "anesthesia-relevant adverse reaction, not a classic drug allergy; should be flagged for sedation planning"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "furosemide 40 mg daily = active",
+    "spoken_truth": "patient confirms taking her water pill every morning",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "NASH (non-alcoholic) etiology of cirrhosis",
+    "spoken_truth": "patient denies alcohol use; consistent with NASH etiology",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-018": [
+   {
+    "id": "D1",
+    "type": "undocumented_medication",
+    "source_of_error": "chart",
+    "chart_state": "no PPI on medication list; only cetirizine PRN",
+    "spoken_truth": "patient self-started OTC omeprazole 20 mg daily ~3 weeks ago for heartburn",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "PPI within 8 weeks of EGD alters biopsy interpretation (PPI-responsive esophageal eosinophilia); must be documented and decision made whether to hold or continue for the EoE biopsy protocol"
+   },
+   {
+    "id": "D2",
+    "type": "mislabeled_urgency",
+    "source_of_error": "chart",
+    "chart_state": "referral marked routine ('self-resolved', 'do not defer long')",
+    "spoken_truth": "index impaction lasted ~3 hours, required an ED visit and IV glucagon, nearly needed endoscopic disimpaction; a second near-impaction occurred last week",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "true clinical picture is recurrent bolus impaction, not a single self-resolved episode; supports semi-urgent scheduling"
+   },
+   {
+    "id": "D3",
+    "type": "medication_frequency",
+    "source_of_error": "chart",
+    "chart_state": "cetirizine documented as PRN",
+    "spoken_truth": "patient takes cetirizine 10 mg every day through allergy season",
+    "significance": "low",
+    "expected_state": "CONTRADICTED",
+    "note": "actual daily use; reconcile frequency"
+   },
+   {
+    "id": "D4",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "peanuts cause mouth itching and lip tingling",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "food allergy undocumented; relevant to atopic profile and periprocedural diet"
+   },
+   {
+    "id": "D5",
+    "type": "suspected_diagnosis",
+    "source_of_error": "none",
+    "chart_state": "eosinophilic esophagitis carried as provisional/working diagnosis",
+    "spoken_truth": "not biopsy-confirmed; EGD with biopsy is the reason for the visit",
+    "significance": "medium",
+    "expected_state": "UNADDRESSED",
+    "note": "diagnosis remains suspected pending histology; avoid treating as established EoE"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "asthma and atopic dermatitis on problem list",
+    "spoken_truth": "patient confirms lifelong asthma and eczema",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "lifelong intermittent solid-food dysphagia in HPI",
+    "spoken_truth": "patient confirms trouble swallowing solids since childhood, eats slowly, drinks a lot of water with meals",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-019": [
+   {
+    "id": "D1",
+    "type": "medication_dose_conflict",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest rivaroxaban 20 mg PO daily = active",
+    "spoken_truth": "daughter reports cardiology reduced dose to 15 mg daily ~2 months ago for declining kidney function; chart never updated",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "stale DOAC dose; wrong dose drives wrong hold/bridging plan and periprocedural bleeding risk"
+   },
+   {
+    "id": "D2",
+    "type": "anticoagulation_timing",
+    "source_of_error": "chart",
+    "chart_state": "referral asks to confirm last rivaroxaban dose; no last-dose documented; no hold ordered",
+    "spoken_truth": "patient took her rivaroxaban this morning; dose not held before this visit",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "last DOAC dose today \u2014 EGD cannot proceed same-day; drives hold decision and earliest safe slot"
+   },
+   {
+    "id": "D3",
+    "type": "new_medication_OTC",
+    "source_of_error": "chart",
+    "chart_state": "no NSAID on medication list",
+    "spoken_truth": "patient has been taking OTC ibuprofen most days for ~2 weeks for knee pain",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "undocumented NSAID + DOAC \u2014 likely UGIB culprit and additive bleeding risk; must stop"
+   },
+   {
+    "id": "D4",
+    "type": "collateral_correction_negation",
+    "source_of_error": "patient",
+    "chart_state": "rivaroxaban (an anticoagulant) is on the active list",
+    "spoken_truth": "patient states she is 'not on any blood thinners'; daughter corrects that she takes rivaroxaban daily",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "mild dementia \u2014 patient's own denial is unreliable; collateral from daughter is ground truth, chart is correct here"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "donepezil 10 mg nightly = active",
+    "spoken_truth": "daughter confirms she gives it every night",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "coffee-ground emesis x1, now resolved (per urgent care referral)",
+    "spoken_truth": "patient and daughter confirm a single vomiting episode yesterday, dark/grainy, none since, no black stools",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "reason for visit; single self-limited episode, hemodynamically stable"
+   }
+  ],
+  "PT-020": [
+   {
+    "id": "D1",
+    "type": "negation_confirmed",
+    "source_of_error": "none",
+    "chart_state": "referral/PMH states no ulcer complications \u2014 specifically no perforation or GI bleed",
+    "spoken_truth": "patient denies any rectal bleeding, black/tarry stools, or vomiting blood, ever",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "negation trap \u2014 do NOT code a GI bleed; absence of complication is the ground truth and is confirmed by the patient"
+   },
+   {
+    "id": "D2",
+    "type": "medication_course_completed",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest clarithromycin 500 mg and metronidazole 500 mg = active",
+    "spoken_truth": "patient completed bismuth quadruple therapy ~3 weeks ago and is currently on no antibiotics",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "stale chart; antibiotic courses are finished, not active \u2014 med list should reflect completed"
+   },
+   {
+    "id": "D3",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "penicillin/amoxicillin caused an itchy rash years ago",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "safety and directly relevant to salvage antibiotic selection for H. pylori eradication"
+   },
+   {
+    "id": "D4",
+    "type": "mislabeled_treatment_failure",
+    "source_of_error": "chart",
+    "chart_state": "referral states failed one eradication course",
+    "spoken_truth": "patient stopped the first (clarithromycin-based) course after ~4 days due to nausea; it was never completed",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "reframes documented treatment failure as non-adherence, not confirmed resistance; changes interpretation of culture/biopsy plan"
+   },
+   {
+    "id": "D5",
+    "type": "diagnostic_interference",
+    "source_of_error": "patient",
+    "chart_state": "not documented",
+    "spoken_truth": "patient is still taking pantoprazole every day",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "active PPI can cause false-negative H. pylori biopsy/culture at EGD; should be held ~2 weeks pre-procedure"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "H. pylori stool antigen positive",
+    "spoken_truth": "patient confirms he was told the stool test was positive",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "pantoprazole 40 mg for dyspepsia = active",
+    "spoken_truth": "patient confirms taking it daily for stomach discomfort",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no anticoagulant/antiplatelet on med list",
+    "spoken_truth": "patient confirms no blood thinners, no aspirin, no fish oil",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "pre-procedure anticoagulation screen \u2014 negative, routine"
+   }
+  ],
+  "PT-021": [
+   {
+    "id": "D1",
+    "type": "anticoagulation_bridging_trap",
+    "source_of_error": "none",
+    "chart_state": "warfarin active, indication = mechanical MITRAL valve prosthesis (2015), afib",
+    "spoken_truth": "patient confirms mechanical mitral valve and lifelong warfarin; mechanical MITRAL position = high thromboembolic risk requiring peri-procedural heparin/LMWH bridging and cardiology co-management",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "RED-tier anticoag: do NOT apply a standard warfarin-hold protocol. Mechanical mitral (not aortic) mandates bridging and cardiology co-management before polypectomy. Trap = naive system protocolizing a routine 5-day hold."
+   },
+   {
+    "id": "D2",
+    "type": "lab_interpretation_trap",
+    "source_of_error": "none",
+    "chart_state": "INR 3.1 (2026-07-10) \u2014 may auto-flag as supratherapeutic/high",
+    "spoken_truth": "target INR range for a mechanical mitral valve is 2.5-3.5, so 3.1 is therapeutic/in-range, not supratherapeutic",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Trap = flagging 3.1 as elevated using a generic 2.0-3.0 target; correct mechanical-mitral goal is 2.5-3.5. Still must be reduced peri-procedurally, but it is not out-of-range."
+   },
+   {
+    "id": "D3",
+    "type": "missing_medication",
+    "source_of_error": "chart",
+    "chart_state": "no antiplatelet on medication list",
+    "spoken_truth": "patient takes OTC aspirin 81 mg daily on her own (thinks it is 'good for the heart'), not documented",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "Undocumented antiplatelet stacks bleeding risk on top of warfarin for a planned polypectomy; must be reconciled and likely held with cardiology input."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "warfarin sodium 5 mg = active",
+    "spoken_truth": "patient confirms taking warfarin daily, dose adjusted by anticoag clinic",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "metoprolol tartrate 50 mg = active",
+    "spoken_truth": "patient confirms taking metoprolol for heart rate",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "digoxin 0.125 mg = active",
+    "spoken_truth": "patient confirms taking digoxin for the atrial fibrillation",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-022": [
+   {
+    "id": "D1",
+    "type": "antiplatelet_hold_high_risk",
+    "source_of_error": "none",
+    "chart_state": "referral: drug-eluting stent placed Dec 2025 (7 months ago) after NSTEMI; on DAPT; RED flag \u2014 DES <12 months, cardiology clearance required before any hold, no hold dates issued by protocol",
+    "spoken_truth": "patient confirms stent placed just after last Christmas, still on dual antiplatelet therapy, cardiologist told him not to stop the antiplatelets without checking first",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "core safety flag \u2014 bare/incomplete DAPT duration; premature interruption risks stent thrombosis; polypectomy hold decision must come from cardiology, not GI unilaterally"
+   },
+   {
+    "id": "D2",
+    "type": "medication_switch_narrative_vs_chart",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest clopidogrel 75 mg = active (DAPT component)",
+    "spoken_truth": "cardiologist switched him from clopidogrel to ticagrelor 90 mg twice daily about 6 weeks ago; he is no longer taking clopidogrel",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "chart med list is stale; ticagrelor vs clopidogrel changes bleeding profile and any pre-procedure hold interval \u2014 must reconcile with cardiology"
+   },
+   {
+    "id": "D3",
+    "type": "blood_thinner_ambiguity",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant on file; no fish oil on file",
+    "spoken_truth": "patient says he takes 'a blood thinner' \u2014 on questioning this is OTC fish oil, plus his aspirin/ticagrelor; he is NOT on warfarin or a DOAC",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "'blood thinner' is antiplatelet + OTC fish oil, not systemic anticoagulation; add fish oil to list; avoid over-holding for a nonexistent anticoagulant (INR 1.0 confirms)"
+   },
+   {
+    "id": "D4",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "no rectal bleeding documented; workup driven by positive FIT only",
+    "spoken_truth": "patient reports intermittent bright red blood on the tissue over the last few weeks",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "overt bleeding on DAPT not previously documented; reinforces need for colonoscopy and mild anemia"
+   },
+   {
+    "id": "D5",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "aspirin 81 mg = active (DAPT component)",
+    "spoken_truth": "patient confirms daily baby aspirin",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "aspirin typically continued through colonoscopy/polypectomy; component of DAPT"
+   },
+   {
+    "id": "D6",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "metoprolol succinate 50 mg and atorvastatin 80 mg = active",
+    "spoken_truth": "patient confirms both daily",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "D7",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "CAD s/p DES x2 (LAD, Cx) Dec 2025 after NSTEMI; EF 50%",
+    "spoken_truth": "patient confirms heart attack over the holidays with two stents; recovering well",
+    "significance": "medium",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-023": [
+   {
+    "id": "D1",
+    "type": "medication_stopped",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest apixaban 5 mg BID = active (pharmacy shows active refills)",
+    "spoken_truth": "patient completed the provoked-DVT anticoagulation course and stopped apixaban ~6 months ago (Jan 2026); has not taken it since; leftover pills sit unused at home and auto-refill kept generating fills",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Central trap: narrative 'completed anticoagulation course' vs active pharmacy refills. Patient's words are ground truth \u2014 she is NOT anticoagulated, so no bridging/hold is needed. Chart/pharmacy is stale. Documenting active apixaban in error would trigger unnecessary hold planning and delay; failing to reconcile could also risk assuming she is still protected."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "hydrochlorothiazide 25 mg daily = active",
+    "spoken_truth": "patient confirms taking HCTZ every morning for blood pressure",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Essential hypertension = active",
+    "spoken_truth": "patient confirms longstanding high blood pressure, well controlled",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "History of provoked DVT (2024), treated course",
+    "spoken_truth": "patient confirms provoked DVT after knee surgery in 2024, no recurrence, completed the blood thinner as planned",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "DVT history is real; only the ACTIVE anticoagulation status is in conflict"
+   },
+   {
+    "id": "R1",
+    "type": "routine_surveillance",
+    "source_of_error": "none",
+    "chart_state": "Adenomatous polyp of colon (2023), surveillance colonoscopy due 2026",
+    "spoken_truth": "patient asymptomatic, here for scheduled surveillance scope",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Indication for the procedure; no new GI symptoms reported"
+   }
+  ],
+  "PT-024": [
+   {
+    "id": "D1",
+    "type": "anticoagulation_management",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest dabigatran etexilate = active; anticoagulation for atrial fibrillation",
+    "spoken_truth": "patient confirms taking his afib 'blood thinner' twice daily",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "renally-cleared DOAC with eGFR 22 (CKD4) \u2014 requires EXTENDED periprocedural hold and nephrology coordination for bleeding risk; core high-risk flag"
+   },
+   {
+    "id": "D2",
+    "type": "medication_dose_conflict",
+    "source_of_error": "chart",
+    "chart_state": "dabigatran etexilate 110 mg BID (active MedicationRequest)",
+    "spoken_truth": "patient reports his nephrologist reduced the dose to 75 mg twice daily a few weeks ago because of his kidneys",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "chart dose is stale; the active/correct dose is 75 mg BID \u2014 affects bleeding-risk assessment and hold instructions; reconcile with nephrology before scheduling"
+   },
+   {
+    "id": "D3",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "referral HPI = 'anemia workup'; no GI bleeding documented",
+    "spoken_truth": "patient reports intermittent black/tarry stools for ~3 weeks",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "melena in an anticoagulated patient reframes anemia as possible occult GI bleed and raises urgency of the colonoscopy"
+   },
+   {
+    "id": "D4",
+    "type": "missing_supplement",
+    "source_of_error": "chart",
+    "chart_state": "no fish oil / omega-3 supplement on medication list",
+    "spoken_truth": "wife reports patient takes over-the-counter fish oil daily and calls it 'his other blood thinner'",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "collateral-history trap: the family-labeled 'blood thinner' is fish oil, NOT the clinically important anticoagulant; do not conflate \u2014 the dabigatran (D1) is the periprocedural driver, but the omega-3 should still be held per prep"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "sevelamer carbonate 800 mg = active",
+    "spoken_truth": "patient confirms taking it with meals as a phosphate binder",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "epoetin alfa injection = active",
+    "spoken_truth": "patient confirms receiving EPO injections at dialysis clinic / nephrology for his anemia",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-025": [
+   {
+    "id": "T1",
+    "type": "anticoagulant_negation",
+    "source_of_error": "none",
+    "chart_state": "referral/intake: 'denies anticoagulant use'; no afib, no VTE",
+    "spoken_truth": "patient confirms no prescription blood thinners, no atrial fibrillation, no clot history",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Negation is accurate. Do not over-flag. The intermittent 'baby aspirin' is over-the-counter low-dose ASA, not an anticoagulant; no anticoagulation-hold or bridging workup indicated."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed_medication",
+    "source_of_error": "none",
+    "chart_state": "ASA 81 mg listed as 'occasionally' (PRN)",
+    "spoken_truth": "patient takes an OTC baby aspirin only a few times a month for aches, not daily, not physician-prescribed",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Intermittent low-dose ASA for a screening colonoscopy without high bleeding risk. Per standard guidance low-dose ASA may be continued; no routine hold required. Confirm final hold instructions with the endoscopist's protocol."
+   },
+   {
+    "id": "C2",
+    "type": "confirmed_medication",
+    "source_of_error": "none",
+    "chart_state": "ibuprofen listed PRN for knees",
+    "spoken_truth": "patient takes ibuprofen a few times a week for knee osteoarthritis",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "NSAID use confirmed; routine to hold NSAIDs periprocedurally per prep instructions, but not an anticoagulation concern."
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Osteoarthritis on problem list",
+    "spoken_truth": "patient confirms knee osteoarthritis",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C4",
+    "type": "confirmed_routine",
+    "source_of_error": "none",
+    "chart_state": "no polyp/adenoma history; average-risk screening",
+    "spoken_truth": "patient reports no prior colonoscopy and no rectal bleeding, weight loss, or change in bowel habits",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Genuinely routine average-risk screening. No fabricated conflict."
+   }
+  ],
+  "PT-026": [
+   {
+    "id": "D1",
+    "type": "medication_dose_conflict",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest edoxaban 60 mg daily = active (per referral and pharmacy list)",
+    "spoken_truth": "cardiology reduced edoxaban to 30 mg daily ~2 months ago for declining renal function; patient takes 30 mg",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "narrative-vs-pharmacy dose conflict; wrong dose drives incorrect DOAC hold/bridge and bleeding-risk planning in an actively bleeding patient"
+   },
+   {
+    "id": "D2",
+    "type": "anticoagulant_not_held",
+    "source_of_error": "patient",
+    "chart_state": "referral assumes DOAC hold is being planned; no last-dose documented",
+    "spoken_truth": "patient took his edoxaban this morning (day of consult); no dose has been held",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "last-dose timing is load-bearing for procedure scheduling and CKD3a-adjusted clearance; hold has not actually begun"
+   },
+   {
+    "id": "D3",
+    "type": "hidden_medication",
+    "source_of_error": "chart",
+    "chart_state": "no fish oil / omega-3 on medication list",
+    "spoken_truth": "patient takes OTC fish oil daily, which he refers to as his 'blood thinner'",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "'blood thinner' = fish oil trap; must not be conflated with the DOAC, but is still relevant to periprocedural bleeding"
+   },
+   {
+    "id": "D4",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "guaiac-positive stool documented; stool color/character not documented",
+    "spoken_truth": "patient reports intermittent black, tarry stools for ~2 weeks",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "melena suggests an upper GI source and reinforces the EGD portion of the bidirectional exam"
+   },
+   {
+    "id": "D5",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "codeine causes nausea/vomiting and itching",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "chart incomplete; relevant to periprocedural analgesia/sedation planning"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "furosemide 20 mg daily = active",
+    "spoken_truth": "patient confirms taking furosemide each morning for the heart failure",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "atrial fibrillation = active problem",
+    "spoken_truth": "patient confirms longstanding atrial fibrillation followed by cardiology",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-027": [
+   {
+    "id": "D1",
+    "type": "mislabeled_urgency",
+    "source_of_error": "chart",
+    "chart_state": "referral flagged RED/urgent \u2014 'colonoscopy requested'",
+    "spoken_truth": "asymptomatic surveillance for prior adenomas; no bleeding, no symptoms; guideline-appropriate interval is not until 2027",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "urgency mislabeled; elective surveillance can safely wait and should be deferred given recent DES on DAPT"
+   },
+   {
+    "id": "D2",
+    "type": "anticoagulation_clearance",
+    "source_of_error": "none",
+    "chart_state": "ticagrelor 90 mg BID + ASA 81 mg (DAPT) active; DES to RCA May 2026 (~2.5 months ago)",
+    "spoken_truth": "patient confirms both antiplatelets started by cardiology after the stent",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "elective procedure within first months post-DES on DAPT \u2014 defer; mandatory cardiology consult before any scope/polypectomy"
+   },
+   {
+    "id": "D3",
+    "type": "medication_stopped",
+    "source_of_error": "patient",
+    "chart_state": "aspirin 81 mg = active",
+    "spoken_truth": "patient self-discontinued aspirin ~2 weeks ago because she didn't want 'two blood thinners' \u2014 cardiology not informed",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "unsanctioned interruption of DAPT component 2 months post-DES; stent thrombosis risk \u2014 urgent cardiology communication"
+   },
+   {
+    "id": "D4",
+    "type": "medication_terminology",
+    "source_of_error": "patient",
+    "chart_state": "ticagrelor documented as antiplatelet",
+    "spoken_truth": "patient calls ticagrelor 'the blood thinner' and believes it is like warfarin",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "patient conflates antiplatelet with anticoagulant; drives her erroneous decision to stop ASA \u2014 needs education, not a chart error"
+   },
+   {
+    "id": "D5",
+    "type": "missing_intolerance",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "codeine causes nausea/vomiting (intolerance, not true allergy)",
+    "significance": "low",
+    "expected_state": "NEW",
+    "note": "chart incomplete; relevant to peri-procedure analgesia"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "rosuvastatin 20 mg = active",
+    "spoken_truth": "patient confirms taking it nightly",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "prior tubular adenomas on 2023 colonoscopy",
+    "spoken_truth": "patient confirms polyps removed, told to repeat in a few years",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-028": [
+   {
+    "id": "D1",
+    "type": "medication_conflict",
+    "source_of_error": "chart",
+    "chart_state": "Referral narrative states patient is 'on blood thinner'; pharmacy/med list shows only aspirin 81 mg (no warfarin, DOAC, or clopidogrel)",
+    "spoken_truth": "Patient takes only aspirin 81 mg daily and lisinopril; no other anticoagulant or antiplatelet. Dual antiplatelet therapy ended years after 2014 stent.",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "Normalization test: 'blood thinner' in referral narrative resolves to aspirin only on verification. No therapeutic anticoagulant. Do not trigger anticoagulation-bridging or cardiology hold on the basis of the narrative phrase."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest aspirin 81 mg = active",
+    "spoken_truth": "Patient confirms taking aspirin 81 mg every day",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest lisinopril 10 mg = active",
+    "spoken_truth": "Patient confirms taking lisinopril daily for blood pressure",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "CAD s/p bare-metal stent 2014 (remote), no interval events",
+    "spoken_truth": "Patient confirms one stent in 2014, no chest pain or cardiac events since",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C4",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Routine pathway; no cardiology hold needed",
+    "spoken_truth": "Stable remote CAD on aspirin monotherapy; no reason for pre-procedure cardiology clearance beyond routine",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-029": [
+   {
+    "id": "D1",
+    "type": "blood_thinner_clarification",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant/antiplatelet on file; referral says 'Meds: None relevant'",
+    "spoken_truth": "patient states she is 'on a blood thinner,' but on clarification it is an over-the-counter fish oil (omega-3) supplement, not a prescription anticoagulant",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "'Blood thinner' = fish oil. True anticoagulation is ruled out \u2014 no bridging/holding of a DOAC or warfarin needed for sphincterotomy; document supplement and stop pre-procedure per bleeding-risk practice"
+   },
+   {
+    "id": "D2",
+    "type": "medication_missing",
+    "source_of_error": "chart",
+    "chart_state": "referral 'Meds: None relevant'; no MedicationRequest on file",
+    "spoken_truth": "patient takes aspirin 81 mg daily (self-started, cardioprotective) for ~3 years",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "Daily low-dose aspirin IS relevant to an ERCP with planned sphincterotomy; must be documented and a hold decision made"
+   },
+   {
+    "id": "D3",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "patient reports a diffuse itchy rash after IV iodinated contrast during a prior CT",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "ERCP uses iodinated contrast under fluoroscopy \u2014 prior contrast reaction is safety-critical; anesthesia/pre-medication implications"
+   },
+   {
+    "id": "D4",
+    "type": "suspected_not_confirmed",
+    "source_of_error": "none",
+    "chart_state": "MRCP shows choledocholithiasis; ERCP indicated to clear the duct",
+    "spoken_truth": "patient now pain-free with downtrending LFTs (bili 5.6 to 2.8, ALP 420 to 310), raising the possibility the stone has partially/spontaneously passed",
+    "significance": "medium",
+    "expected_state": "UNADDRESSED",
+    "note": "Imaging finding may be evolving; ERCP still indicated to confirm/clear, but clinician should note the LFT trend and consider repeat imaging vs proceeding"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "gallstone pancreatitis (resolved); laparoscopic cholecystectomy planned after duct clearance",
+    "spoken_truth": "patient confirms the pancreatitis has resolved and understands gallbladder removal is planned after the ERCP",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "bili 2.8 mg/dL, ALP 310 U/L, lipase normalized on recent labs",
+    "spoken_truth": "labs reviewed with patient and consistent with referral",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-030": [
+   {
+    "id": "D1",
+    "type": "anticoagulation_timing",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest apixaban 5 mg BID active; last dose UNKNOWN, 'ED to confirm'",
+    "spoken_truth": "patient took his morning apixaban dose today at ~7 AM with breakfast, ~4 hours before the visit; daughter confirms",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "Fills the load-bearing gap. Recent DOAC dose = near-peak anticoagulation for a same-day emergent ERCP with planned sphincterotomy; drives reversal (andexanet/PCC) vs delay decision NOW."
+   },
+   {
+    "id": "D2",
+    "type": "lab_pitfall",
+    "source_of_error": "none",
+    "chart_state": "INR 1.2 on referral, implied reassuring / near-normal coagulation",
+    "spoken_truth": "INR does not reliably reflect apixaban (factor Xa inhibitor) anticoagulant effect; a normal INR does NOT mean the patient is safe to scope",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Classic DOAC trap \u2014 INR/aPTT are unreliable for apixaban. The falsely reassuring INR must not override the timing/reversal decision from D1."
+   },
+   {
+    "id": "D3",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "prior reaction (hives, itching, flushing) to iodinated IV contrast on a CT ~2 years ago",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "ERCP uses iodinated contrast injected into the biliary tree \u2014 relevant to periprocedural safety/premedication. Chart incomplete."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Referral: Charcot triad present (fever, RUQ pain, jaundice)",
+    "spoken_truth": "patient confirms fever/chills, right upper abdominal pain, and family noticed yellow eyes",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "Cholangitis picture confirmed by history; urgency is correctly labeled, not mislabeled."
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "apixaban 5 mg BID for atrial fibrillation = active",
+    "spoken_truth": "patient confirms he is on the 'blood thinner twice a day' for an irregular heartbeat",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Medication and indication confirmed; only the last-dose timing (D1) was missing."
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Referral: urgent/emergent same-day ERCP pathway, not routine clinic protocol",
+    "spoken_truth": "clinically an emergent decompression case; treated same-day",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "Urgency correctly triaged; documented to avoid mislabeling as elective."
+   }
+  ],
+  "PT-031": [
+   {
+    "id": "D1",
+    "type": "medication_omission",
+    "source_of_error": "chart",
+    "chart_state": "Medication list = None; no anticoagulant/antiplatelet documented",
+    "spoken_truth": "patient takes OTC fish oil (omega-3) daily and calls it 'a blood thinner my other doctor mentioned'",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "'blood thinner' = fish oil. Omega-3 is not a clinically significant anticoagulant and does not require holding for EUS-FNA/ERCP; do not delay the procedure or over-treat as therapeutic anticoagulation."
+   },
+   {
+    "id": "D2",
+    "type": "medication_omission",
+    "source_of_error": "chart",
+    "chart_state": "Medication list = None",
+    "spoken_truth": "PCP started metformin 500 mg twice daily ~2 months ago for the new diabetes",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Real prescription medication absent from GI chart; relevant to peri-procedural planning (hold on procedure day for NPO status)."
+   },
+   {
+    "id": "D3",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "patient reports a rash/hives after IV contrast 'dye' during a prior CT",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "Safety flag for ERCP fluoroscopic contrast; document and plan premedication/mitigation."
+   },
+   {
+    "id": "D4",
+    "type": "diagnosis_unconfirmed",
+    "source_of_error": "chart",
+    "chart_state": "Condition 'Malignant tumor of pancreas' entered with verificationStatus = confirmed",
+    "spoken_truth": "diagnosis is radiographically suspected only; no tissue yet \u2014 the EUS-FNA is being done precisely to obtain tissue",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Chart overstates certainty. Should be provisional/suspected pending FNA cytology; avoid premature oncologic labeling in patient-facing materials."
+   },
+   {
+    "id": "D5",
+    "type": "diagnosis_reframed",
+    "source_of_error": "none",
+    "chart_state": "Type 2 diabetes mellitus listed as independent new-onset condition (6 months)",
+    "spoken_truth": "new-onset diabetes coincides with weight loss and jaundice; may be a paraneoplastic/herald presentation of the pancreatic mass rather than primary T2DM",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Not a chart error \u2014 flagged so downstream reasoning links the two rather than treating diabetes as incidental."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "painless obstructive jaundice with total bilirubin 4.1 mg/dL",
+    "spoken_truth": "patient confirms yellow eyes/skin, dark urine, pale stools, and no abdominal pain",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "CA 19-9 = 890 U/mL and 3.2 cm pancreatic head mass on CT",
+    "spoken_truth": "patient aware of the imaging finding and elevated tumor marker",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-032": [
+   {
+    "id": "D1",
+    "type": "diagnosis_as_question",
+    "source_of_error": "chart",
+    "chart_state": "Condition 'Malignant tumor of pancreas' carried from referral text 'rule out malignancy' (verificationStatus=unconfirmed)",
+    "spoken_truth": "asymptomatic incidental 14 mm cyst found on trauma CT; malignancy is the QUESTION the EUS is meant to answer, not a diagnosis the patient carries",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Do NOT document pancreatic malignancy as an active/confirmed problem. 'Rule out malignancy' is the reason for the study; the working problem is a pancreatic cystic lesion of undetermined significance."
+   },
+   {
+    "id": "D2",
+    "type": "medication_omission_otc",
+    "source_of_error": "chart",
+    "chart_state": "Medication list = None (no MedicationRequest on file)",
+    "spoken_truth": "patient takes OTC fish oil daily and asks if it is a 'blood thinner'; not a prescription anticoagulant",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Fish oil is not a therapeutic anticoagulant and does not require periprocedural hold, but should be captured before EUS with possible FNA and clarified for the patient. Do not miscode as an anticoagulant."
+   },
+   {
+    "id": "D3",
+    "type": "family_history_attribution",
+    "source_of_error": "patient",
+    "chart_state": "no family history documented",
+    "spoken_truth": "father had pancreatic cancer (diagnosed in his 70s)",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Family history \u2014 belongs to the father, NOT a diagnosis for this patient. Relevant risk factor that raises pretest concern for the cyst but must not be attributed to the patient."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Incidental 14 mm pancreatic cyst on trauma CT",
+    "spoken_truth": "patient confirms the cyst was an incidental finding after a bicycle accident and he has no abdominal symptoms",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Medications: None (prescription)",
+    "spoken_truth": "patient confirms he takes no prescription medications",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "PMH: None",
+    "spoken_truth": "patient confirms no chronic medical problems and no prior abdominal surgery",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-033": [
+   {
+    "id": "D1",
+    "type": "medication_indication_wrong",
+    "source_of_error": "chart",
+    "chart_state": "clopidogrel 75 mg reasonCode = presence of coronary artery stent (DAPT)",
+    "spoken_truth": "clopidogrel is single-agent for stroke/TIA prevention; patient has never had a heart stent",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Wrong indication changes periprocedural antiplatelet risk calculus \u2014 monotherapy for TIA is far more interruptible than DAPT for a recent coronary stent"
+   },
+   {
+    "id": "D2",
+    "type": "medication_terminology",
+    "source_of_error": "patient",
+    "chart_state": "clopidogrel is an antiplatelet agent",
+    "spoken_truth": "patient refers to clopidogrel as her 'blood thinner'",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Lay term 'blood thinner' must not be mis-mapped to an anticoagulant (warfarin/DOAC); it is the antiplatelet clopidogrel already on the list"
+   },
+   {
+    "id": "D3",
+    "type": "mislabeled_urgency",
+    "source_of_error": "chart",
+    "chart_state": "referral/triage flag = urgent",
+    "spoken_truth": "asymptomatic routine scheduled 3-month plastic stent exchange; no fever, no jaundice, feels well",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "Elective scheduled exchange mis-triaged as urgent; no cholangitis/obstruction features"
+   },
+   {
+    "id": "D4",
+    "type": "periprocedural_anticoagulation",
+    "source_of_error": "none",
+    "chart_state": "no hold decision documented",
+    "spoken_truth": "hold clopidogrel only IF sphincterotomy anticipated; simple plastic stent exchange alone is low-bleeding-risk and likely does not require interruption",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "Nuanced decision \u2014 requires confirming whether sphincterotomy is planned before instructing patient to hold antiplatelet; single-agent TIA indication raises stroke risk of unnecessary hold"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "amlodipine 5 mg = active",
+    "spoken_truth": "patient confirms taking amlodipine daily for blood pressure",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "biliary plastic stent in situ for benign stricture, exchange due",
+    "spoken_truth": "patient confirms stent placed ~3 months ago, feels well, no fever or yellowing",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-034": [
+   {
+    "id": "D1",
+    "type": "altered_anatomy_approach",
+    "source_of_error": "chart",
+    "chart_state": "Procedure requested = standard ERCP; referral asks 'about approach'",
+    "spoken_truth": "patient had Roux-en-Y gastric bypass in 2019; standard per-oral ERCP is not feasible \u2014 requires laparoscopic-assisted (transgastric) or device/enteroscopy-assisted ERCP",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "advanced routing mandatory; the requested standard approach must be changed before scheduling"
+   },
+   {
+    "id": "D2",
+    "type": "missing_operative_record",
+    "source_of_error": "chart",
+    "chart_state": "RYGB 2019 listed in PMH but operative note NOT in chart; limb lengths unknown",
+    "spoken_truth": "patient confirms bypass done at outside hospital in 2019; does not know limb lengths; no records transferred",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "limb lengths determine feasibility of enteroscopy-assisted vs lap-assisted approach; op note must be obtained"
+   },
+   {
+    "id": "D3",
+    "type": "med_conflict_blood_thinner",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant/antiplatelet on file (meds = MVI, B12)",
+    "spoken_truth": "patient describes a daily 'blood thinner' which on questioning is over-the-counter fish oil, not a true anticoagulant",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "classic 'blood thinner' = fish oil trap; must not be mislabeled as therapeutic anticoagulation for periprocedural holding"
+   },
+   {
+    "id": "D4",
+    "type": "diagnosis_confirmed",
+    "source_of_error": "none",
+    "chart_state": "Choledocholithiasis on MRCP",
+    "spoken_truth": "patient reports RUQ pain and dark urine; imaging shows CBD stone with duct dilation",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "indication for biliary drainage is genuine"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "PMH obesity resolved post-bypass",
+    "spoken_truth": "patient confirms weight down ~110 lb and stable since surgery",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequests = multivitamin and vitamin B12",
+    "spoken_truth": "patient confirms daily bariatric multivitamin and monthly B12",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-035": [
+   {
+    "id": "D1",
+    "type": "records_not_received",
+    "source_of_error": "chart",
+    "chart_state": "Outside EGD report and images referenced but not on file (no DiagnosticReport, no imaging); lesion size/location known only from referral text (18 mm subepithelial gastric lesion)",
+    "spoken_truth": "patient confirms an EGD was done at another facility for reflux and a 'bump' was found; she does not have the report or biopsy result with her",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "records-hunt item; outside EGD report/images must be obtained before EUS to confirm size, location, and whether biopsy was already attempted \u2014 drives whether FNA is needed and the EUS approach"
+   },
+   {
+    "id": "D2",
+    "type": "lesion_size_unconfirmed",
+    "source_of_error": "none",
+    "chart_state": "Referral states 18 mm subepithelial gastric lesion",
+    "spoken_truth": "patient recalls being told it was 'about two centimeters'",
+    "significance": "low",
+    "expected_state": "UNADDRESSED",
+    "note": "patient recollection roughly matches referral; true size to be confirmed from outside report \u2014 not a chart error, flagged as pending confirmation"
+   },
+   {
+    "id": "D3",
+    "type": "anticoagulation_clarification",
+    "source_of_error": "patient",
+    "chart_state": "No anticoagulant or antiplatelet on medication list; only levothyroxine",
+    "spoken_truth": "patient initially says she takes 'a blood thinner'; on questioning it is over-the-counter fish oil (omega-3), not a prescription anticoagulant or antiplatelet",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "classic 'blood thinner' = fish oil trap; relevant to bleeding risk if EUS-FNA is performed \u2014 clarify and document that no true anticoagulant is in use"
+   },
+   {
+    "id": "D4",
+    "type": "symptom_negation",
+    "source_of_error": "none",
+    "chart_state": "Referral documents lesion as asymptomatic",
+    "spoken_truth": "patient confirms no dysphagia, no weight loss, no GI bleeding, no early satiety, no abdominal pain",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "asymptomatic status confirmed by patient; supports elective/routine characterization"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "levothyroxine active for hypothyroidism",
+    "spoken_truth": "patient confirms she takes levothyroxine every morning and had normal thyroid labs",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-036": [
+   {
+    "id": "D1",
+    "type": "suspected_not_confirmed",
+    "source_of_error": "none",
+    "chart_state": "Condition cholangiocarcinoma present as provisional/differential (verificationStatus = provisional); MRCP report reads 'cannot exclude malignancy'",
+    "spoken_truth": "referring hepatologist and patient both frame it as a possibility only; no tissue diagnosis; ERCP brushings are being done precisely to determine whether cancer is present",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "TRAP: cholangiocarcinoma is SUSPECTED, not diagnosed. Must remain a suspicion/differential and must NOT be elevated to a confirmed cancer diagnosis. The suspicion legitimately drives urgency/expedite."
+   },
+   {
+    "id": "D2",
+    "type": "medication_list_conflict",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest list shows ursodiol only; mesalamine not on the active med list despite PMH documenting UC on mesalamine",
+    "spoken_truth": "patient takes mesalamine 1.2 g daily every day for his ulcerative colitis and has not missed it",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "narrative-vs-list conflict; mesalamine is an active maintenance drug missing from the structured med list"
+   },
+   {
+    "id": "D3",
+    "type": "blood_thinner_confusion",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant or antiplatelet on file",
+    "spoken_truth": "patient describes fish oil as his 'blood thinner'; it is an OTC omega-3 supplement, not a true anticoagulant/antiplatelet",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "peri-procedure TRAP: 'blood thinner' = fish oil. No prescription anticoagulation to hold; do not mislabel patient as anticoagulated. Fish oil noted for peri-ERCP planning only."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Condition primary sclerosing cholangitis = active/confirmed",
+    "spoken_truth": "patient confirms long-standing PSC followed by hepatology",
+    "significance": "medium",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Condition ulcerative colitis = active, quiescent",
+    "spoken_truth": "patient confirms UC, no flares, no bleeding or urgency currently",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "ursodiol active",
+    "spoken_truth": "patient confirms taking ursodiol daily",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C4",
+    "type": "confirmed_lab_trend",
+    "source_of_error": "none",
+    "chart_state": "ALP 480 U/L (up from 320), total bilirubin 1.9 mg/dL",
+    "spoken_truth": "worsening cholestatic labs consistent with progressing dominant stricture; corroborates need for ERCP",
+    "significance": "high",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C5",
+    "type": "urgency_confirmed",
+    "source_of_error": "none",
+    "chart_state": "referral flagged Advanced / expedite",
+    "spoken_truth": "rising ALP, new dominant stricture on MRCP, and inability to exclude malignancy make expedited ERCP appropriate",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "urgency label is accurate, not mislabeled \u2014 genuine expedite"
+   }
+  ],
+  "PT-037": [
+   {
+    "id": "D1",
+    "type": "hedged_adherence_overstated",
+    "source_of_error": "chart",
+    "chart_state": "Referral states 'uses CPAP most nights'; no objective compliance download",
+    "spoken_truth": "patient actually wears CPAP only 2-3 nights/week for a few hours, mask leaks and she takes it off; no download in over a year",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "This is the RED-vs-YELLOW anesthesia discriminator: unverified, self-reported 'most nights' is actually poor/undocumented adherence in severe OSA (AHI 42) + BMI 41 -> escalate to anesthesia-directed airway/monitored setting, not routine sedation"
+   },
+   {
+    "id": "D2",
+    "type": "medication_missing",
+    "source_of_error": "chart",
+    "chart_state": "Medication list shows losartan only",
+    "spoken_truth": "patient also takes a 'water pill' (hydrochlorothiazide) every morning",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "unlisted diuretic; relevant to peri-procedural volume status and electrolytes with bowel prep"
+   },
+   {
+    "id": "D3",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "patient reports a rash/itching from latex gloves",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "procedure-relevant; flag for latex-safe environment"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "losartan active for hypertension",
+    "spoken_truth": "patient confirms taking losartan daily",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "severe OSA (AHI 42), HTN, BMI 41; adenoma surveillance indication",
+    "spoken_truth": "patient confirms severe sleep apnea diagnosis, high blood pressure, and prior polyp; here for the follow-up scope",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-038": [
+   {
+    "id": "D1",
+    "type": "medication_dose_changed",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest prednisone taper = 10 mg daily (active)",
+    "spoken_truth": "pulmonologist increased prednisone back up to 20 mg daily about a week ago after a flare; patient is currently on 20 mg, not tapering",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "stale chart; higher active steroid dose changes peri-procedure stress-dose steroid planning and infection/healing risk; anesthesia relevant"
+   },
+   {
+    "id": "D2",
+    "type": "medication_adherence",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest apixaban 5 mg twice daily (active)",
+    "spoken_truth": "patient has been taking apixaban only once a day on her own because she was worried about bleeding",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "self-reduced DOAC dosing \u2014 subtherapeutic anticoagulation for afib and alters bleeding-risk assessment; must reconcile"
+   },
+   {
+    "id": "D3",
+    "type": "anticoagulation_hold_unaddressed",
+    "source_of_error": "none",
+    "chart_state": "no DOAC hold plan documented; EGD pending",
+    "spoken_truth": "patient took her apixaban this morning and has not been told to hold it before the procedure",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "DOAC must be held before EGD; anesthesia/anticoagulation clearance not yet arranged \u2014 active safety gap"
+   },
+   {
+    "id": "D4",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "no weight loss documented",
+    "spoken_truth": "unintentional weight loss of about 12 pounds over 2 months plus solid-food dysphagia",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "alarm feature \u2014 raises concern for stricture/malignancy and reinforces EGD urgency"
+   },
+   {
+    "id": "D5",
+    "type": "new_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "hedged/collateral history: patient recalls a 'bad reaction' to sedation years ago (prolonged grogginess and nausea), unsure of the agent",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "possible sedation intolerance \u2014 relevant to RED anesthesia review; verify prior anesthesia record"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "home oxygen 2 L/min and severe COPD on file",
+    "spoken_truth": "patient confirms 2 L home O2 continuously and severe breathing limitation",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "recent COPD exacerbation admission ~5 weeks ago",
+    "spoken_truth": "patient confirms recent hospitalization for her breathing and says she still has not fully recovered",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "recent exacerbation within pre-op window supports hospital-based procedure setting"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "atrial fibrillation on file",
+    "spoken_truth": "patient confirms afib and takes a blood thinner for it",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-039": [
+   {
+    "id": "D1",
+    "type": "new_anticoagulant",
+    "source_of_error": "chart",
+    "chart_state": "no anticoagulant on GI med list; MedicationRequests limited to sacubitril/valsartan, carvedilol, spironolactone, ASA 81",
+    "spoken_truth": "cardiology started apixaban 5 mg twice daily ~6 weeks ago for newly diagnosed atrial fibrillation",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "GI chart is stale; a therapeutic-dose DOAC not on file materially changes periprocedural bleeding management and hold/bridge planning for colonoscopy with anticipated polypectomy"
+   },
+   {
+    "id": "D2",
+    "type": "new_condition",
+    "source_of_error": "chart",
+    "chart_state": "no atrial fibrillation documented in GI problem list",
+    "spoken_truth": "new-onset atrial fibrillation diagnosed by cardiology ~6 weeks ago, reason apixaban was started",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "explains the new anticoagulant; also relevant to periprocedural rhythm/rate management"
+   },
+   {
+    "id": "D3",
+    "type": "confirmed_high_acuity",
+    "source_of_error": "none",
+    "chart_state": "HFrEF EF 25%, ischemic cardiomyopathy, ICD placed 2024; referral flags mandatory anesthesia review and device management plan (magnet vs reprogram)",
+    "spoken_truth": "patient confirms ICD in place, follows with EP, EF unchanged; no decompensation currently",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "RED tier is correct and must not be downgraded \u2014 anesthesia clearance and ICD peri-procedure management remain mandatory"
+   },
+   {
+    "id": "D4",
+    "type": "medication_changed",
+    "source_of_error": "chart",
+    "chart_state": "spironolactone 25 mg daily = active",
+    "spoken_truth": "cardiology halved it to 12.5 mg daily ~1 month ago after a high potassium; patient taking the lower dose",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "dose on chart is stale; relevant to periprocedural electrolytes and bowel-prep-related potassium shifts"
+   },
+   {
+    "id": "D5",
+    "type": "blood_thinner_semantics",
+    "source_of_error": "none",
+    "chart_state": "ASA 81 mg = active (antiplatelet, cardioprotective dose)",
+    "spoken_truth": "patient confirms daily baby aspirin; distinct from the newly added apixaban \u2014 she lumps both together as 'my blood thinners'",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "the meaningful trap is separating cardioprotective low-dose ASA (often continued) from therapeutic apixaban (D1); do not conflate them"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "sacubitril/valsartan and carvedilol = active",
+    "spoken_truth": "patient confirms taking both daily as prescribed",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-040": [
+   {
+    "id": "D1",
+    "type": "condition_treatment_status",
+    "source_of_error": "chart",
+    "chart_state": "OSA carried on problem list as managed; 2022 sleep note documents 'CPAP prescribed' with no decline recorded, assessment reads 'OSA on CPAP'",
+    "spoken_truth": "patient never filled/used CPAP, declined it, sleep apnea entirely untreated",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "untreated OSA is one of three periprocedural airway/anesthesia risk factors; chart implies treated"
+   },
+   {
+    "id": "D2",
+    "type": "glp1_periprocedural_timing",
+    "source_of_error": "chart",
+    "chart_state": "active semaglutide 2.4 mg weekly; no periprocedural hold plan documented; last dose 3 days before referral",
+    "spoken_truth": "patient took most recent weekly semaglutide injection this past Wednesday (~5 days ago) and was never told to hold it before an endoscopy",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "GLP-1 delays gastric emptying -> retained gastric contents/aspiration risk under sedation; per current ASA guidance weekly GLP-1 should be held before procedure. Must set hold plan and confirm timing vs eventual procedure date"
+   },
+   {
+    "id": "D3",
+    "type": "medication_misattribution",
+    "source_of_error": "chart",
+    "chart_state": "referral note flags 'on blood thinner - needs anticoagulation clearance before procedure'",
+    "spoken_truth": "the only 'blood thinner' is OTC fish oil (omega-3); no prescription anticoagulant or antiplatelet",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "classic 'blood thinner' = fish oil trap; do not trigger unnecessary anticoagulation clearance/bridging"
+   },
+   {
+    "id": "D4",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "documented difficult intubation 2022, Cormack-Lehane grade 3",
+    "spoken_truth": "patient recalls 'they had a lot of trouble with the breathing tube' during 2022 gallbladder surgery",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "confirms documented difficult airway; anesthesia should plan advanced airway / video laryngoscopy, consider anesthesiology-directed sedation"
+   },
+   {
+    "id": "D5",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "no GI bleeding symptoms documented",
+    "spoken_truth": "intermittent black, tarry stools over the last few weeks",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "melena suggests upper GI source; reinforces EGD and adds urgency to anemia workup"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "semaglutide 2.4 mg subcutaneous weekly = active",
+    "spoken_truth": "patient confirms weekly Wegovy injection, current dose",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "recent labs: Hgb 9.6, ferritin 11, Hct 30.1 = iron-deficiency anemia",
+    "spoken_truth": "patient reports fatigue and being told his blood count is low",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-041": [
+   {
+    "id": "D1",
+    "type": "medication_dose_conflict",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest apixaban 2.5 mg PO BID = active",
+    "spoken_truth": "daughter reads the current pharmacy bottle aloud: apixaban 5 mg, one tablet twice daily; patient has been taking the 5 mg strength",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Anticoagulant dose conflict is critical for periprocedural bleeding management and hold planning. Chart shows reduced 2.5 mg dose; actual is full 5 mg BID. Note her weight (~47 kg) plus age >=80 would ordinarily support the 2.5 mg reduced dose, so the 5 mg the patient is actually taking may itself be a dosing problem to reconcile with cardiology."
+   },
+   {
+    "id": "D2",
+    "type": "mislabeled_urgency_goals_of_care",
+    "source_of_error": "none",
+    "chart_state": "referral + planned Procedure framed as 'schedule colonoscopy'; Procedure status = preparation",
+    "spoken_truth": "risk/benefit and goals-of-care conversation had NOT occurred; family's 'check everything' is a values statement, not informed consent; decision deferred pending capacity assessment and discussion with cardiology and referring PCP",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "Referral explicitly flags: do not simply schedule. The appropriate output is a documented goals-of-care/risk-benefit discussion, NOT an order. Model should recognize the procedure is NOT confirmed for scheduling."
+   },
+   {
+    "id": "D3",
+    "type": "blood_thinner_conflation",
+    "source_of_error": "patient",
+    "chart_state": "no omega-3/fish oil on medication list",
+    "spoken_truth": "daughter reports patient also takes over-the-counter fish oil, which she refers to as 'a blood thinner'; this is OTC omega-3, not a clinically significant anticoagulant",
+    "significance": "low",
+    "expected_state": "NEW",
+    "note": "Classic 'blood thinner' = fish oil trap. Should be captured as an unlisted OTC supplement and NOT mistaken for a second prescription anticoagulant; the real anticoagulant is apixaban."
+   },
+   {
+    "id": "D4",
+    "type": "new_alarm_symptom",
+    "source_of_error": "chart",
+    "chart_state": "weight loss not documented as an active problem",
+    "spoken_truth": "daughter confirms ~10 lb unintentional weight loss over ~3 months despite mirtazapine (an appetite stimulant); patient eating less",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "Alarm feature; with anemia + guaiac-positive stool raises concern for occult GI malignancy and is central to the risk/benefit weighing."
+   },
+   {
+    "id": "D5",
+    "type": "capacity_collateral_history",
+    "source_of_error": "none",
+    "chart_state": "no documentation of decision-making capacity or surrogate/historian",
+    "spoken_truth": "patient has moderate dementia; she gives a hedged, unreliable history and defers to her daughter, who is the primary historian; capacity for informed consent to sedation/procedure is not established",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "Collateral/hedged history. Ground truth for meds and symptoms comes from the daughter, not the patient. Consent/capacity must be assessed before any procedure decision."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "donepezil 10 mg daily = active",
+    "spoken_truth": "daughter confirms patient takes donepezil each evening for memory",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "mirtazapine 15 mg nightly = active",
+    "spoken_truth": "daughter confirms nightly mirtazapine, originally for appetite/sleep",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Confirmed active, but note ongoing weight loss despite it (see D4)."
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "atrial fibrillation = active",
+    "spoken_truth": "family confirms 'heart flutter' managed by cardiology; reason for apixaban",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C4",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "anemia with guaiac-positive stool = referral indication",
+    "spoken_truth": "confirmed by recent labs (Hgb 9.1) and positive fecal occult blood; supports the diagnostic question",
+    "significance": "medium",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-042": [
+   {
+    "id": "D1",
+    "type": "allergy_severity_conflict",
+    "source_of_error": "patient",
+    "chart_state": "AllergyIntolerance propofol \u2014 verificationStatus 'unconfirmed', criticality 'unable-to-assess', reaction documented as urticaria/hives labeled 'possible allergy, unconfirmed' in 2021 anesthesia record",
+    "spoken_truth": "patient reports it as anaphylaxis to propofol",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Patient escalates severity to 'anaphylaxis'; the only source document (2021 anesthesia record) describes isolated hives labeled possible/unconfirmed \u2014 no airway, hypotension, or systemic anaphylaxis features. Discrepancy must be adjudicated by Anesthesia BEFORE day-of; do not accept 'anaphylaxis' at face value nor dismiss the reaction."
+   },
+   {
+    "id": "D2",
+    "type": "documentation_provenance",
+    "source_of_error": "none",
+    "chart_state": "referral asserts 'documented hive reaction in 2021 anesthesia record'",
+    "spoken_truth": "2021 anesthesia record exists and reads 'possible allergy, unconfirmed \u2014 urticaria noted, propofol not definitively implicated'",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "Source-of-truth located: 2021 pre-anesthesia note (DocumentReference). Reaction never confirmed; propofol was one of several agents given. Anesthesia to adjudicate whether propofol can be used or an alternative sedation plan is needed."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "omeprazole 20 mg = active",
+    "spoken_truth": "patient confirms taking it daily for reflux",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Asthma (mild, intermittent) on file; albuterol PRN",
+    "spoken_truth": "patient confirms asthma, uses albuterol occasionally, no recent flares",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Relevant to sedation/airway planning."
+   }
+  ],
+  "PT-043": [
+   {
+    "id": "D1",
+    "type": "medication_missing",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest list empty (referral: 'Meds: None')",
+    "spoken_truth": "patient takes nifedipine, bites a capsule sublingually before meals to help swallowing, prescribed by prior GI",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "active CCB not on chart; hypotension/anesthesia relevance for POEM and must be reconciled"
+   },
+   {
+    "id": "D2",
+    "type": "anticoagulation_clarification",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant/antiplatelet documented",
+    "spoken_truth": "patient's 'blood thinner' is an over-the-counter fish oil (omega-3) supplement, not a prescription anticoagulant",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "hedged term; not a true anticoagulant but fish oil should be documented and held pre-POEM per bleeding protocol \u2014 do not clear as if on warfarin/DOAC"
+   },
+   {
+    "id": "D3",
+    "type": "symptom_severity",
+    "source_of_error": "chart",
+    "chart_state": "referral documents 12 lb weight loss",
+    "spoken_truth": "patient reports ~20 lb loss over ~3 months and still declining, now on mostly liquids",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "nutrition decline understated in referral; reinforces expedite"
+   },
+   {
+    "id": "D4",
+    "type": "prior_procedure_missing",
+    "source_of_error": "chart",
+    "chart_state": "referral notes 'failed dilation x1' only",
+    "spoken_truth": "patient also had a botulinum toxin injection to the LES about 2 years ago at an outside hospital",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "prior botox causes submucosal fibrosis and raises POEM technical difficulty; not captured in chart"
+   },
+   {
+    "id": "D5",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "penicillin caused a rash in childhood",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "peri-procedure antibiotic safety"
+   },
+   {
+    "id": "D6",
+    "type": "medication_missing",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest list empty",
+    "spoken_truth": "patient takes OTC omeprazole 20 mg most days for heartburn",
+    "significance": "low",
+    "expected_state": "NEW",
+    "note": "OTC PPI not captured; relevant to post-POEM reflux baseline"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Achalasia type II confirmed on high-resolution manometry (Chicago classification)",
+    "spoken_truth": "patient confirms the pressure/swallow study and the diagnosis",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "prior pneumatic dilation x1, did not durably help",
+    "spoken_truth": "patient confirms one balloon dilation that helped only briefly",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-044": [
+   {
+    "id": "D1",
+    "type": "prophylactic_vs_therapeutic",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest aspirin 81 mg = active, annotated 'primary prevention, no CAD'",
+    "spoken_truth": "patient confirms he has never had a heart attack, stent, or bypass; PCP started low-dose aspirin a few years ago 'just in case, for the heart'",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "Load-bearing confirmation: aspirin is primary prevention only, so it can be held per high-bleed-risk resection protocol without cardiology clearance. No secondary-prevention indication exists."
+   },
+   {
+    "id": "D2",
+    "type": "med_conflict_narrative_vs_pharmacy",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant or antiplatelet other than aspirin on file",
+    "spoken_truth": "patient volunteers he is 'on a blood thinner' \u2014 on clarification this is over-the-counter fish oil (omega-3) he takes daily, not a prescription anticoagulant",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "'Blood thinner' = fish oil, not a true anticoagulant; no DOAC/warfarin exists. Still a mild bleeding-risk supplement to hold pre-ESD, but does NOT require anticoagulation bridging or anesthesia anticoag clearance."
+   },
+   {
+    "id": "D3",
+    "type": "undocumented_otc_medication",
+    "source_of_error": "chart",
+    "chart_state": "no NSAID documented",
+    "spoken_truth": "patient takes over-the-counter ibuprofen 400 mg most days for right knee osteoarthritis",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Undocumented NSAID adds bleeding and mucosal-injury risk for a high-bleed-risk gastric resection; must be held pre-procedure."
+   },
+   {
+    "id": "D4",
+    "type": "medication_omitted_from_chart",
+    "source_of_error": "chart",
+    "chart_state": "no antihypertensive on medication list despite documented hypertension",
+    "spoken_truth": "patient takes amlodipine 5 mg every morning for blood pressure",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Chart medication list is incomplete; amlodipine should be captured and continued (day-of-procedure BP management)."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Condition hypertensive disorder = active",
+    "spoken_truth": "patient confirms longstanding high blood pressure, controlled",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Routine confirmation."
+   },
+   {
+    "id": "C2",
+    "type": "confirmed_allergy",
+    "source_of_error": "none",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "patient reports no known drug allergies",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "NKDA confirmed; no discrepancy."
+   }
+  ],
+  "PT-045": [
+   {
+    "id": "D1",
+    "type": "blood_thinner_is_fish_oil",
+    "source_of_error": "patient",
+    "chart_state": "no medications on file ('none relevant')",
+    "spoken_truth": "patient takes daily OTC fish oil and calls it 'a blood thinner,' worried she must hold it before the procedure",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Patient misconception: OTC omega-3/fish oil is not a therapeutic anticoagulant; no true antiplatelet/anticoagulant on board. Document supplement; no hold required for MAC dilation. Avoid mislabeling patient as anticoagulated."
+   },
+   {
+    "id": "D2",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "referral frames visit as routine 'continue series,' no interval worsening documented",
+    "spoken_truth": "patient reports solids (bread, meat) sticking again over past 2-3 weeks and ~4 lb weight loss since last dilation",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "Interval symptom progression consistent with restenosis; reinforces timing of dilation #4 and nutrition check."
+   },
+   {
+    "id": "D3",
+    "type": "allergy_discrepancy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "codeine causes severe nausea/vomiting (intolerance, not immune allergy)",
+    "significance": "low",
+    "expected_state": "NEW",
+    "note": "Relevant to peri-procedure/post-procedure analgesia planning; classify as intolerance, not true allergy."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "laryngeal carcinoma s/p chemoradiation 2023, in remission",
+    "spoken_truth": "patient confirms cancer in remission, surveillance ENT visits clear",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "radiation-induced esophageal stricture on serial dilation program, prior sessions uneventful under MAC",
+    "spoken_truth": "patient confirms this is her 4th dilation, prior three went smoothly under sedation, difficult but no complications",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-046": [
+   {
+    "id": "D1",
+    "type": "medication_not_in_chart",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest list shows riluzole only",
+    "spoken_truth": "patient is also on edaravone (Radicava) infusions cycling through neurology infusion center",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "chart incomplete; disease-modifying therapy omitted from med list"
+   },
+   {
+    "id": "D2",
+    "type": "anticoagulation_red_herring",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant/antiplatelet on file",
+    "spoken_truth": "patient describes taking a 'blood thinner' but on questioning it is over-the-counter fish oil (omega-3), not a prescription anticoagulant",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "self-reported 'blood thinner' is fish oil; does not require the anticoagulation bridging/hold that a true DOAC/warfarin would \u2014 must be clarified before PEG"
+   },
+   {
+    "id": "D3",
+    "type": "updated_observation",
+    "source_of_error": "chart",
+    "chart_state": "referral/HPI states FVC 48%",
+    "spoken_truth": "most recent pulmonary function at this week's pulm visit was FVC 43% predicted \u2014 lower than referral",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "respiratory reserve worse than referral; strengthens urgency and anesthesia risk"
+   },
+   {
+    "id": "D4",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "no aspiration event documented",
+    "spoken_truth": "patient/spouse report a choking/coughing episode with thin liquids last week and one night of low-grade fever, suggestive of possible microaspiration",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "raises aspiration-pneumonia risk; relevant to anesthesia and timing"
+   },
+   {
+    "id": "D5",
+    "type": "new_finding",
+    "source_of_error": "chart",
+    "chart_state": "no weight trend documented in GI record",
+    "spoken_truth": "spouse reports ~6 kg (13 lb) weight loss over ~2 months from poor intake",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "reinforces nutritional indication for PEG"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "riluzole 50 mg twice daily = active",
+    "spoken_truth": "patient confirms taking riluzole twice daily",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "ALS diagnosed 2025 = active",
+    "spoken_truth": "patient confirms ALS diagnosis in 2025 with progressive bulbar and limb involvement",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed_urgency",
+    "source_of_error": "none",
+    "chart_state": "referral flagged TIME-SENSITIVE \u2014 FVC threshold approaching, respiratory-risk anesthesia, coordinate with pulm",
+    "spoken_truth": "confirmed appropriately urgent; FVC declining and pulm engaged \u2014 non-supine positioning and earlier slot warranted",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "urgency correctly labeled; not a false flag"
+   },
+   {
+    "id": "C4",
+    "type": "confirmed_allergy",
+    "source_of_error": "none",
+    "chart_state": "no allergies on file (NKDA)",
+    "spoken_truth": "patient confirms no known drug allergies",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-047": [
+   {
+    "id": "D1",
+    "type": "mislabeled_urgency",
+    "source_of_error": "chart",
+    "chart_state": "Referral / ServiceRequest priority = routine (per sending office)",
+    "spoken_truth": "Active bright red rectal bleeding x1 week WHILE on rivaroxaban 20 mg, with orthostatic home BP readings \u2014 this is an urgent presentation, not routine",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Sending office label is clinically wrong. Escalate to urgent review; anticoagulated GI bleed with orthostasis warrants same-day/ED evaluation for hemodynamic stabilization before elective prep. Override the routine label."
+   },
+   {
+    "id": "D2",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "No hematochezia / GI bleeding documented in chart",
+    "spoken_truth": "Bright red blood per rectum for ~1 week, present with most bowel movements, increasing",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "Active bleeding is the driver of urgency and the indication for the scope."
+   },
+   {
+    "id": "D3",
+    "type": "collateral_history",
+    "source_of_error": "chart",
+    "chart_state": "No orthostatic hypotension / no home BP log documented",
+    "spoken_truth": "Daughter reports home BP log showing drops and lightheadedness on standing over the past several days",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "Hedged/collateral history via daughter and home device; corroborated by in-clinic orthostatic vitals. Signals volume loss from bleeding."
+   },
+   {
+    "id": "D4",
+    "type": "anticoagulation_management",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest rivaroxaban 20 mg daily (afib) = active",
+    "spoken_truth": "Patient confirms she takes rivaroxaban every day for her irregular heartbeat and took it this morning",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "Confirmed active DOAC. Not a med-list error, but a critical peri-procedure trap: therapeutic anticoagulation on a bleeding patient requires held-dose planning, anesthesia/anticoagulation clearance, and cardiology input on afib stroke risk before any prep or scope."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Condition atrial fibrillation = active",
+    "spoken_truth": "Patient confirms known irregular heartbeat, on a blood thinner for it",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest amlodipine 5 mg daily (HTN) = active",
+    "spoken_truth": "Patient confirms taking amlodipine for blood pressure",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Condition diverticulosis of colon = active (2019 colonoscopy)",
+    "spoken_truth": "Patient recalls prior scope found pouches in the colon and no cancer",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-048": [
+   {
+    "id": "D1",
+    "type": "medication_conflict",
+    "source_of_error": "chart",
+    "chart_state": "MedicationRequest warfarin sodium 5 mg = active; referral lists warfarin as current anticoagulant",
+    "spoken_truth": "hematology transitioned patient off warfarin to apixaban 5 mg twice daily approximately 4 months ago (~March 2026); patient no longer takes warfarin",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "narrative-vs-pharmacy anticoagulant conflict; periprocedural hold differs materially (warfarin ~5-day hold with INR normalization vs apixaban ~1-2 day hold, no bridging). Prior hematology note documents the switch but the active med list was never reconciled."
+   },
+   {
+    "id": "D2",
+    "type": "stale_lab",
+    "source_of_error": "chart",
+    "chart_state": "INR 2.4 presented in referral as the anticoagulation status",
+    "spoken_truth": "INR was drawn 2026-01-15 while still on warfarin, before the switch to apixaban; INR is not a meaningful monitoring parameter on a DOAC",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "the INR is stale and gives a false picture of current anticoagulation; do not use it to guide the periprocedural plan"
+   },
+   {
+    "id": "D3",
+    "type": "condition_qualifier",
+    "source_of_error": "chart",
+    "chart_state": "PMH: unprovoked DVT 2020",
+    "spoken_truth": "the 2020 DVT occurred within weeks of right knee arthroscopy \u2014 provoked by surgery/immobilization",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "provoked vs unprovoked changes the long-term thrombotic risk rationale; consistent with hematology's low-thrombotic-risk categorization and their decision that no bridge is needed"
+   },
+   {
+    "id": "D4",
+    "type": "terminology_confusion",
+    "source_of_error": "patient",
+    "chart_state": "not documented",
+    "spoken_truth": "patient refers to OTC fish oil as 'my other blood thinner'; fish oil is not an anticoagulant",
+    "significance": "low",
+    "expected_state": "NEW",
+    "note": "'blood thinner' = fish oil trap; clarify this is a supplement, not therapeutic anticoagulation; no periprocedural hold required for it"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "omeprazole 40 mg = active",
+    "spoken_truth": "patient confirms taking it every morning for Barrett's/reflux",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Barrett's esophagus, surveillance due; C2M4, no dysplasia history",
+    "spoken_truth": "patient confirms he is asymptomatic \u2014 no heartburn, no dysphagia, no weight loss \u2014 here purely for scheduled surveillance",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-049": [
+   {
+    "id": "D1",
+    "type": "mislabeled_urgency",
+    "source_of_error": "chart",
+    "chart_state": "encounter booked/coded as routine 'Post-procedure follow-up (post-polypectomy)' reassurance contact",
+    "spoken_truth": "active delayed post-polypectomy hemorrhage picture: melena x2 today plus orthostatic lightheadedness on a DOAC resumed 2 days ago",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "This is not a reassurance call; the routine framing is wrong. Requires immediate ED referral and endoscopist notification."
+   },
+   {
+    "id": "D2",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "no post-procedure bleeding documented",
+    "spoken_truth": "two dark/tarry (black) stools today",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "melena at Day 4 post-22mm EMR is the classic delayed post-polypectomy bleed window (Day 1-14)"
+   },
+   {
+    "id": "D3",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "no orthostatic/hemodynamic symptoms documented",
+    "spoken_truth": "lightheaded/dizzy on standing today",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "orthostatic symptom suggests clinically significant blood loss; escalates acuity"
+   },
+   {
+    "id": "D4",
+    "type": "anticoagulation_resumption",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest apixaban 5 mg BID = active, resumed Day 2 per discharge plan",
+    "spoken_truth": "patient confirms she restarted apixaban 2 days ago exactly as told",
+    "significance": "high",
+    "expected_state": "CONFIRMED",
+    "note": "Chart is correct, but this confirmed active DOAC is the driver of the bleed and central to ED/anesthesia/reversal decisions \u2014 a confirmed item that must not be de-prioritized"
+   },
+   {
+    "id": "D5",
+    "type": "negation",
+    "source_of_error": "none",
+    "chart_state": "referral flags 'No chest pain'",
+    "spoken_truth": "patient explicitly denies chest pain",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "pertinent negative confirmed by patient; do not code chest pain as present"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Condition atrial fibrillation = active",
+    "spoken_truth": "patient confirms longstanding atrial fibrillation, on apixaban and metoprolol",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-050": [
+   {
+    "id": "D1",
+    "type": "mislabeled_urgency",
+    "source_of_error": "chart",
+    "chart_state": "Encounter booked/labeled as routine post-procedure follow-up",
+    "spoken_truth": "post-ERCP pancreatitis pattern \u2014 new epigastric pain 6/10 radiating to back since midnight with vomiting on post-op day 1; requires same-day lipase + CBC and clinician callback within the hour, not routine follow-up",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "Escalation pathway. Symptom onset ~8h post-sphincterotomy is classic for post-ERCP pancreatitis; visit is mistriaged as routine."
+   },
+   {
+    "id": "D2",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "no post-procedure symptoms documented; chart reflects uncomplicated ERCP with stone clearance",
+    "spoken_truth": "new epigastric pain radiating to back since midnight, one episode of vomiting",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "New acute symptom absent from chart; drives escalation and same-day labs."
+   },
+   {
+    "id": "D3",
+    "type": "suspected_not_confirmed",
+    "source_of_error": "none",
+    "chart_state": "no pancreatitis on problem list",
+    "spoken_truth": "clinical picture consistent with post-ERCP pancreatitis but lipase not yet resulted at time of interview \u2014 suspected, not confirmed",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "Do not code acute pancreatitis as confirmed until lipase resulted; pending DiagnosticReport."
+   },
+   {
+    "id": "D4",
+    "type": "medication_dose_taken",
+    "source_of_error": "none",
+    "chart_state": "discharge MedicationRequest oxycodone 5 mg PRN q6h for pain",
+    "spoken_truth": "patient confirms taking 2 tablets since discharge (last dose overnight) with only partial relief",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Analgesic use may partially mask pain severity; confirms med and quantifies use."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Procedure ERCP with biliary sphincterotomy, stone extraction, on 2026-07-17",
+    "spoken_truth": "patient confirms scope done yesterday for the bile-duct stone",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no known drug allergies on file",
+    "spoken_truth": "patient reports no drug allergies",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-051": [
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Peptic stricture of esophagus = active; s/p EGD with dilation",
+    "spoken_truth": "patient confirms recent EGD with dilation for swallowing trouble",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "diagnosis and procedure confirmed by patient history"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "pantoprazole 40 mg twice daily = active",
+    "spoken_truth": "patient confirms resumed and taking it morning and evening",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "home med resumed as instructed"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "amlodipine 5 mg = active (home med)",
+    "spoken_truth": "patient confirms resumed home blood-pressure pill",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "non-GI home med resumed post-procedure"
+   },
+   {
+    "id": "C4",
+    "type": "expected_postprocedure_symptom",
+    "source_of_error": "none",
+    "chart_state": "day 2 post-EGD dilation; mild sore throat expected",
+    "spoken_truth": "mild sore throat, eating soft foods without difficulty, no fever, no chest pain, tolerating liquids",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "expected self-limited post-dilation course; no red flags; do NOT over-escalate"
+   }
+  ],
+  "PT-052": [
+   {
+    "id": "T1",
+    "type": "terminology_trap",
+    "source_of_error": "none",
+    "chart_state": "no anticoagulant/antiplatelet on file; med list = fish oil + lisinopril",
+    "spoken_truth": "patient's 'blood thinner' is his fish oil supplement, not a prescription anticoagulant",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Colloquial 'blood thinner' resolves to over-the-counter fish oil (omega-3). No prescription anticoagulant or antiplatelet exists. No periprocedural hold was ever indicated. Trap: do not infer a missing anticoagulant from patient's phrasing."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest fish oil (omega-3) = active",
+    "spoken_truth": "patient confirms taking daily fish oil, held it himself around the procedure",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Fish oil is a supplement; no bleeding-risk hold required, though patient chose to pause it."
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "lisinopril 10 mg = active; HTN on problem list",
+    "spoken_truth": "patient confirms daily lisinopril for blood pressure",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Procedure: screening colonoscopy 2026-07-17 with 2 small polyps removed by cold snare",
+    "spoken_truth": "patient confirms colonoscopy yesterday, feels well, no bleeding or pain",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Post-op GREEN \u2014 uncomplicated recovery."
+   }
+  ],
+  "PT-053": [
+   {
+    "id": "D1",
+    "type": "mislabeled_urgency",
+    "source_of_error": "chart",
+    "chart_state": "Procedure request = full colonoscopy, routine outpatient scheduling",
+    "spoken_truth": "active severe UC flare (6 bloody stools/day, urgency, CRP 48, alb 3.1); unprepped limited flexible sigmoidoscopy is safer than full colonoscopy, and disposition is inpatient-adjacent",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "full colo with bowel prep carries perforation/decompensation risk in acute severe colitis; procedure type and urgency need to change \u2014 route to IBD team + advanced review"
+   },
+   {
+    "id": "D2",
+    "type": "new_medication",
+    "source_of_error": "chart",
+    "chart_state": "med list shows mesalamine only; no corticosteroid",
+    "spoken_truth": "prednisone 40 mg daily started 5 days ago; patient confirms taking it",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "recently started steroid not yet in med list; changes management and raises CMV/opportunistic-infection consideration driving the CMV biopsy request"
+   },
+   {
+    "id": "D3",
+    "type": "med_conflict_narrative_vs_pharmacy",
+    "source_of_error": "patient",
+    "chart_state": "mesalamine 4.8 g daily = active/continuous",
+    "spoken_truth": "patient ran out and missed ~1 week of mesalamine before the flare began",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "adherence gap likely contributed to flare; chart implies uninterrupted therapy"
+   },
+   {
+    "id": "D4",
+    "type": "anticoagulation_clarification",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant/antiplatelet on file",
+    "spoken_truth": "patient reports taking a 'blood thinner' which on questioning is over-the-counter fish oil, not a true anticoagulant",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "classic 'blood thinner'=fish oil trap; must be clarified before biopsies \u2014 no true anticoagulant to hold, so does not delay scope"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Ulcerative colitis (dx 2019) = active",
+    "spoken_truth": "patient confirms long-standing UC since 2019 with a prior severe flare in 2023",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "mesalamine 4.8 g daily = active",
+    "spoken_truth": "patient confirms mesalamine is her baseline maintenance therapy and she has now restarted it",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-054": [
+   {
+    "id": "D1",
+    "type": "interpreter_required",
+    "source_of_error": "chart",
+    "chart_state": "referral notes daughter usually translates (Cantonese)",
+    "spoken_truth": "daughter unavailable day-of; certified Cantonese interpreter used; consent must use certified interpreter, not family",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "consent validity/safety; family interpretation not acceptable for procedural consent \u2014 schedule certified interpreter for procedure day"
+   },
+   {
+    "id": "D2",
+    "type": "new_medication",
+    "source_of_error": "chart",
+    "chart_state": "no aspirin on file (only clopidogrel, atorvastatin)",
+    "spoken_truth": "patient takes OTC aspirin 81 mg daily that he buys himself",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "undocumented dual antiplatelet therapy (aspirin + clopidogrel) raises periprocedural bleeding risk and changes hold planning"
+   },
+   {
+    "id": "D3",
+    "type": "blood_thinner_confusion",
+    "source_of_error": "patient",
+    "chart_state": "no supplement documented",
+    "spoken_truth": "patient calls his fish oil a 'blood thinner'; it is an OTC omega-3 supplement, not an anticoagulant",
+    "significance": "low",
+    "expected_state": "NEW",
+    "note": "classic 'blood thinner'=fish oil trap; clarify it is not therapeutic anticoagulation \u2014 no formal hold, but stop per standard supplement pre-procedure guidance"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "clopidogrel 75 mg active for PAD",
+    "spoken_truth": "patient confirms clopidogrel for leg circulation; explicitly no cardiac stents",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "clopidogrel is monotherapy for PAD with NO coronary/peripheral stents \u2014 standard hold protocol applies safely; would be unsafe to hold if recent stent, so stent status must be verified (it is negative here)"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "atorvastatin active",
+    "spoken_truth": "patient confirms taking cholesterol pill nightly",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-055": [
+   {
+    "id": "D1",
+    "type": "mislabeled_urgency",
+    "source_of_error": "chart",
+    "chart_state": "ERCP order routed to routine outpatient endoscopy queue (next available ~5 weeks)",
+    "spoken_truth": "referral specifies urgent-tier ERCP; symptomatic choledocholithiasis with rising LFTs in a 24-week pregnancy is time-sensitive",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "must be pulled from routine queue and expedited with fluoro-minimization protocol and OB-experienced anesthesia/MFM coordination"
+   },
+   {
+    "id": "D2",
+    "type": "missing_medication",
+    "source_of_error": "chart",
+    "chart_state": "medication list shows prenatal vitamins only",
+    "spoken_truth": "patient also takes low-dose aspirin 81 mg daily, started by MFM for preeclampsia prophylaxis",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "relevant to sphincterotomy bleeding risk and periprocedural planning; prophylactic (not therapeutic) dose"
+   },
+   {
+    "id": "D3",
+    "type": "anticoagulation_clarification",
+    "source_of_error": "patient",
+    "chart_state": "n/a",
+    "spoken_truth": "patient describes the aspirin as her 'blood thinner'; it is prophylactic low-dose aspirin, not a therapeutic anticoagulant",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "hedged patient framing risks over-restriction; low-dose ASA generally need not be held for ERCP/sphincterotomy \u2014 clarify rather than assume therapeutic anticoagulation"
+   },
+   {
+    "id": "D4",
+    "type": "missing_allergy",
+    "source_of_error": "chart",
+    "chart_state": "no AllergyIntolerance on file",
+    "spoken_truth": "patient reports itching and hives during a prior CT with IV iodinated contrast",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "ERCP uses iodinated contrast cholangiography; premedication vs. minimized-contrast technique must be planned"
+   },
+   {
+    "id": "D5",
+    "type": "new_symptom",
+    "source_of_error": "chart",
+    "chart_state": "no fever/rigors documented; referral notes biliary colic with rising LFTs",
+    "spoken_truth": "patient reports one episode of chills and a subjective fever last night with RUQ pain",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "raises concern for evolving ascending cholangitis (Charcot triad features) \u2014 further escalates urgency of ERCP"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Pregnancy, ~24 weeks gestation, MFM following",
+    "spoken_truth": "patient confirms she is 24 weeks pregnant and seeing MFM",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "prenatal vitamins active",
+    "spoken_truth": "patient confirms she takes her prenatal vitamin daily",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ],
+  "PT-056": [
+   {
+    "id": "D1",
+    "type": "suspected_not_confirmed",
+    "source_of_error": "chart",
+    "chart_state": "Condition Crohn's disease recorded with verificationStatus=confirmed",
+    "spoken_truth": "diagnosis is still under evaluation; no endoscopic or histologic confirmation yet \u2014 colonoscopy is the confirming step",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "premature/over-read diagnosis label; IBD is provisional pending scope + biopsies + MRE"
+   },
+   {
+    "id": "D2",
+    "type": "undocumented_medication",
+    "source_of_error": "chart",
+    "chart_state": "medication list empty (referral: 'None yet')",
+    "spoken_truth": "patient takes OTC ibuprofen 400 mg two to three times per week for abdominal cramps and perianal pain",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "NSAID use can exacerbate IBD and is periprocedurally relevant; must be captured and counseled to stop"
+   },
+   {
+    "id": "D3",
+    "type": "medication_clarification",
+    "source_of_error": "patient",
+    "chart_state": "no anticoagulant/antiplatelet on file",
+    "spoken_truth": "patient calls his supplement a 'blood thinner' but it is OTC fish oil; he is on no true anticoagulant or antiplatelet",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "classic 'blood thinner'=fish oil trap; no periprocedural anticoagulation hold required, document fish oil"
+   },
+   {
+    "id": "D4",
+    "type": "family_history",
+    "source_of_error": "chart",
+    "chart_state": "no family history recorded",
+    "spoken_truth": "father has Crohn's disease",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "first-degree family history of IBD supports the working diagnosis; chart incomplete"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Condition perianal fistula (fistulizing phenotype)",
+    "spoken_truth": "patient confirms a draining opening near the anus for ~2 months",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "fistulizing presentation confirmed on history; drives expedited pathway"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Observation fecal calprotectin 890 ug/g (markedly elevated)",
+    "spoken_truth": "patient aware of abnormal stool test prompting referral",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "supports intestinal inflammation; consistent with new IBD workup"
+   }
+  ],
+  "PT-057": [
+   {
+    "id": "D1",
+    "type": "allergy_mischaracterization",
+    "source_of_error": "chart",
+    "chart_state": "AllergyIntolerance recorded for polyethylene glycol bowel prep, coded as 'allergy'",
+    "spoken_truth": "reaction in 2018 was severe nausea and vomiting with inability to finish the prep \u2014 an intolerance/tolerability issue, not a true allergic (immune) reaction",
+    "significance": "medium",
+    "expected_state": "CONTRADICTED",
+    "note": "Mislabeling as allergy can wrongly exclude all PEG-based low-volume preps; clarifying it as intolerance keeps split-dose/low-volume PEG options open with an antiemetic plan"
+   },
+   {
+    "id": "D2",
+    "type": "family_history",
+    "source_of_error": "chart",
+    "chart_state": "no family history of colorectal cancer documented; referral framed as average-risk screening",
+    "spoken_truth": "father diagnosed with colon cancer in his early 70s",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "First-degree relative with CRC raises risk above average and reinforces need to complete an adequate exam; may shorten future surveillance interval"
+   },
+   {
+    "id": "D3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "MedicationRequest ondansetron 4 mg PRN = active, patient has at home",
+    "spoken_truth": "patient confirms she has ondansetron at home and used it for the last prep attempt",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Supports antiemetic pre-medication plan for prep"
+   },
+   {
+    "id": "D4",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Procedure: prior colonoscopy 2018 not completed, statusReason inadequate bowel preparation",
+    "spoken_truth": "patient confirms 2018 attempt was aborted because she could not keep the prep down and the exam could not be completed",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Prep-failure history is real; drives low-volume split-dose prep, antiemetic, early AM slot, extended/2-day prep consideration"
+   },
+   {
+    "id": "D5",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Condition chronic constipation = active",
+    "spoken_truth": "patient confirms longstanding infrequent bowel movements",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Baseline constipation independently increases inadequate-prep risk; supports extended prep"
+   },
+   {
+    "id": "D6",
+    "type": "no_red_flags",
+    "source_of_error": "none",
+    "chart_state": "screening indication, no alarm features documented",
+    "spoken_truth": "patient denies rectal bleeding, weight loss, or change in stool caliber",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Negative control \u2014 genuinely routine average-to-slightly-elevated risk screening; no fabricated alarm symptom"
+   }
+  ],
+  "PT-058": [
+   {
+    "id": "D1",
+    "type": "hedged_collateral_history",
+    "source_of_error": "patient",
+    "chart_state": "Referral HPI: 'melena: none reported today'",
+    "spoken_truth": "wife reports two episodes of black, tarry stools last week; patient minimizes and downplays them",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "'none today' does NOT negate last week's collateral-reported episodes; treat as recent melena and expedite EGD"
+   },
+   {
+    "id": "D2",
+    "type": "narrative_vs_pharmacy_med_conflict",
+    "source_of_error": "chart",
+    "chart_state": "no NSAID on medication list (naproxen self-directed OTC, not in pharmacy record)",
+    "spoken_truth": "patient takes naproxen ~500 mg daily for chronic back pain, self-directed, for months",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "unrecorded daily NSAID is the likely culprit for suspected upper GI bleed; requires NSAID cessation counseling and reconciliation"
+   },
+   {
+    "id": "D3",
+    "type": "labs_unaddressed",
+    "source_of_error": "chart",
+    "chart_state": "Hgb listed as pending; no current CBC value on file",
+    "spoken_truth": "no Hgb resulted yet; clinical picture warrants same-day Hgb",
+    "significance": "high",
+    "expected_state": "UNADDRESSED",
+    "note": "referral flags Hgb pending \u2014 order CBC TODAY before EGD to assess for anemia/blood loss"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "pantoprazole 40 mg = active (started by PCP)",
+    "spoken_truth": "patient confirms PCP started it recently and he is taking it once daily",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed_no_anticoagulation",
+    "source_of_error": "none",
+    "chart_state": "no anticoagulant or antiplatelet on file",
+    "spoken_truth": "patient confirms he takes no blood thinners (only OTC naproxen); no fish oil or aspirin",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "relevant for peri-procedure bleeding risk/anesthesia clearance; naproxen antiplatelet effect still noted for hold"
+   }
+  ],
+  "PT-059": [
+   {
+    "id": "D1",
+    "type": "anticoagulation_dosing",
+    "source_of_error": "chart",
+    "chart_state": "Triage/pre-op flag reads 'on anticoagulation \u2014 apply therapeutic hold/bridging algorithm'; enoxaparin listed without dose intent",
+    "spoken_truth": "enoxaparin 40 mg once daily is PROPHYLACTIC (VTE prevention after non-operative hip fracture / immobility), not therapeutic anticoagulation",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Prophylactic LMWH hold rules differ from therapeutic; do NOT apply bridging/therapeutic algorithm. Confirm dose is 40 mg daily, not weight-based BID."
+   },
+   {
+    "id": "D2",
+    "type": "suspected_not_confirmed",
+    "source_of_error": "chart",
+    "chart_state": "Condition list carries 'Malignant tumor of lung' with verificationStatus = confirmed",
+    "spoken_truth": "No tissue diagnosis exists; lung primary is SUSPECTED on imaging and the EUS-FNA is being done to establish it",
+    "significance": "high",
+    "expected_state": "CONTRADICTED",
+    "note": "Malignancy is provisional/unconfirmed; diagnosis pending the very sampling this visit plans."
+   },
+   {
+    "id": "D3",
+    "type": "urgency_routing",
+    "source_of_error": "none",
+    "chart_state": "Referral marked advanced routing / oncology-expedite",
+    "spoken_truth": "Patient and pulmonology both want expedited staging; expedite is appropriate",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Expedite is correctly applied \u2014 not a mislabel."
+   },
+   {
+    "id": "D4",
+    "type": "medication_active",
+    "source_of_error": "none",
+    "chart_state": "enoxaparin 40 mg daily = active",
+    "spoken_truth": "patient confirms still doing the daily belly injection since the hip fracture",
+    "significance": "medium",
+    "expected_state": "CONFIRMED",
+    "note": "Med is genuinely active; relevant to peri-procedure hold timing."
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Mild COPD on file",
+    "spoken_truth": "patient confirms mild COPD, uses inhaler occasionally, good exercise tolerance",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Relevant to sedation/anesthesia planning; stable."
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "Recent non-operative hip fracture on file",
+    "spoken_truth": "patient confirms fall, treated without surgery, still limited mobility",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "Context for immobility and VTE prophylaxis."
+   }
+  ],
+  "PT-060": [
+   {
+    "id": "FH1",
+    "type": "family_history_attribution",
+    "source_of_error": "none",
+    "chart_state": "referral free-text: 'strong family history of colon cancer \u2014 mother at 48, brother at 52'; no structured FamilyMemberHistory on file",
+    "spoken_truth": "patient's MOTHER had colon cancer diagnosed at age 48 and his BROTHER at age 52; patient himself has NEVER been diagnosed with cancer and has never been screened",
+    "significance": "high",
+    "expected_state": "NEW",
+    "note": "TRAP: family cancer history must be attributed to relatives, NOT coded as a personal cancer diagnosis for the patient. Two young-onset first-degree relatives drive earlier/enhanced screening interval and raise Lynch (HNPCC) suspicion; correctly structure as FamilyMemberHistory."
+   },
+   {
+    "id": "GEN1",
+    "type": "new_referral_consideration",
+    "source_of_error": "none",
+    "chart_state": "no genetics referral on file",
+    "spoken_truth": "two first-degree relatives with colorectal cancer under age 55 meets criteria to consider hereditary cancer (Lynch) evaluation",
+    "significance": "medium",
+    "expected_state": "NEW",
+    "note": "genetics/germline evaluation should be offered; not yet ordered before this visit"
+   },
+   {
+    "id": "C1",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no personal history of malignancy documented",
+    "spoken_truth": "patient confirms he has never had cancer of any kind",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "guards against mislabeling family history as personal diagnosis"
+   },
+   {
+    "id": "C2",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no GI symptoms documented; referral says asymptomatic, denies rectal bleeding",
+    "spoken_truth": "patient reports no rectal bleeding, no change in bowel habits, no weight loss \u2014 asymptomatic",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "true screening (not diagnostic) indication"
+   },
+   {
+    "id": "C3",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no active medications on file",
+    "spoken_truth": "patient confirms he takes no prescription medications and no blood thinners",
+    "significance": "low",
+    "expected_state": "CONFIRMED",
+    "note": "standard anesthesia/anticoagulation clearance \u2014 nothing to hold"
+   },
+   {
+    "id": "C4",
+    "type": "confirmed",
+    "source_of_error": "none",
+    "chart_state": "no allergies on file",
+    "spoken_truth": "patient reports no known drug allergies",
+    "significance": "low",
+    "expected_state": "CONFIRMED"
+   }
+  ]
+ }
+}

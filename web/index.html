@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PreChart</title>
+<style>
+  :root{
+    --ink:#16283a; --muted:#5b6b7a; --line:#e2e8ee; --bg:#f6f8fb; --card:#fff;
+    --blue:#17557a; --blueTint:#eaf1f8;
+    --CONTRADICTED:#c0392b; --UNRESOLVED:#e08e0b; --ELABORATED:#2b6cb0;
+    --NEW:#2f855a; --UNADDRESSED:#718096; --CONFIRMED:#4a5568;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.5 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
+  header{display:flex;align-items:baseline;justify-content:space-between;padding:22px 0 6px}
+  header h1{margin:0;font-size:26px}
+  header .sub{color:var(--muted);font-size:13.5px;margin:2px 0 0}
+  .wordmark{font-size:20px;font-weight:800}
+  .wordmark .gi{color:var(--blue)}
+  .wordmark .suite{display:block;text-align:right;font-size:10px;font-weight:400;color:var(--muted)}
+
+  .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;background:var(--card);
+    border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0 18px}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field.grow{flex:1;min-width:280px}
+  .field label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  select{font:inherit;padding:8px 10px;border:1px solid #cdd7df;border-radius:8px;background:#fff;color:var(--ink);max-width:100%}
+  .livewrap{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);padding-bottom:9px}
+  button{font:inherit;font-weight:700;background:var(--blue);color:#fff;border:0;border-radius:9px;
+    padding:10px 20px;cursor:pointer}
+  button:disabled{opacity:.5;cursor:default}
+
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+  .summary .title{font-weight:700}
+  .summary .meta{color:var(--muted);font-size:13px;margin-top:2px}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+  .badge{font-size:11px;font-weight:700;padding:4px 9px;border-radius:6px}
+  .badge.agent{background:#e6f4ea;color:#276749} .badge.dry{background:#fdf3e3;color:#a35f06}
+  .badge.guard{background:var(--blueTint);color:var(--blue)}
+  .badge.warn{background:#fbecea;color:#c0392b}
+  .counts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .cchip{font-size:11px;font-weight:700;color:#fff;padding:3px 8px;border-radius:6px}
+
+  details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:14px}
+  summary{cursor:pointer;padding:12px 16px;font-weight:700;font-size:14px;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary .hint{font-weight:400;color:var(--muted);font-size:12.5px}
+  details .body{padding:0 16px 14px}
+
+  .trace{display:flex;flex-direction:column;gap:6px}
+  .tstep{display:flex;gap:10px;align-items:flex-start;font-size:13px;padding:7px 10px;background:#f8fafc;border:1px solid var(--line);border-radius:8px}
+  .tstep .tool{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;color:var(--blue);white-space:nowrap}
+  .tstep .tgt{font-weight:600} .tstep .res{color:var(--muted)}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .cols h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  .witlist{margin:0;padding:0;list-style:none;font-size:13px}
+  .witlist li{padding:5px 0;border-bottom:1px solid var(--line)}
+  .tier{color:#9aa7b2;font-size:11px}
+
+  .row{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px 14px;margin-bottom:10px}
+  .chip{color:#fff;font-size:11px;font-weight:700;padding:4px 8px;border-radius:6px;height:fit-content;white-space:nowrap}
+  .rbody{flex:1;min-width:0}
+  .topic{font-weight:600;margin-bottom:5px}
+  .so{background:#fde68a;color:#7a5b00;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;margin-left:6px}
+  .sides{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:13px;margin-bottom:5px}
+  .verdict{font-size:12.5px;color:#333;margin-bottom:3px}
+  .why{font-size:13px;color:#555;font-style:italic}
+  .ev{margin:6px 0 0;padding-left:16px;font-size:12px;color:#6b7783}
+  .next{background:#fff7ed;border-left:3px solid var(--UNRESOLVED);padding:5px 9px;font-size:12.5px;color:#7a5b00;margin-top:7px;border-radius:5px}
+  .empty{color:var(--muted);padding:40px 0;text-align:center}
+  .spinner{width:16px;height:16px;border:2px solid #cbd5e1;border-top-color:var(--blue);border-radius:50%;
+    display:inline-block;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .gt{font-size:12.5px}
+  .gt div{padding:6px 0;border-bottom:1px solid var(--line)}
+  .gt .k{font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>PreChart</h1>
+      <p class="sub">Pick a patient. The agent cross-examines the chart against the room — and refuses to guess.</p>
+    </div>
+    <div class="wordmark">UCSF <span class="gi">GI</span><span class="suite">GI Procedure Suite</span></div>
+  </header>
+
+  <div class="controls">
+    <div class="field grow">
+      <label for="patient">Patient (synthetic)</label>
+      <select id="patient"></select>
+    </div>
+    <div class="field">
+      <label for="specialty">Specialty</label>
+      <select id="specialty"></select>
+    </div>
+    <div class="livewrap"><input type="checkbox" id="live"><label for="live" id="livelabel">Live agent</label></div>
+    <button id="run">Run PreChart</button>
+  </div>
+
+  <div id="out"><div class="empty">Select a patient and run PreChart.</div></div>
+</div>
+
+<script>
+const ORDER = ["CONTRADICTED","UNRESOLVED","ELABORATED","NEW","UNADDRESSED","CONFIRMED"];
+const $ = s => document.querySelector(s);
+function el(tag, cls, txt){ const e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e; }
+
+async function init(){
+  const r = await fetch('/api/patients'); const d = await r.json();
+  const psel = $('#patient');
+  d.patients.forEach(p=>{
+    const o = el('option', null, `${p.id.split('::')[0]} — ${p.visit_title}  (${p.planted} planted)`);
+    o.value = p.index; psel.appendChild(o);
+  });
+  const ssel = $('#specialty');
+  d.specialties.forEach(s=>{ const o=el('option',null,s); o.value=s; if(s==='gi')o.selected=true; ssel.appendChild(o); });
+  const live = $('#live');
+  if(d.has_key){ live.checked=true; $('#livelabel').textContent='Live agent (claude-opus-4-8)'; }
+  else{ live.disabled=true; $('#livelabel').textContent='Live agent — set ANTHROPIC_API_KEY to enable'; }
+  // default to the warfarin hero case if present
+  const hero = d.patients.find(p=>p.index===47); if(hero) psel.value=47;
+}
+
+async function run(){
+  const out = $('#out'); const btn=$('#run'); btn.disabled=true;
+  const live = $('#live').checked;
+  out.innerHTML='';
+  const load = el('div','empty');
+  load.innerHTML = `<span class="spinner"></span>${live ? 'Running the agent — tool-use loop over the two witnesses…' : 'Reconciling…'}`;
+  out.appendChild(load);
+  try{
+    const r = await fetch('/api/prechart', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({index:Number($('#patient').value), specialty:$('#specialty').value, live})});
+    const d = await r.json();
+    if(d.error){ out.innerHTML=''; out.appendChild(el('div','empty','Error: '+d.error)); return; }
+    render(d);
+  }catch(e){ out.innerHTML=''; out.appendChild(el('div','empty','Request failed: '+e)); }
+  finally{ btn.disabled=false; }
+}
+
+function render(d){
+  const out = $('#out'); out.innerHTML='';
+
+  // summary
+  const s = el('div','summary');
+  s.appendChild(el('div','title', d.meta.visit_title));
+  s.appendChild(el('div','meta', `${d.meta.id}  ·  ${d.meta.date}  ·  ${d.meta.specialty}`));
+  const badges = el('div','badges');
+  badges.appendChild(el('span','badge '+(d.meta.is_dry?'dry':'agent'), d.meta.mode));
+  if(d.meta.temporal_removed>0) badges.appendChild(el('span','badge guard', `Temporal guard: ${d.meta.temporal_removed} future artifact(s) withheld`));
+  if(d.meta.warning) badges.appendChild(el('span','badge warn', d.meta.warning));
+  s.appendChild(badges);
+  const counts = el('div','counts');
+  ORDER.forEach(st=>{ if(d.counts[st]){ const c=el('span','cchip', `${d.counts[st]} ${st.toLowerCase()}`); c.style.background=`var(--${st})`; counts.appendChild(c);} });
+  s.appendChild(counts);
+  out.appendChild(s);
+
+  // investigation trace
+  if(d.trace && d.trace.length){
+    const det = el('details'); det.open=true;
+    const sm = el('summary'); sm.innerHTML = `Investigation trace <span class="hint">— ${d.trace.length} tool call(s) the agent made</span>`;
+    det.appendChild(sm);
+    const b = el('div','body'); const t = el('div','trace');
+    d.trace.forEach(step=>{
+      const row = el('div','tstep');
+      row.appendChild(el('span','tool', step.tool));
+      const box = el('div'); box.appendChild(el('span','tgt', step.target)); box.appendChild(document.createTextNode('  ')); box.appendChild(el('span','res', step.result||''));
+      row.appendChild(box); t.appendChild(row);
+    });
+    b.appendChild(t); det.appendChild(b); out.appendChild(det);
+  }
+
+  // witnesses
+  const wd = el('details');
+  const wsm = el('summary'); wsm.innerHTML = `The two witnesses <span class="hint">— ${d.chart_items.length} chart items · ${d.spoken.length} spoken assertions (both may be wrong)</span>`;
+  wd.appendChild(wsm);
+  const wb = el('div','body'); const cols = el('div','cols');
+  const cc = el('div'); cc.appendChild(el('h4',null,'Chart'));
+  const cul = el('ul','witlist');
+  d.chart_items.forEach(it=>{ const li=el('li'); li.textContent=`${it.kind}: ${it.label} `; const t=el('span','tier',it.tier); li.appendChild(t); cul.appendChild(li); });
+  cc.appendChild(cul);
+  const rc = el('div'); rc.appendChild(el('h4',null,'Room'));
+  const rul = el('ul','witlist');
+  d.spoken.forEach(sp=>{ const li=el('li',null,`${sp.speaker}: ${sp.quote}`); rul.appendChild(li); });
+  rc.appendChild(rul);
+  cols.appendChild(cc); cols.appendChild(rc); wb.appendChild(cols); wd.appendChild(wb); out.appendChild(wd);
+
+  // ledger
+  const byState = {}; ORDER.forEach(st=>byState[st]=[]);
+  d.proposals.forEach(p=>{ (byState[p.state]||(byState[p.state]=[])).push(p); });
+  ORDER.forEach(st=>{
+    byState[st].sort((a,b)=> (a.topic||'').localeCompare(b.topic||''));
+    byState[st].forEach(p=> out.appendChild(rowFor(p, st)));
+  });
+
+  // ground truth
+  if(d.planted && d.planted.length){
+    const gd = el('details');
+    const gsm = el('summary'); gsm.innerHTML = `Benchmark ground truth <span class="hint">— ${d.planted.length} planted discrepancies (the answer key)</span>`;
+    gd.appendChild(gsm);
+    const gb = el('div','body'); const g = el('div','gt');
+    d.planted.forEach(x=>{ const row=el('div');
+      row.appendChild(el('span','k', `[${x.expected_state}${x.source_of_error&&x.source_of_error!=='none'?' · '+x.source_of_error+' wrong':''}] `));
+      row.appendChild(document.createTextNode(`${x.chart_state||''} → ${x.spoken_truth||''}`)); g.appendChild(row); });
+    gb.appendChild(g); gd.appendChild(gb); out.appendChild(gd);
+  }
+}
+
+function rowFor(p, st){
+  const row = el('div','row');
+  const chip = el('span','chip', st); chip.style.background=`var(--${st})`; row.appendChild(chip);
+  const b = el('div','rbody');
+  const topic = el('div','topic', p.topic||'');
+  if(p.requires_signoff) topic.appendChild(el('span','so','sign-off'));
+  b.appendChild(topic);
+  const sides = el('div','sides');
+  const room = el('div'); room.innerHTML='<b>Room:</b> '; room.appendChild(document.createTextNode(p.spoken_side||'—'));
+  const chart = el('div'); chart.innerHTML='<b>Chart:</b> '; chart.appendChild(document.createTextNode(p.chart_side||'—'));
+  const t=el('span','tier',' '+(p.provenance_tier||'')); chart.appendChild(t);
+  sides.appendChild(room); sides.appendChild(chart); b.appendChild(sides);
+  b.appendChild(el('div','verdict', `likely correct: ${p.likely_correct} · ${p.confidence} confidence · ${p.clinical_significance} significance → ${p.proposed_action}`));
+  b.appendChild(el('div','why', p.reasoning||''));
+  if(p.evidence_dossier && p.evidence_dossier.length){
+    const ul = el('ul','ev');
+    p.evidence_dossier.forEach(x=>{ const li=el('li'); li.innerHTML=`<b>${x.source||''}:</b> `; li.appendChild(document.createTextNode(x.finding||'')); ul.appendChild(li); });
+    b.appendChild(ul);
+  }
+  if(p.recommended_next_data) b.appendChild(el('div','next', 'needs → '+p.recommended_next_data));
+  row.appendChild(b);
+  return row;
+}
+
+$('#run').addEventListener('click', run);
+init();
+</script>
+</body>
+</html>

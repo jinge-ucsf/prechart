@@ -1,0 +1,8 @@
+{
+  "key": "gi",
+  "name": "Gastroenterology",
+  "visit_framing": "a GI pre-procedure / clinic visit. Prioritize peri-procedural bleeding risk (anticoagulation and antiplatelet status), sedation and anesthesia risk, active GI bleeding, bowel-prep-relevant medications, and hepatic/renal dosing.",
+  "priority_meds": ["warfarin", "apixaban", "rivaroxaban", "dabigatran", "clopidogrel", "aspirin", "heparin", "enoxaparin", "insulin", "metformin"],
+  "priority_problems": ["cirrhosis", "varices", "gi bleed", "gastrointestinal hemorrhage", "inflammatory bowel", "crohn", "colitis", "colon", "pancreat", "barrett", "anticoag", "dysphagia"],
+  "high_significance_flags": ["warfarin", "apixaban", "rivaroxaban", "dabigatran", "clopidogrel", "aspirin", "heparin", "enoxaparin", "anticoag", "insulin", "allergy", "sedation", "cirrhosis", "bleed"]
+}

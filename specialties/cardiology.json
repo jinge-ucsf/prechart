@@ -1,0 +1,8 @@
+{
+  "key": "cardiology",
+  "name": "Cardiology",
+  "visit_framing": "a cardiology visit. Prioritize anticoagulation and antiplatelet therapy, heart-failure and rate/rhythm medications, statin therapy and LDL control, and renal dosing.",
+  "priority_meds": ["warfarin", "apixaban", "rivaroxaban", "clopidogrel", "aspirin", "metoprolol", "carvedilol", "lisinopril", "sacubitril", "atorvastatin", "rosuvastatin", "furosemide", "amiodarone", "digoxin"],
+  "priority_problems": ["heart failure", "atrial fibrillation", "coronary", "myocardial", "hypertension", "hyperlipidemia", "valve", "cardiomyopathy"],
+  "high_significance_flags": ["warfarin", "apixaban", "rivaroxaban", "clopidogrel", "aspirin", "anticoag", "insulin", "allergy", "amiodarone", "digoxin", "potassium"]
+}

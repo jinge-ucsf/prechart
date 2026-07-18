@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
+# generated at runtime — regenerate with run.py / eval.py
+ledger.html
+eval-report.md
+# NOTE: data/ IS committed — it is fully synthetic (no PHI) so the repo runs from one clone.
