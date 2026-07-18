@@ -27,9 +27,11 @@ Runs from a single clone — the synthetic dataset is bundled, and the web app +
 ```bash
 python3 app.py                            # → http://localhost:8000
 ```
-Pick one of the 60 patients + a specialty, hit **Run PreChart**, and watch the agent's
-investigation trace, the two witnesses, and the reconciliation ledger. With
-`ANTHROPIC_API_KEY` set it runs the live agent; without one it runs the dry-run heuristic.
+Pick one of the 60 patients + a specialty, hit **Run PreChart**, and see the full story on one screen:
+**① the pre-charted note** drafted from the chart (specialty-styled, before the room) → **② the ambient
+transcript** → **③ the reconciliation** — discrepancies surfaced against the note, the agent's
+investigation trace (the tool calls), and its resolution, with the benchmark ground truth as an answer key.
+With `ANTHROPIC_API_KEY` set it runs the live agent; without one it runs the dry-run heuristic.
 
 ### CLI
 ```bash
@@ -81,8 +83,9 @@ Nothing high-stakes (dose, active/inactive medication, allergy, anticoagulation)
 | `dataio.py` | load record · extract chart items (with provenance **tier**) + spoken assertions · **temporal filter** |
 | `tools.py` | agent tools — `triangulate_chart_evidence`, `check_physiologic_markers`, `find_chart_item` |
 | `adjudicator.py` | the agentic core: Claude tool-use loop (live) + `--dry-run` heuristic |
+| `note.py` | pre-charts the visit note from the chart (specialty-styled), before the room |
 | `run.py` | orchestrate → CLI + `ledger.html` |
-| `app.py` + `web/index.html` | the patient-picker web app (stdlib server) |
+| `app.py` + `web/index.html` | the patient-picker web app — note → transcript → reconciliation |
 | `eval.py` | score predictions vs the labeled benchmark |
 | `specialty.py` + `specialties/*.json` | specialty framing / significance profiles |
 | `data/` | 60 synthetic GI records + labels (**fully synthetic — no PHI**) |

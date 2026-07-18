@@ -77,6 +77,18 @@
   .gt{font-size:12.5px}
   .gt div{padding:6px 0;border-bottom:1px solid var(--line)}
   .gt .k{font-weight:700}
+
+  .secnum{display:inline-block;background:var(--blue);color:#fff;font-size:11px;font-weight:700;
+    width:19px;height:19px;line-height:19px;text-align:center;border-radius:50%;margin-right:8px}
+  .sechead{font-size:15px;font-weight:700;margin:2px 0 8px;display:flex;align-items:center}
+  .sechead .hint{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
+  .note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 20px 16px;margin-bottom:14px}
+  .note h4{font-size:16px;margin:12px 0 6px}
+  .note h5{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);margin:14px 0 4px}
+  .note p{margin:4px 0;font-size:13.5px} .note ul{margin:4px 0;padding-left:20px;font-size:13.5px} .note li{margin:2px 0}
+  .note code{background:#eef2f6;padding:1px 4px;border-radius:4px;font-size:12px}
+  .transcript{max-height:320px;overflow:auto;font-size:13px}
+  .transcript>div{margin:3px 0} .transcript .sp{font-weight:700;color:var(--blue)}
 </style>
 </head>
 <body>
@@ -109,6 +121,23 @@
 const ORDER = ["CONTRADICTED","UNRESOLVED","ELABORATED","NEW","UNADDRESSED","CONFIRMED"];
 const $ = s => document.querySelector(s);
 function el(tag, cls, txt){ const e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e; }
+
+// minimal, safe Markdown -> HTML for the pre-charted note (escapes first, then inline styles)
+function mdToHtml(md){
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\*(.+?)\*/g,'<i>$1</i>')
+                            .replace(/_(.+?)_/g,'<i>$1</i>').replace(/`(.+?)`/g,'<code>$1</code>');
+  let html='', inList=false; const closeList=()=>{ if(inList){html+='</ul>';inList=false;} };
+  (md||'').split('\n').forEach(raw=>{
+    const line = raw.replace(/\s+$/,'');
+    if(/^##\s+/.test(line)){ closeList(); html+='<h5>'+inline(line.replace(/^##\s+/,''))+'</h5>'; }
+    else if(/^#\s+/.test(line)){ closeList(); html+='<h4>'+inline(line.replace(/^#\s+/,''))+'</h4>'; }
+    else if(/^[-*]\s+/.test(line)){ if(!inList){html+='<ul>';inList=true;} html+='<li>'+inline(line.replace(/^[-*]\s+/,''))+'</li>'; }
+    else if(line.trim()===''){ closeList(); }
+    else { closeList(); html+='<p>'+inline(line)+'</p>'; }
+  });
+  closeList(); return html;
+}
 
 async function init(){
   const r = await fetch('/api/patients'); const d = await r.json();
@@ -159,6 +188,36 @@ function render(d){
   ORDER.forEach(st=>{ if(d.counts[st]){ const c=el('span','cchip', `${d.counts[st]} ${st.toLowerCase()}`); c.style.background=`var(--${st})`; counts.appendChild(c);} });
   s.appendChild(counts);
   out.appendChild(s);
+
+  // ① pre-charted note (from the chart, before the room)
+  if(d.note){
+    const nd = el('div','note');
+    const h = el('div','sechead');
+    h.innerHTML = '<span class="secnum">1</span>Pre-charted note <span class="hint">— drafted from the chart, before the room</span>';
+    nd.appendChild(h);
+    const body = el('div'); body.innerHTML = mdToHtml(d.note); nd.appendChild(body);
+    out.appendChild(nd);
+  }
+
+  // ② the room — ambient transcript
+  if(d.transcript){
+    const det = el('details');
+    const sm = el('summary'); sm.innerHTML = '<span class="secnum">2</span>The room — ambient transcript';
+    det.appendChild(sm);
+    const b = el('div','body'); const t = el('div','transcript');
+    d.transcript.split('\n').forEach(line=>{
+      const p = el('div'); const i = line.indexOf(':');
+      if(i>0 && i<40){ p.appendChild(el('span','sp', line.slice(0,i+1))); p.appendChild(document.createTextNode(line.slice(i+1))); }
+      else p.textContent = line;
+      t.appendChild(p);
+    });
+    b.appendChild(t); det.appendChild(b); out.appendChild(det);
+  }
+
+  // ③ reconciliation — discrepancies + agentic resolution
+  const rh = el('div','sechead'); rh.style.marginTop = '4px';
+  rh.innerHTML = '<span class="secnum">3</span>Reconciliation <span class="hint">— discrepancies surfaced against the note, with the agent\'s resolution</span>';
+  out.appendChild(rh);
 
   // investigation trace
   if(d.trace && d.trace.length){

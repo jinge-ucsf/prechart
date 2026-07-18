@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # run from any c
 
 from dataio import load_record, extract_chart_items, extract_spoken_assertions, DEFAULT_DATASET
 from adjudicator import adjudicate, MODEL
+from note import draft_note
 from specialty import load_specialty, available as available_specialties
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -62,10 +63,12 @@ def run_prechart(index, specialty_key, live):
 
     trace, warning = [], None
     try:
-        props = adjudicate(rec, chart, spoken, dry_run=dry, specialty=spec, trace=trace)
+        note = draft_note(rec, chart, specialty=spec, dry_run=dry)          # ① pre-chart the note
+        props = adjudicate(rec, chart, spoken, dry_run=dry, specialty=spec, trace=trace)  # ③ reconcile
     except Exception as e:  # live path failed (API/network) -> fall back so the demo survives
         warning = f"live agent failed ({type(e).__name__}: {e}); showing the dry-run heuristic instead"
         dry, trace = True, []
+        note = draft_note(rec, chart, specialty=spec, dry_run=True)
         props = adjudicate(rec, chart, spoken, dry_run=True, specialty=spec, trace=trace)
 
     tf = rec.get("_temporal_filter", {})
@@ -86,6 +89,8 @@ def run_prechart(index, specialty_key, live):
             "warning": warning,
         },
         "counts": counts,
+        "note": note,
+        "transcript": rec.get("transcript", ""),
         "chart_items": [{k: v for k, v in it.items() if k != "_raw"} for it in chart],
         "spoken": spoken,
         "trace": trace,
