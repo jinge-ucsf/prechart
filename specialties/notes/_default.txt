@@ -1,0 +1,29 @@
+Write a specialty consultation note from the clinical material provided — referral, labs, imaging/diagnostic reports, prior notes, outside records, and/or the ambient recording or transcript. Produce three parts in my Epic style, in this order: a History of Present Illness (HPI), an Outside Data block, and an Assessment & Plan (A/P). Give all three, complete, in one response.
+
+Use as much of the provided data as possible, extracting exhaustively from tables, narrative text, and documents. Consider all available data, including information outside this specialty: incorporate and interpret it when it is relevant to the presenting problem or to management, and leave out data that is not relevant.
+
+Draw on outside records available through Care Everywhere, pulling in information from the last 2 years.
+
+Where a missing detail can be reasonably inferred from the available data and clinical context, fill it in; use *** only where information genuinely can't be determined and needs me. Don't invent specific values you have no basis for (labs, vital signs, exam findings, dates). Keep the tone concise, professional, and interpretive.
+
+If a previous note (its HPI and A/P) is included or pulled into the input alongside the new encounter, generate the new note as an update of it: start from the prior HPI and A/P, keep what's still accurate, revise what the encounter changed, add new history/findings/decisions/plan items from the recording, and resolve prior *** wherever the recording now supplies the answer. Refresh the Outside Data block from current Care Everywhere records. Output the full updated note, not an addendum.
+
+HPI: comprehensive. Open with an identifying sentence (age, pertinent history, and the reason for the visit), then interval history, complications, and recent results, including any relevant findings from outside this specialty.
+
+Outside Data block: between the HPI and A/P, report the relevant outside labs and outside imaging drawn from Care Everywhere (last 2 years). Head it "Outside Data (Care Everywhere):" and list outside labs and outside imaging separately, each entry with its date and source facility where useful; for imaging, give a brief result. Include only what is pertinent to the assessment. Omit the block if no relevant outside data is available.
+
+Assessment & Plan — use this exact plain-text format for every problem:
+- Treat ** as literal characters, not Markdown: begin each problem line with ** and do not close it, bold the line, or drop it.
+- Start with a one-line summary, then a blank line, then each problem as a block separated by one blank line.
+- Problem order: (1) The presenting problem / reason for the visit or procedure, (2) The primary diagnosis, (3) Related complications, (4) Comorbid and metabolic conditions that bear on management, (5) Preventive health and surveillance, (6) Miscellaneous. Include only those that apply.
+- Each problem is one line beginning **[problem]: followed by a brief assessment with specific data and reasoning (diagnosis, dates, values, status, treatment response). Then each plan item on its own line starting with "- " (hyphen + space) — every step, no exceptions, no prose run-ons, no other bullet markers.
+- Use *** inline to flag points needing my judgment (complex decisions, diagnostic uncertainty, coordination).
+
+Example:
+
+<one-line summary>
+
+**[Presenting problem]: Concise interpretive assessment with the specific data that supports it — diagnosis, relevant dates, values, current status, and response to treatment.
+- Each concrete next step on its own line, beginning with a hyphen and a space.
+- Order labs/imaging/consults/medication changes as indicated.
+- *** flag any point that needs my judgment (a complex decision, diagnostic uncertainty, or coordination).

@@ -11,7 +11,19 @@ import json
 import os
 
 SPEC_DIR = os.path.join(os.path.dirname(__file__), "specialties")
+NOTE_DIR = os.path.join(SPEC_DIR, "notes")
 DEFAULT = "gi"
+
+
+def _note_prompt(key):
+    """The specialty's Epic-style note-format spec (specialties/notes/<key>.txt),
+    falling back to the generic _default.txt."""
+    for name in (f"{key}.txt", "_default.txt"):
+        path = os.path.join(NOTE_DIR, name)
+        if os.path.exists(path):
+            with open(path) as fh:
+                return fh.read().strip()
+    return ""
 
 
 def available():
@@ -31,4 +43,5 @@ def load_specialty(key=None):
     cfg.setdefault("visit_framing", "")
     for f in ("priority_meds", "priority_problems", "high_significance_flags"):
         cfg.setdefault(f, [])
+    cfg["note_prompt"] = _note_prompt(key)  # Epic-style note-format spec for this specialty
     return cfg

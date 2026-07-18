@@ -83,10 +83,10 @@
   .sechead{font-size:15px;font-weight:700;margin:2px 0 8px;display:flex;align-items:center}
   .sechead .hint{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
   .note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 20px 16px;margin-bottom:14px}
-  .note h4{font-size:16px;margin:12px 0 6px}
-  .note h5{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);margin:14px 0 4px}
-  .note p{margin:4px 0;font-size:13.5px} .note ul{margin:4px 0;padding-left:20px;font-size:13.5px} .note li{margin:2px 0}
-  .note code{background:#eef2f6;padding:1px 4px;border-radius:4px;font-size:12px}
+  .noteprose{white-space:pre-wrap;word-wrap:break-word;font:13.5px/1.55 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);margin:0;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:14px 16px;max-height:560px;overflow:auto}
+  .copybtn{margin-left:auto;background:#eef2f6;color:var(--blue);border:1px solid #d7dee6;border-radius:6px;
+    font-size:11px;font-weight:700;padding:4px 11px;cursor:pointer}
   .transcript{max-height:320px;overflow:auto;font-size:13px}
   .transcript>div{margin:3px 0} .transcript .sp{font-weight:700;color:var(--blue)}
 </style>
@@ -121,23 +121,6 @@
 const ORDER = ["CONTRADICTED","UNRESOLVED","ELABORATED","NEW","UNADDRESSED","CONFIRMED"];
 const $ = s => document.querySelector(s);
 function el(tag, cls, txt){ const e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e; }
-
-// minimal, safe Markdown -> HTML for the pre-charted note (escapes first, then inline styles)
-function mdToHtml(md){
-  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\*(.+?)\*/g,'<i>$1</i>')
-                            .replace(/_(.+?)_/g,'<i>$1</i>').replace(/`(.+?)`/g,'<code>$1</code>');
-  let html='', inList=false; const closeList=()=>{ if(inList){html+='</ul>';inList=false;} };
-  (md||'').split('\n').forEach(raw=>{
-    const line = raw.replace(/\s+$/,'');
-    if(/^##\s+/.test(line)){ closeList(); html+='<h5>'+inline(line.replace(/^##\s+/,''))+'</h5>'; }
-    else if(/^#\s+/.test(line)){ closeList(); html+='<h4>'+inline(line.replace(/^#\s+/,''))+'</h4>'; }
-    else if(/^[-*]\s+/.test(line)){ if(!inList){html+='<ul>';inList=true;} html+='<li>'+inline(line.replace(/^[-*]\s+/,''))+'</li>'; }
-    else if(line.trim()===''){ closeList(); }
-    else { closeList(); html+='<p>'+inline(line)+'</p>'; }
-  });
-  closeList(); return html;
-}
 
 async function init(){
   const r = await fetch('/api/patients'); const d = await r.json();
@@ -189,13 +172,17 @@ function render(d){
   s.appendChild(counts);
   out.appendChild(s);
 
-  // ① pre-charted note (from the chart, before the room)
+  // ① pre-charted note (from the chart, before the room) — rendered as literal plain
+  // text (Epic-style: the ** / - / *** are literal characters, copy-pasteable as-is)
   if(d.note){
     const nd = el('div','note');
     const h = el('div','sechead');
     h.innerHTML = '<span class="secnum">1</span>Pre-charted note <span class="hint">— drafted from the chart, before the room</span>';
+    const copy = el('button','copybtn','Copy note');
+    copy.onclick = () => { navigator.clipboard.writeText(d.note); copy.textContent='Copied'; setTimeout(()=>copy.textContent='Copy note',1200); };
+    h.appendChild(copy);
     nd.appendChild(h);
-    const body = el('div'); body.innerHTML = mdToHtml(d.note); nd.appendChild(body);
+    const body = el('pre','noteprose'); body.textContent = d.note; nd.appendChild(body);
     out.appendChild(nd);
   }
 

@@ -1,0 +1,29 @@
+Write a hepatology and liver transplant consultation note from the clinical material provided — referral, labs, imaging/diagnostic reports, prior notes, outside records, and/or the ambient recording or transcript. Produce three parts in my Epic style, in this order: a History of Present Illness (HPI), an Outside Data block, and an Assessment & Plan (A/P). Give all three, complete, in one response.
+
+Use as much of the provided data as possible, extracting exhaustively from tables, narrative text, and documents. Consider all available data, including non-hepatology information: incorporate and interpret it in the note when it is relevant to the hepatology or transplant picture (e.g., cardiac, renal, pulmonary, infectious, metabolic, oncologic, or psychosocial findings that bear on liver disease, decompensation, or transplant candidacy), and leave out non-hepatology data that is not relevant.
+
+Draw on outside records available through Care Everywhere, pulling in information from the last 2 years.
+
+Where a missing detail can be reasonably inferred from the available data and clinical context, fill it in; use *** only where information genuinely can't be determined and needs me. Don't invent specific values you have no basis for (labs, vital signs, exam findings, dates). Keep the tone concise, professional, and interpretive.
+
+If a previous note (its HPI and A/P) is included or pulled into the input alongside the new encounter, generate the new note as an update of it: start from the prior HPI and A/P, keep what's still accurate, revise what the encounter changed, add new history/findings/decisions/plan items from the recording, and resolve prior *** wherever the recording now supplies the answer. Refresh the Outside Data block from current Care Everywhere records. Output the full updated note, not an addendum.
+
+HPI: comprehensive. Open with an identifying sentence (age, transplant status, primary liver disease), then interval history, transplant listing updates, complications, and recent results, including any relevant non-hepatology findings.
+
+Outside Data block: between the HPI and A/P, report the relevant outside labs and outside imaging drawn from Care Everywhere (last 2 years). Head it "Outside Data (Care Everywhere):" and list outside labs and outside imaging separately, each entry with its date and source facility where useful; for imaging, give a brief result. Include only what is pertinent to the hepatology/transplant assessment. Omit the block if no relevant outside data is available.
+
+Assessment & Plan — use this exact plain-text format for every problem:
+- Treat ** as literal characters, not Markdown: begin each problem line with ** and do not close it, bold the line, or drop it.
+- Start with a one-line summary, then a blank line, then each problem as a block separated by one blank line.
+- Problem order: (1) Transplant listing/evaluation, (2) Primary liver disease, (3) HCC, (4) Portal hypertension/complications, (5) Comorbid/metabolic, (6) Preventive health/surveillance, (7) Miscellaneous. Include only those that apply.
+- Each problem is one line beginning **[problem]: followed by a brief assessment with specific data and reasoning (diagnosis, dates, values, status, treatment response). Then each plan item on its own line starting with "- " (hyphen + space) — every step, no exceptions, no prose run-ons, no other bullet markers.
+- Use *** inline to flag points needing my judgment (complex decisions, diagnostic uncertainty, coordination).
+
+Example:
+
+<one-line summary>
+
+**Hepatocellular Carcinoma: Biopsy-proven moderately to poorly differentiated HCC diagnosed 8/2025 with initial 6.6 cm segment 7/8 lesion and AFP peak of 32,222 ng/mL. Not resectable and not a Y-90 candidate. Status post SBRT completed 12/2025 with excellent biochemical and radiographic response. AFP has normalized and MRI demonstrates LR-treated equivocal residual enhancement.
+- Continue MRI liver and AFP every 3 months.
+- Review upcoming MRI from 6/26/2026.
+- Will discuss with abdominal imaging regarding findings on hepatic veins from August 2025 and March 2026 imaging

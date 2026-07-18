@@ -1,0 +1,31 @@
+Write a general cardiology consultation note from the clinical material provided — referral, labs, ECGs, imaging/diagnostic reports (echocardiography, stress testing, cardiac catheterization/angiography, cardiac CT/MRI, telemetry, device interrogations), prior notes, outside records, and/or the ambient recording or transcript. Produce three parts in my Epic style, in this order: a History of Present Illness (HPI), an Outside Data block, and an Assessment & Plan (A/P). Give all three, complete, in one response.
+
+Use as much of the provided data as possible, extracting exhaustively from tables, narrative text, and documents. Consider all available data, including non-cardiology information: incorporate and interpret it in the note when it is relevant to the cardiac picture (e.g., renal, pulmonary, endocrine/metabolic, hematologic, infectious, oncologic, or psychosocial findings that bear on ischemia, heart failure, arrhythmia, anticoagulation decisions, or procedural risk), and leave out non-cardiology data that is not relevant.
+
+Draw on outside records available through Care Everywhere, pulling in information from the last 2 years.
+
+Where a missing detail can be reasonably inferred from the available data and clinical context, fill it in; use *** only where information genuinely can't be determined and needs me. Don't invent specific values you have no basis for (labs, vital signs, exam findings, ejection fractions, device settings, dates). Keep the tone concise, professional, and interpretive.
+
+If a previous note (its HPI and A/P) is included or pulled into the input alongside the new encounter, generate the new note as an update of it: start from the prior HPI and A/P, keep what's still accurate, revise what the encounter changed, add new history/findings/decisions/plan items from the recording, and resolve prior *** wherever the recording now supplies the answer. Refresh the Outside Data block from current Care Everywhere records. Output the full updated note, not an addendum.
+
+HPI: comprehensive. Open with an identifying sentence (age, pertinent cardiac history — prior MI/PCI/CABG, known cardiomyopathy or arrhythmia, implanted devices — and the presenting cardiac problem or reason for consult), then interval history, symptom characterization (chest pain, dyspnea, palpitations, syncope, functional/NYHA class), procedural and device updates, complications, and recent results, including any relevant non-cardiology findings.
+
+Outside Data block: between the HPI and A/P, report the relevant outside labs and outside imaging/diagnostics drawn from Care Everywhere (last 2 years). Head it "Outside Data (Care Everywhere):" and list outside labs and outside imaging separately, each entry with its date and source facility where useful; for imaging and diagnostics (echocardiograms, stress tests, catheterizations, cardiac CT/MRI, ECGs, device interrogations), give a brief result. Include only what is pertinent to the cardiac assessment. Omit the block if no relevant outside data is available.
+
+Assessment & Plan — use this exact plain-text format for every problem:
+- Treat ** as literal characters, not Markdown: begin each problem line with ** and do not close it, bold the line, or drop it.
+- Start with a one-line summary, then a blank line, then each problem as a block separated by one blank line.
+- Problem order: (1) Presenting cardiac problem / reason for consult or procedure, (2) Coronary artery disease / ischemia, (3) Heart failure / cardiomyopathy, (4) Arrhythmia & anticoagulation, (5) Valvular disease, (6) Cardiovascular risk factors & metabolic (HTN, hyperlipidemia, diabetes), (7) Preventive / miscellaneous. Include only those that apply.
+- Each problem is one line beginning **[problem]: followed by a brief assessment with specific data and reasoning (diagnosis, dates, values, status, treatment response). Then each plan item on its own line starting with "- " (hyphen + space) — every step, no exceptions, no prose run-ons, no other bullet markers.
+- Use *** inline to flag points needing my judgment (complex decisions, diagnostic uncertainty, coordination).
+
+Example:
+
+<one-line summary>
+
+**Coronary Artery Disease s/p PCI: Known multivessel CAD presenting with NSTEMI 3/2026 (peak troponin 4.2 ng/mL) and culprit 90% mid-LAD lesion, status post drug-eluting stent to the mid-LAD 3/2026 with good angiographic result and TIMI 3 flow. Post-MI echo showed LVEF 45% with mild anterior hypokinesis. Currently asymptomatic without recurrent angina and tolerating dual antiplatelet therapy.
+- Continue aspirin 81 mg daily indefinitely and ticagrelor 90 mg twice daily to complete 12 months of DAPT through 3/2027.
+- Continue high-intensity atorvastatin 80 mg daily; recheck lipid panel in 6 weeks with goal LDL <55 mg/dL.
+- Continue metoprolol succinate and lisinopril, uptitrate as heart rate and blood pressure tolerate.
+- Refer to cardiac rehabilitation.
+- *** confirm timing and strategy for staged PCI of the 70% circumflex lesion noted on angiography.

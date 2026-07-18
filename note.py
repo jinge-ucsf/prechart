@@ -38,7 +38,27 @@ def _labs(rec, limit=12):
     return out[:limit]
 
 
+def _diagnostics(rr):
+    out = []
+    for d in rr.get("DiagnosticReport", []):
+        name = d.get("code", {}).get("text") or "diagnostic report"
+        when = (d.get("effectiveDateTime") or d.get("issued") or "")[:10]
+        result = (d.get("conclusion") or "").strip()
+        out.append(f"{name}" + (f" ({when})" if when else "") + (f": {result[:300]}" if result else ""))
+    return out
+
+
+def _procedures(rr):
+    out = []
+    for pr in rr.get("Procedure", []):
+        name = pr.get("code", {}).get("text") or "procedure"
+        when = (pr.get("performedDateTime") or (pr.get("performedPeriod") or {}).get("start") or "")[:10]
+        out.append(f"{name}" + (f" ({when})" if when else ""))
+    return out
+
+
 def _chart_payload(rec, chart_items, specialty):
+    rr = rec.get("encounter_fhir", {}).get("related_resources", {}) or {}
     return {
         "reason_for_visit": rec.get("metadata", {}).get("visit_title", ""),
         "specialty": (specialty or {}).get("name", "General"),
@@ -48,9 +68,11 @@ def _chart_payload(rec, chart_items, specialty):
         "medications": [it["label"] for it in chart_items if it["kind"] == "medication"],
         "allergies": [it["label"] for it in chart_items if it["kind"] == "allergy"],
         "recent_labs": _labs(rec),
+        "imaging_and_diagnostics": _diagnostics(rr),
+        "procedures": _procedures(rr),
         "prior_notes": [
             {"type": n.get("document_type"), "date": n.get("date"),
-             "specialty": n.get("provider_specialty"), "text": (n.get("text") or "")[:1200]}
+             "specialty": n.get("provider_specialty"), "text": (n.get("text") or "")[:1500]}
             for n in rec.get("patient_context", {}).get("prior_notes", []) or []
         ],
     }
@@ -60,56 +82,54 @@ def draft_note(rec, chart_items, specialty=None, dry_run=False):
     payload = _chart_payload(rec, chart_items, specialty)
     if dry_run:
         return _template_note(payload)
-    return _model_note(payload)
+    system = (specialty or {}).get("note_prompt") or SYSTEM   # the specialty's Epic-style spec
+    return _model_note(payload, system)
 
 
-def _model_note(payload):
+def _model_note(payload, system):
     import anthropic  # lazy: live path only
     client = anthropic.Anthropic()
     msg = client.messages.create(
-        model=MODEL, max_tokens=4000, thinking={"type": "adaptive"}, system=SYSTEM,
+        model=MODEL, max_tokens=8000, thinking={"type": "adaptive"}, system=system,
         messages=[{"role": "user", "content":
-                   "Draft the pre-visit note from this chart data:\n\n" + json.dumps(payload, indent=1)}])
+                   "Draft the note from this pre-visit chart material (problems, medications, labs, "
+                   "imaging/diagnostics, and prior/outside notes are included where available):\n\n"
+                   + json.dumps(payload, indent=1)}])
     return "".join(b.text for b in msg.content if getattr(b, "type", None) == "text").strip()
 
 
 def _template_note(p):
-    """Deterministic fallback (NOT the model) — assembles the chart into a draft."""
-    def bullets(items):
-        return "\n".join(f"- {x}" for x in items) if items else "None documented."
-
+    """Deterministic fallback (NOT the model) — assembles the chart into the three-part
+    plain-text shape (HPI / Outside Data / A/P) so the format is visible offline. The
+    live model writes the real interpretive note from the specialty spec."""
     hi = tuple(p["high_significance"])
-    meds = [f"{m}  _(verify — high-significance for this visit)_" if any(h in m.lower() for h in hi) else m
-            for m in p["medications"]]
-    priors = "\n".join(
-        f"- **{n['type']}** ({n['date']}, {n['specialty']}): {n['text'][:200].strip()}…"
-        for n in p["prior_notes"]) or "None documented."
-    to_confirm = [m for m in p["medications"] if any(h in m.lower() for h in hi)] or \
-                 p["medications"][:3] or ["chart items with the patient"]
-    return f"""## Pre-Visit Note — {p['reason_for_visit']}
-*{p['specialty']} · drafted from the chart, to be verified in the room (dry-run template — not the model)*
+    probs = p["active_problems"]
+    meds = p["medications"]
 
-## Reason for Visit
-{p['reason_for_visit']}
+    hpi = (f"Patient presenting for {p['reason_for_visit']}. "
+           f"Active problems per chart: {', '.join(probs) if probs else 'none documented'}. "
+           f"Medications per chart: {', '.join(meds) if meds else 'none documented'}. "
+           f"Allergies: {', '.join(p['allergies']) if p['allergies'] else 'none documented'}. "
+           f"[dry-run template — the live model writes the full interpretive HPI]")
 
-## Active Problems (per chart)
-{bullets(p['active_problems'])}
+    outside = ""
+    if p["recent_labs"] or p["imaging_and_diagnostics"]:
+        outside = "\n\nOutside Data (Care Everywhere):\n"
+        if p["recent_labs"]:
+            outside += "Labs:\n" + "\n".join(f"- {x}" for x in p["recent_labs"]) + "\n"
+        if p["imaging_and_diagnostics"]:
+            outside += "Imaging/diagnostics:\n" + "\n".join(f"- {x}" for x in p["imaging_and_diagnostics"]) + "\n"
 
-## Medications (per chart)
-{bullets(meds)}
+    blocks = []
+    for prob in (probs or [p["reason_for_visit"]]):
+        blocks.append(f"**{prob}: *** dry-run template — the live model writes the assessment "
+                      f"(diagnosis, dates, values, status).\n- Confirm status and management with the patient in the room.")
+    for m in [m for m in meds if any(h in m.lower() for h in hi)]:
+        blocks.append(f"**Medication — {m}: high-significance for this visit.\n"
+                      f"- *** Verify current use and dose and reconcile against the room.")
 
-## Allergies
-{bullets(p['allergies'])}
-
-## Pertinent Labs
-{bullets(p['recent_labs'])}
-
-## {p['specialty']} Considerations
-{p['specialty_focus'] or 'None specified.'}
-
-## Prior Notes
-{priors}
-
-## To Confirm in the Visit
-{bullets(to_confirm)}
-"""
+    return (f"History of Present Illness\n{hpi}"
+            f"{outside}\n\n"
+            f"Assessment & Plan\n"
+            f"Pre-visit draft for {p['specialty']} (dry-run template — not the model).\n\n"
+            + "\n\n".join(blocks) + "\n")

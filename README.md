@@ -52,7 +52,11 @@ python3 run.py --specialty cardiology
 python3 run.py --specialty hepatology
 ```
 
-Add one by dropping a JSON file in `specialties/` (see `specialty.py`).
+Each specialty also carries an **Epic-style note-format spec** in `specialties/notes/<key>.txt`
+that drives the pre-charted note (HPI → Outside Data → A/P, with the physician's exact plain-text
+A/P format). Hepatology uses a transplant-hepatology spec; GI and cardiology are domain adaptations;
+`_default.txt` is the fallback. Add a specialty by dropping a `specialties/<key>.json` (+ optional
+`specialties/notes/<key>.txt`).
 
 ## Evaluation
 
@@ -88,6 +92,7 @@ Nothing high-stakes (dose, active/inactive medication, allergy, anticoagulation)
 | `app.py` + `web/index.html` | the patient-picker web app — note → transcript → reconciliation |
 | `eval.py` | score predictions vs the labeled benchmark |
 | `specialty.py` + `specialties/*.json` | specialty framing / significance profiles |
+| `specialties/notes/*.txt` | per-specialty Epic-style note-format specs (hepatology = transplant) |
 | `data/` | 60 synthetic GI records + labels (**fully synthetic — no PHI**) |
 | `docs/agentic-loop.svg` | the architecture diagram above |
 
