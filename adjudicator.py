@@ -12,8 +12,7 @@ import json
 from tools import (TOOL_SCHEMAS, triangulate_chart_evidence,
                    check_physiologic_markers, find_chart_item)
 from models import Proposal
-
-MODEL = "claude-opus-4-8"
+from config import MODEL, thinking_kwargs
 
 SYSTEM = """You are PreChart's evidence-gathering agent for a clinic visit.
 
@@ -100,8 +99,7 @@ def _run_agent(rec, chart_items, spoken, specialty=None, trace=None):
     for _ in range(12):  # bounded tool-use loop
         resp = client.messages.create(
             model=MODEL, max_tokens=16000,
-            thinking={"type": "adaptive"},
-            system=system, tools=TOOL_SCHEMAS, messages=messages,
+            system=system, tools=TOOL_SCHEMAS, messages=messages, **thinking_kwargs(),
         )
         if resp.stop_reason == "max_tokens":
             raise RuntimeError("adjudication truncated (max_tokens) — raise max_tokens or split the chart")
@@ -127,8 +125,8 @@ def _run_agent(rec, chart_items, spoken, specialty=None, trace=None):
 
     # loop exhausted while still investigating: force ONE final answer with tools disabled,
     # and fail LOUDLY rather than silently returning an empty ledger.
-    final = client.messages.create(model=MODEL, max_tokens=16000, thinking={"type": "adaptive"},
-                                   system=system, messages=messages)
+    final = client.messages.create(model=MODEL, max_tokens=16000,
+                                   system=system, messages=messages, **thinking_kwargs())
     props = _parse(_final_text(final))
     if not props:
         raise RuntimeError("agent produced no proposal array after 12 tool rounds")

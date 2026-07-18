@@ -17,6 +17,7 @@ import json
 import os
 import re
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # run from any cwd
@@ -87,8 +88,12 @@ def run_prechart(index, specialty_key, live):
 
     trace, warning = [], None
     try:
-        note = draft_note(rec, chart, specialty=spec, dry_run=dry)          # ① pre-chart the note
-        props = adjudicate(rec, chart, spoken, dry_run=dry, specialty=spec, trace=trace)  # ③ reconcile
+        # note (①) and reconciliation (③) are independent — run them concurrently to
+        # roughly halve wall-clock on the live path.
+        with ThreadPoolExecutor(max_workers=2) as ex:
+            note_f = ex.submit(draft_note, rec, chart, specialty=spec, dry_run=dry)
+            props_f = ex.submit(adjudicate, rec, chart, spoken, dry_run=dry, specialty=spec, trace=trace)
+            note, props = note_f.result(), props_f.result()
     except Exception as e:  # live path failed (API/network) -> fall back so the demo survives
         warning = f"live agent failed ({type(e).__name__}: {e}); showing the dry-run heuristic instead"
         dry, trace = True, []
@@ -170,6 +175,9 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8000)
+    ap.add_argument("--warm", default="",
+                    help="comma-separated record indices to pre-run into the cache before serving (e.g. --warm 47,15)")
+    ap.add_argument("--warm-specialty", default="gi", help="specialty to warm with (default gi)")
     a = ap.parse_args()
     live_ready = HAS_KEY
     if HAS_KEY:
@@ -186,6 +194,17 @@ def main():
         mode = "DRY-RUN only (anthropic not installed — see warning above)"
     else:
         mode = "DRY-RUN only (no ANTHROPIC_API_KEY)"
+
+    if a.warm:
+        idxs = [int(x) for x in a.warm.split(",") if x.strip().lstrip("-").isdigit()]
+        print(f"Pre-warming cache: {len(idxs)} record(s) × '{a.warm_specialty}' ({MODEL})… this is the slow part, once.")
+        for i in idxs:
+            try:
+                run_prechart(i, a.warm_specialty, live=live_ready)
+                print(f"  ✓ warmed idx {i}")
+            except Exception as e:
+                print(f"  ✗ idx {i}: {type(e).__name__}: {e}")
+
     print(f"PreChart web app → http://localhost:{a.port}   [{mode}]")
     ThreadingHTTPServer(("0.0.0.0", a.port), Handler).serve_forever()
 

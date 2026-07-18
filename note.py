@@ -12,7 +12,7 @@ template so the skeleton renders with no key.
 import json
 import re
 
-MODEL = "claude-opus-4-8"
+from config import MODEL, thinking_kwargs
 
 SYSTEM = """You are pre-charting an office visit: drafting the note from the chart BEFORE
 the patient is seen, so the clinician can review it and walk in prepared.
@@ -143,8 +143,8 @@ def _model_note(payload, system):
     # the complete Assessment & Plan) must both fit under max_tokens, or the A/P is truncated.
     # Streaming also avoids the SDK's non-streaming timeout on large outputs.
     with client.messages.stream(
-        model=MODEL, max_tokens=20000, thinking={"type": "adaptive"},
-        system=system, messages=[{"role": "user", "content": user}],
+        model=MODEL, max_tokens=20000, system=system,
+        messages=[{"role": "user", "content": user}], **thinking_kwargs(),
     ) as stream:
         msg = stream.get_final_message()
     text = "".join(b.text for b in msg.content if getattr(b, "type", None) == "text").strip()
