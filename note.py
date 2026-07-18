@@ -89,13 +89,21 @@ def draft_note(rec, chart_items, specialty=None, dry_run=False):
 def _model_note(payload, system):
     import anthropic  # lazy: live path only
     client = anthropic.Anthropic()
-    msg = client.messages.create(
-        model=MODEL, max_tokens=8000, thinking={"type": "adaptive"}, system=system,
-        messages=[{"role": "user", "content":
-                   "Draft the note from this pre-visit chart material (problems, medications, labs, "
-                   "imaging/diagnostics, and prior/outside notes are included where available):\n\n"
-                   + json.dumps(payload, indent=1)}])
-    return "".join(b.text for b in msg.content if getattr(b, "type", None) == "text").strip()
+    user = ("Draft the note from this pre-visit chart material (problems, medications, labs, "
+            "imaging/diagnostics, and prior/outside notes are included where available):\n\n"
+            + json.dumps(payload, indent=1))
+    # Stream with a generous budget: adaptive thinking AND the full note (HPI + Outside Data +
+    # the complete Assessment & Plan) must both fit under max_tokens, or the A/P is truncated.
+    # Streaming also avoids the SDK's non-streaming timeout on large outputs.
+    with client.messages.stream(
+        model=MODEL, max_tokens=20000, thinking={"type": "adaptive"},
+        system=system, messages=[{"role": "user", "content": user}],
+    ) as stream:
+        msg = stream.get_final_message()
+    text = "".join(b.text for b in msg.content if getattr(b, "type", None) == "text").strip()
+    if msg.stop_reason == "max_tokens":
+        text += "\n\n[note truncated at max_tokens — raise the budget in note.py:_model_note]"
+    return text
 
 
 def _template_note(p):
