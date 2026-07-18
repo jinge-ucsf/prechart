@@ -283,7 +283,7 @@ function conflictsMenu(d){
   const wrap = el('div');
   const byState = {}; ORDER.forEach(s=>byState[s]=[]);
   d.proposals.forEach(p=>{ (byState[p.state]||(byState[p.state]=[])).push(p); });
-  const crit = ["CONTRADICTED","UNRESOLVED"].flatMap(s => byState[s].sort((a,b)=>(a.topic||'').localeCompare(b.topic||'')));
+  const crit = ["CONTRADICTED","UNRESOLVED","NEW","ELABORATED"].flatMap(s => byState[s].sort((a,b)=>(a.topic||'').localeCompare(b.topic||'')));
   window.__conflicts = crit;
   window.__resolutions = {};
   if(!crit.length){
@@ -295,8 +295,8 @@ function conflictsMenu(d){
       wrap.appendChild(conflictSelect(p, def));
     });
   }
-  // lower-risk states, collapsed
-  const OTHER = ["NEW","ELABORATED","CONFIRMED","UNADDRESSED"];
+  // routine states, collapsed
+  const OTHER = ["CONFIRMED","UNADDRESSED"];
   const other = OTHER.flatMap(s => byState[s]);
   if(other.length){
     const parts = OTHER.filter(s=>byState[s].length).map(s=>`${byState[s].length} ${s.toLowerCase()}`);
@@ -378,13 +378,13 @@ async function fetchNote(decisions){
 // Warm the cache in the background for each conflict flipped to its opposite side,
 // so the toggle the clinician is most likely to click swaps instantly.
 async function prefetchOverrides(){
-  const conflicts = window.__conflicts||[];
-  if(conflicts.length > 4) return;  // avoid a storm on rare high-conflict records
+  const all = window.__conflicts||[];
   const defaults = Object.assign({}, window.__resolutions);
-  for(const p of conflicts){
+  for(const p of all.slice(0, 6)){   // bound prefetch cost; conflicts are in priority order
     const alt = defaults[p.topic]==='room' ? 'chart' : 'room';   // the opposite account
-    const decisions = conflicts.map(c=>({topic:c.topic, choice:(c.topic===p.topic?alt:defaults[c.topic]),
-                                         room:c.spoken_side, chart:c.chart_side}));
+    // build the decision set over ALL conflicts so the cache key matches a real toggle
+    const decisions = all.map(c=>({topic:c.topic, choice:(c.topic===p.topic?alt:defaults[c.topic]),
+                                   room:c.spoken_side, chart:c.chart_side}));
     if(window.__noteCache.has(decisionsKey(decisions))) continue;
     try{ await fetchNote(decisions); }catch(e){}
   }
