@@ -267,6 +267,12 @@ function render(d){
 
   out.appendChild(grid);
 
+  // seed the client note cache with the initial (agent-default) note, then warm the
+  // likely overrides so toggling is instant
+  window.__noteCache = new Map();
+  window.__noteCache.set(decisionsKey(currentDecisions()), d.note || '');
+  prefetchOverrides();
+
   // secondary detail (full width, collapsed)
   if(d.trace && d.trace.length) out.appendChild(traceDetails(d));
   out.appendChild(witnessDetails(d));
@@ -355,23 +361,49 @@ function selectResolution(topic, key, seg, btn){
   regenNote();
 }
 
+function currentDecisions(){
+  return (window.__conflicts||[]).map(p=>({
+    topic:p.topic, choice:window.__resolutions[p.topic], room:p.spoken_side, chart:p.chart_side }));
+}
+function decisionsKey(decisions){ return JSON.stringify(decisions.map(x=>[x.topic, x.choice])); }
+
+async function fetchNote(decisions){
+  const r = await fetch('/api/note', {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(Object.assign({}, window.__ctx, {decisions}))});
+  const d = await r.json();
+  if(d.note) window.__noteCache.set(decisionsKey(decisions), d.note);
+  return d.note;
+}
+
+// Warm the cache in the background for each conflict flipped to its opposite side,
+// so the toggle the clinician is most likely to click swaps instantly.
+async function prefetchOverrides(){
+  const conflicts = window.__conflicts||[];
+  if(conflicts.length > 4) return;  // avoid a storm on rare high-conflict records
+  const defaults = Object.assign({}, window.__resolutions);
+  for(const p of conflicts){
+    const alt = defaults[p.topic]==='room' ? 'chart' : 'room';   // the opposite account
+    const decisions = conflicts.map(c=>({topic:c.topic, choice:(c.topic===p.topic?alt:defaults[c.topic]),
+                                         room:c.spoken_side, chart:c.chart_side}));
+    if(window.__noteCache.has(decisionsKey(decisions))) continue;
+    try{ await fetchNote(decisions); }catch(e){}
+  }
+}
+
 let __regenTimer = null;
 function regenNote(){
   const box = $('#noteBox'); if(!box) return;
+  const decisions = currentDecisions(), key = decisionsKey(decisions);
+  if(window.__noteCache && window.__noteCache.has(key)){   // instant — already computed
+    box.textContent = window.__noteCache.get(key); box.classList.remove('updating'); return;
+  }
   box.classList.add('updating');
   clearTimeout(__regenTimer);
   __regenTimer = setTimeout(async ()=>{
-    const decisions = (window.__conflicts||[]).map(p=>({
-      topic:p.topic, choice:window.__resolutions[p.topic], room:p.spoken_side, chart:p.chart_side
-    }));
-    try{
-      const r = await fetch('/api/note', {method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(Object.assign({}, window.__ctx, {decisions}))});
-      const d = await r.json();
-      if(d.note) box.textContent = d.note;
-    }catch(e){ /* keep the current note on failure */ }
+    try{ const note = await fetchNote(decisions); if(note) box.textContent = note; }
+    catch(e){ /* keep the current note on failure */ }
     box.classList.remove('updating');
-  }, 400);
+  }, 250);
 }
 
 function traceDetails(d){
