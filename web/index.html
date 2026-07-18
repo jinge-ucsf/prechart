@@ -13,7 +13,7 @@
   }
   *{box-sizing:border-box}
   body{margin:0;font:15px/1.5 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px}
+  .wrap{max-width:1440px;margin:0 auto;padding:0 20px 60px}
   header{display:flex;align-items:baseline;justify-content:space-between;padding:22px 0 6px}
   header h1{margin:0;font-size:26px}
   header .sub{color:var(--muted);font-size:13.5px;margin:2px 0 0}
@@ -120,11 +120,28 @@
   .sechead .hint{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
   .note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 20px 16px;margin-bottom:14px}
   .noteprose{white-space:pre-wrap;word-wrap:break-word;font:13px/1.5 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-    color:var(--ink);margin:0;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:14px 16px;height:520px;overflow:auto}
+    color:var(--ink);margin:0;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:14px 16px;height:620px;overflow:auto;transition:opacity .15s}
+  .noteprose.updating{opacity:.4}
   .copybtn{margin-left:auto;background:#eef2f6;color:var(--blue);border:1px solid #d7dee6;border-radius:6px;
     font-size:11px;font-weight:700;padding:4px 11px;cursor:pointer}
-  .transcript{height:520px;overflow:auto;font-size:13px;line-height:1.5;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .transcript{height:620px;overflow:auto;font-size:13px;line-height:1.5;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:14px 16px}
   .transcript>div{margin:3px 0} .transcript .sp{font-weight:700;color:var(--blue)}
+
+  /* 3-column layout + selectable conflict menu */
+  .grid3{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:14px;align-items:start;margin-bottom:14px}
+  @media (max-width:1000px){ .grid3{grid-template-columns:1fr} }
+  .col{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
+  .colhead{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+  .coltitle{font-weight:700;font-size:14px}
+  .seg{display:flex;flex-direction:column;gap:6px}
+  .segopt{display:block;width:100%;text-align:left;background:#fafbfc;border:1px solid var(--line);border-radius:8px;
+    padding:7px 10px;cursor:pointer;font:inherit;color:var(--ink)}
+  .segopt:hover{border-color:#b9c4ce}
+  .segopt.sel{border-color:#2f855a;background:#eefaf1;box-shadow:inset 0 0 0 1px #2f855a}
+  .segtop{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+  .segopt.sel .segtop{color:#2f855a}
+  .agenttag{background:#2f855a;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;text-transform:none;letter-spacing:0}
+  .segval{font-size:12px;color:var(--ink);margin-top:3px;line-height:1.35}
 </style>
 </head>
 <body>
@@ -177,13 +194,14 @@ async function init(){
 async function run(){
   const out = $('#out'); const btn=$('#run'); btn.disabled=true;
   const live = $('#live').checked;
+  window.__ctx = {index:Number($('#patient').value), specialty:$('#specialty').value, live};
   out.innerHTML='';
   const load = el('div','empty');
-  load.innerHTML = `<span class="spinner"></span>${live ? 'Running the agent — tool-use loop over the two witnesses…' : 'Reconciling…'}`;
+  load.innerHTML = `<span class="spinner"></span>${live ? 'Running the agent…' : 'Reconciling…'}`;
   out.appendChild(load);
   try{
     const r = await fetch('/api/prechart', {method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({index:Number($('#patient').value), specialty:$('#specialty').value, live})});
+      body: JSON.stringify(window.__ctx)});
     const d = await r.json();
     if(d.error){ out.innerHTML=''; out.appendChild(el('div','empty','Error: '+d.error)); return; }
     render(d);
@@ -191,12 +209,18 @@ async function run(){
   finally{ btn.disabled=false; }
 }
 
+function colHead(title, hint){
+  const h = el('div','colhead');
+  h.appendChild(el('span','coltitle', title));
+  if(hint) h.appendChild(el('span','hint', hint));
+  return h;
+}
+
 function render(d){
   const out = $('#out'); out.innerHTML='';
-
   const m = d.meta, pt = m.patient || {};
 
-  // TOP — patient demographics
+  // TOP — demographics (full width)
   const demo = el('div','demo');
   const nr = el('div','namerow');
   nr.appendChild(el('span','pname', pt.name || m.id));
@@ -208,26 +232,15 @@ function render(d){
   badges.appendChild(el('span','badge '+(m.is_dry?'dry':'agent'), m.mode));
   if(m.temporal_removed>0) badges.appendChild(el('span','badge guard', `Temporal guard: ${m.temporal_removed} future artifact(s) withheld`));
   if(m.warning) badges.appendChild(el('span','badge warn', m.warning));
-  ORDER.forEach(st=>{ if(d.counts[st]){ const c=el('span','cchip', `${d.counts[st]} ${st.toLowerCase()}`); c.style.background=`var(--${st})`; badges.appendChild(c);} });
   demo.appendChild(badges);
   out.appendChild(demo);
 
-  // MIDDLE — pre-charted note ‖ transcript, side by side
-  const split = el('div','split');
-  //  ① note (literal plain text, Epic-paste faithful)
-  const nd = el('div','panel');
-  const nh = el('div','sechead');
-  nh.innerHTML = '<span class="secnum">1</span>Pre-charted note <span class="hint">chart + this visit</span>';
-  const copy = el('button','copybtn','Copy note');
-  copy.onclick = () => { navigator.clipboard.writeText(d.note||''); copy.textContent='Copied'; setTimeout(()=>copy.textContent='Copy note',1200); };
-  nh.appendChild(copy); nd.appendChild(nh);
-  const nbody = el('pre','noteprose'); nbody.textContent = d.note || '(no note)'; nd.appendChild(nbody);
-  split.appendChild(nd);
-  //  ② transcript
-  const td = el('div','panel');
-  const th = el('div','sechead');
-  th.innerHTML = '<span class="secnum">2</span>Conversation transcript <span class="hint">the room</span>';
-  td.appendChild(th);
+  // 3-COLUMN — transcript | working note | conflicts menu
+  const grid = el('div','grid3');
+
+  // LEFT: transcript
+  const L = el('div','col');
+  L.appendChild(colHead('Transcript', 'the room'));
   const tbody = el('div','transcript');
   (d.transcript||'').split('\n').forEach(line=>{
     const p = el('div'); const i = line.indexOf(':');
@@ -235,130 +248,94 @@ function render(d){
     else p.textContent = line;
     tbody.appendChild(p);
   });
-  td.appendChild(tbody);
-  split.appendChild(td);
-  out.appendChild(split);
+  L.appendChild(tbody); grid.appendChild(L);
 
-  // BOTTOM — conflicting issues + the evidence behind each adjudication
-  const rh = el('div','sechead'); rh.style.marginTop = '4px';
-  rh.innerHTML = '<span class="secnum">3</span>Conflicts &amp; adjudication <span class="hint">— each discrepancy with the evidence behind the agent\'s call</span>';
-  out.appendChild(rh);
+  // CENTER: working note (updates as the clinician adjudicates)
+  const C = el('div','col');
+  const ch = colHead('Working note', 'updates as you adjudicate →');
+  const copy = el('button','copybtn','Copy');
+  copy.onclick = () => { navigator.clipboard.writeText($('#noteBox').textContent||''); copy.textContent='Copied'; setTimeout(()=>copy.textContent='Copy',1200); };
+  ch.appendChild(copy); C.appendChild(ch);
+  const noteBox = el('pre','noteprose'); noteBox.id='noteBox'; noteBox.textContent = d.note || '(no note)';
+  C.appendChild(noteBox); grid.appendChild(C);
 
-  // conflicts shown as cards; routine (agreed / not discussed) collapsed — streamlined
-  const byState = {}; ORDER.forEach(st=>byState[st]=[]);
+  // RIGHT: conflicts menu (selectable)
+  const R = el('div','col');
+  R.appendChild(colHead('Conflicts & adjudication', 'select the truth'));
+  R.appendChild(conflictsMenu(d));
+  grid.appendChild(R);
+
+  out.appendChild(grid);
+
+  // secondary detail (full width, collapsed)
+  if(d.trace && d.trace.length) out.appendChild(traceDetails(d));
+  out.appendChild(witnessDetails(d));
+  if(d.planted && d.planted.length) out.appendChild(groundTruthDetails(d));
+}
+
+function conflictsMenu(d){
+  const wrap = el('div');
+  const byState = {}; ORDER.forEach(s=>byState[s]=[]);
   d.proposals.forEach(p=>{ (byState[p.state]||(byState[p.state]=[])).push(p); });
-  // CONTRADICTED + UNRESOLVED — surfaced as open cards (the calls that need attention)
-  const CRITICAL = ["CONTRADICTED","UNRESOLVED"];
-  const critical = CRITICAL.flatMap(st => byState[st].sort((a,b)=>(a.topic||'').localeCompare(b.topic||'')));
-  if(critical.length){
-    critical.forEach(p => out.appendChild(conflictCard(p)));
+  const crit = ["CONTRADICTED","UNRESOLVED"].flatMap(s => byState[s].sort((a,b)=>(a.topic||'').localeCompare(b.topic||'')));
+  window.__conflicts = crit;
+  window.__resolutions = {};
+  if(!crit.length){
+    wrap.appendChild(el('div','empty','No conflicts to adjudicate — chart and room agree.'));
   } else {
-    out.appendChild(el('div','empty','No contradictions or unresolved conflicts — nothing needs adjudication.'));
+    crit.forEach(p=>{
+      const def = p.likely_correct==='patient' ? 'room' : p.likely_correct==='chart' ? 'chart' : 'unresolved';
+      window.__resolutions[p.topic] = def;
+      wrap.appendChild(conflictSelect(p, def));
+    });
   }
-  // NEW / ELABORATED / CONFIRMED / UNADDRESSED — lower-risk, collapsed
+  // lower-risk states, collapsed
   const OTHER = ["NEW","ELABORATED","CONFIRMED","UNADDRESSED"];
-  const other = OTHER.flatMap(st => byState[st]);
+  const other = OTHER.flatMap(s => byState[s]);
   if(other.length){
-    const parts = OTHER.filter(st=>byState[st].length).map(st=>`${byState[st].length} ${st.toLowerCase()}`);
+    const parts = OTHER.filter(s=>byState[s].length).map(s=>`${byState[s].length} ${s.toLowerCase()}`);
     const det = el('details');
-    const sm = el('summary');
-    sm.innerHTML = `Other findings <span class="hint">— ${parts.join(' · ')}</span>`;
+    const sm = el('summary'); sm.innerHTML = `Other findings <span class="hint">— ${parts.join(' · ')}</span>`;
     det.appendChild(sm);
     const b = el('div','body'); const ul = el('ul','routinelist');
     other.forEach(p=>{
-      const li = el('li');
-      const chip = el('span','minichip', p.state.toLowerCase()); chip.style.background=`var(--${p.state})`;
-      li.appendChild(chip);
-      li.appendChild(document.createTextNode(' ' + (p.topic||'')));
-      if(p.state==='NEW' || p.state==='ELABORATED') li.appendChild(el('span','miniact', ' → '+(p.proposed_action||'review')));
+      const li = el('li'); const chip = el('span','minichip', p.state.toLowerCase()); chip.style.background=`var(--${p.state})`;
+      li.appendChild(chip); li.appendChild(document.createTextNode(' ' + (p.topic||'')));
       ul.appendChild(li);
     });
-    b.appendChild(ul); det.appendChild(b); out.appendChild(det);
+    b.appendChild(ul); det.appendChild(b); wrap.appendChild(det);
   }
-
-  // investigation trace (the tool calls the agent made — secondary evidence)
-  if(d.trace && d.trace.length){
-    const det = el('details');
-    const sm = el('summary'); sm.innerHTML = `Investigation trace <span class="hint">— ${d.trace.length} tool call(s) the agent made</span>`;
-    det.appendChild(sm);
-    const b = el('div','body'); const t = el('div','trace');
-    d.trace.forEach(step=>{
-      const row = el('div','tstep');
-      row.appendChild(el('span','tool', step.tool));
-      const box = el('div'); box.appendChild(el('span','tgt', step.target)); box.appendChild(document.createTextNode('  ')); box.appendChild(el('span','res', step.result||''));
-      row.appendChild(box); t.appendChild(row);
-    });
-    b.appendChild(t); det.appendChild(b); out.appendChild(det);
-  }
-
-  // extracted witnesses (secondary)
-  const wd = el('details');
-  const wsm = el('summary'); wsm.innerHTML = `Extracted witnesses <span class="hint">— ${d.chart_items.length} chart items · ${d.spoken.length} spoken assertions</span>`;
-  wd.appendChild(wsm);
-  const wb = el('div','body'); const cols = el('div','cols');
-  const cc = el('div'); cc.appendChild(el('h4',null,'Chart'));
-  const cul = el('ul','witlist');
-  d.chart_items.forEach(it=>{ const li=el('li'); li.textContent=`${it.kind}: ${it.label} `; li.appendChild(el('span','tier',it.tier)); cul.appendChild(li); });
-  cc.appendChild(cul);
-  const rc = el('div'); rc.appendChild(el('h4',null,'Room'));
-  const rul = el('ul','witlist');
-  d.spoken.forEach(sp=>{ rul.appendChild(el('li',null,`${sp.speaker}: ${sp.quote}`)); });
-  rc.appendChild(rul);
-  cols.appendChild(cc); cols.appendChild(rc); wb.appendChild(cols); wd.appendChild(wb); out.appendChild(wd);
-
-  // ground truth
-  if(d.planted && d.planted.length){
-    const gd = el('details');
-    const gsm = el('summary'); gsm.innerHTML = `Benchmark ground truth <span class="hint">— ${d.planted.length} planted discrepancies (the answer key)</span>`;
-    gd.appendChild(gsm);
-    const gb = el('div','body'); const g = el('div','gt');
-    d.planted.forEach(x=>{ const row=el('div');
-      row.appendChild(el('span','k', `[${x.expected_state}${x.source_of_error&&x.source_of_error!=='none'?' · '+x.source_of_error+' wrong':''}] `));
-      row.appendChild(document.createTextNode(`${x.chart_state||''} → ${x.spoken_truth||''}`)); g.appendChild(row); });
-    gb.appendChild(g); gd.appendChild(gb); out.appendChild(gd);
-  }
+  return wrap;
 }
 
-function sideBox(label, value, isWin, isDim, tier){
-  const b = el('div','side' + (isWin?' win':'') + (isDim?' dim':''));
-  const h = el('div','sidehd', label);
-  if(isWin) h.appendChild(el('span','pick','✓ agent’s call'));
-  b.appendChild(h);
-  b.appendChild(el('div','sideval', value || (label==='Chart' ? '— not in chart' : '— not mentioned')));
-  if(tier && value) b.appendChild(el('span','tier', tier));
-  return b;
-}
-
-function conflictCard(p){
-  const winner = p.likely_correct==='patient' ? 'room' : p.likely_correct==='chart' ? 'chart' : null;
+function conflictSelect(p, def){
   const card = el('div','ccard'); card.style.borderLeftColor = `var(--${p.state})`;
-
   const hd = el('div','chd');
   const chip = el('span','chip', p.state); chip.style.background=`var(--${p.state})`; hd.appendChild(chip);
   hd.appendChild(el('span','ctopic', p.topic||''));
-  if((p.clinical_significance||'')==='high') hd.appendChild(el('span','sigflag','high significance'));
-  if(p.requires_signoff) hd.appendChild(el('span','so','sign-off'));
+  if((p.clinical_significance||'')==='high') hd.appendChild(el('span','sigflag','high'));
   card.appendChild(hd);
 
-  const acc = el('div','accounts');   // agent's pick highlighted, the other dimmed
-  acc.appendChild(sideBox('Room', p.spoken_side, winner==='room', winner==='chart'));
-  acc.appendChild(sideBox('Chart', p.chart_side, winner==='chart', winner==='room', p.provenance_tier));
-  card.appendChild(acc);
-
-  const verdict = p.state==='NEW' ? 'New — surfaced in the room'
-                : p.state==='ELABORATED' ? 'Room adds detail'
-                : winner==='room' ? 'Agent trusts the room'
-                : winner==='chart' ? 'Agent trusts the chart'
-                : 'Unresolved — won’t guess';
-  const call = el('div','call ' + (winner || p.state==='NEW' || p.state==='ELABORATED' ? 'resolved' : 'open'));
-  call.innerHTML = `<b>${verdict}</b>` + (p.confidence?` · ${p.confidence} confidence`:'')
-                 + (p.proposed_action?` → <b>${p.proposed_action}</b>`:'');
-  card.appendChild(call);
-  if(p.recommended_next_data) card.appendChild(el('div','next','needs → '+p.recommended_next_data));
+  const seg = el('div','seg');
+  const opts = [
+    {key:'room',       label:'Room',       val:p.spoken_side, agent:p.likely_correct==='patient'},
+    {key:'chart',      label:'Chart',      val:p.chart_side,  agent:p.likely_correct==='chart'},
+    {key:'unresolved', label:'Unresolved', val:'defer — ' + (p.recommended_next_data||'gather more data first'),
+                       agent:(p.likely_correct!=='patient' && p.likely_correct!=='chart')},
+  ];
+  opts.forEach(o=>{
+    const b = el('button','segopt' + (def===o.key?' sel':''));
+    const t = el('div','segtop'); t.appendChild(el('span','seglbl', o.label));
+    if(o.agent) t.appendChild(el('span','agenttag','agent’s pick'));
+    b.appendChild(t);
+    b.appendChild(el('div','segval', o.val || (o.key==='chart' ? '— not in chart' : o.key==='room' ? '— not mentioned' : '')));
+    b.onclick = () => selectResolution(p.topic, o.key, seg, b);
+    seg.appendChild(b);
+  });
+  card.appendChild(seg);
 
   if(p.reasoning || (p.evidence_dossier && p.evidence_dossier.length)){
-    const det = el('details','whybox');
-    det.appendChild(el('summary', null, 'Supporting Evidence'));
+    const det = el('details','whybox'); det.appendChild(el('summary', null, 'Supporting Evidence'));
     const b = el('div','body');
     if(p.reasoning) b.appendChild(el('div','why', p.reasoning));
     if(p.evidence_dossier && p.evidence_dossier.length){
@@ -369,6 +346,70 @@ function conflictCard(p){
     det.appendChild(b); card.appendChild(det);
   }
   return card;
+}
+
+function selectResolution(topic, key, seg, btn){
+  window.__resolutions[topic] = key;
+  [...seg.querySelectorAll('.segopt')].forEach(x=>x.classList.remove('sel'));
+  btn.classList.add('sel');
+  regenNote();
+}
+
+let __regenTimer = null;
+function regenNote(){
+  const box = $('#noteBox'); if(!box) return;
+  box.classList.add('updating');
+  clearTimeout(__regenTimer);
+  __regenTimer = setTimeout(async ()=>{
+    const decisions = (window.__conflicts||[]).map(p=>({
+      topic:p.topic, choice:window.__resolutions[p.topic], room:p.spoken_side, chart:p.chart_side
+    }));
+    try{
+      const r = await fetch('/api/note', {method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(Object.assign({}, window.__ctx, {decisions}))});
+      const d = await r.json();
+      if(d.note) box.textContent = d.note;
+    }catch(e){ /* keep the current note on failure */ }
+    box.classList.remove('updating');
+  }, 400);
+}
+
+function traceDetails(d){
+  const det = el('details');
+  const sm = el('summary'); sm.innerHTML = `Investigation trace <span class="hint">— ${d.trace.length} tool call(s) the agent made</span>`;
+  det.appendChild(sm);
+  const b = el('div','body'); const t = el('div','trace');
+  d.trace.forEach(step=>{
+    const row = el('div','tstep'); row.appendChild(el('span','tool', step.tool));
+    const box = el('div'); box.appendChild(el('span','tgt', step.target)); box.appendChild(document.createTextNode('  ')); box.appendChild(el('span','res', step.result||''));
+    row.appendChild(box); t.appendChild(row);
+  });
+  b.appendChild(t); det.appendChild(b); return det;
+}
+
+function witnessDetails(d){
+  const wd = el('details');
+  const wsm = el('summary'); wsm.innerHTML = `Extracted witnesses <span class="hint">— ${d.chart_items.length} chart items · ${d.spoken.length} spoken assertions</span>`;
+  wd.appendChild(wsm);
+  const wb = el('div','body'); const cols = el('div','cols');
+  const cc = el('div'); cc.appendChild(el('h4',null,'Chart')); const cul = el('ul','witlist');
+  d.chart_items.forEach(it=>{ const li=el('li'); li.textContent=`${it.kind}: ${it.label} `; li.appendChild(el('span','tier',it.tier)); cul.appendChild(li); });
+  cc.appendChild(cul);
+  const rc = el('div'); rc.appendChild(el('h4',null,'Room')); const rul = el('ul','witlist');
+  d.spoken.forEach(sp=>{ rul.appendChild(el('li',null,`${sp.speaker}: ${sp.quote}`)); });
+  rc.appendChild(rul);
+  cols.appendChild(cc); cols.appendChild(rc); wb.appendChild(cols); wd.appendChild(wb); return wd;
+}
+
+function groundTruthDetails(d){
+  const gd = el('details');
+  const gsm = el('summary'); gsm.innerHTML = `Benchmark ground truth <span class="hint">— ${d.planted.length} planted discrepancies (the answer key)</span>`;
+  gd.appendChild(gsm);
+  const gb = el('div','body'); const g = el('div','gt');
+  d.planted.forEach(x=>{ const row=el('div');
+    row.appendChild(el('span','k', `[${x.expected_state}${x.source_of_error&&x.source_of_error!=='none'?' · '+x.source_of_error+' wrong':''}] `));
+    row.appendChild(document.createTextNode(`${x.chart_state||''} → ${x.spoken_truth||''}`)); g.appendChild(row); });
+  gb.appendChild(g); gd.appendChild(gb); return gd;
 }
 
 $('#run').addEventListener('click', run);

@@ -131,6 +131,26 @@ def run_prechart(index, specialty_key, live):
     return result
 
 
+def regen_note(index, specialty_key, live, decisions):
+    """Re-draft only the note to reflect the clinician's adjudication choices."""
+    dry = not (live and HAS_KEY)
+    key = f"note|{index}|{specialty_key}|{'dry' if dry else 'live'}|{json.dumps(decisions, sort_keys=True)}"
+    if key in _CACHE:
+        return _CACHE[key]
+    spec = load_specialty(specialty_key)
+    rec = load_record(DEFAULT_DATASET, index=index)
+    chart = extract_chart_items(rec)
+    warning = None
+    try:
+        note = draft_note(rec, chart, specialty=spec, dry_run=dry, decisions=decisions)
+    except Exception as e:
+        warning = f"live regeneration failed ({type(e).__name__}: {e}); showing the template"
+        note = draft_note(rec, chart, specialty=spec, dry_run=True, decisions=decisions)
+    res = {"note": note, "is_dry": dry, "warning": warning}
+    _CACHE[key] = res
+    return res
+
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):  # quiet console
         pass
@@ -158,16 +178,24 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, {"error": "not found"})
 
     def do_POST(self):
-        if self.path != "/api/prechart":
-            self._send(404, {"error": "not found"})
-            return
         try:
             n = int(self.headers.get("Content-Length", 0))
             body = json.loads(self.rfile.read(n) or b"{}")
-            result = run_prechart(int(body.get("index", 0)),
-                                  body.get("specialty", "gi"),
-                                  bool(body.get("live", False)))
-            self._send(200, result)
+        except Exception as e:
+            self._send(400, {"error": f"bad request: {e}"})
+            return
+        try:
+            if self.path == "/api/prechart":
+                self._send(200, run_prechart(int(body.get("index", 0)),
+                                             body.get("specialty", "gi"),
+                                             bool(body.get("live", False))))
+            elif self.path == "/api/note":
+                self._send(200, regen_note(int(body.get("index", 0)),
+                                           body.get("specialty", "gi"),
+                                           bool(body.get("live", False)),
+                                           body.get("decisions", [])))
+            else:
+                self._send(404, {"error": "not found"})
         except Exception as e:
             self._send(500, {"error": f"{type(e).__name__}: {e}"})
 

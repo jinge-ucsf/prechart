@@ -122,15 +122,17 @@ def _note_payload(rec, chart_items, specialty):
     }
 
 
-def draft_note(rec, chart_items, specialty=None, dry_run=False):
+def draft_note(rec, chart_items, specialty=None, dry_run=False, decisions=None):
     payload = _note_payload(rec, chart_items, specialty)
+    if decisions:
+        payload["clinician_decisions"] = decisions
     if dry_run:
         return _template_note(payload)
     system = (specialty or {}).get("note_prompt") or SYSTEM   # the specialty's Epic-style spec
-    return _model_note(payload, system)
+    return _model_note(payload, system, decisions)
 
 
-def _model_note(payload, system):
+def _model_note(payload, system, decisions=None):
     import anthropic  # lazy: live path only
     client = anthropic.Anthropic()
     user = ("Draft the note from this encounter material. The chart (problems, medications, labs, "
@@ -139,6 +141,12 @@ def _model_note(payload, system):
             "& Plan (the actual management discussed), the chart supplies background and objective "
             "data. Where they conflict, reason to the most likely truth and flag it.\n\n"
             + json.dumps(payload, indent=1))
+    if decisions:
+        user += ("\n\nCLINICIAN DECISIONS — the clinician has adjudicated the conflicts below; write the "
+                 "HPI and Assessment & Plan to reflect each decision AS THE TRUTH, even where the raw "
+                 "evidence is mixed. room = the patient's account is correct; chart = the chart is correct; "
+                 "unresolved = state the uncertainty and the plan to resolve it before acting:\n"
+                 + json.dumps(decisions, indent=1))
     # Stream with a generous budget: adaptive thinking AND the full note (HPI + Outside Data +
     # the complete Assessment & Plan) must both fit under max_tokens, or the A/P is truncated.
     # Streaming also avoids the SDK's non-streaming timeout on large outputs.
@@ -183,8 +191,13 @@ def _template_note(p):
         blocks.append(f"**Medication — {m}: high-significance for this visit.\n"
                       f"- *** Verify current use and dose and reconcile against the room.")
 
+    dec = p.get("clinician_decisions")
+    dec_txt = ""
+    if dec:
+        dec_txt = "\n\nClinician adjudication applied:\n" + "\n".join(
+            f"- {x.get('topic', '?')} → {str(x.get('choice', '?')).upper()}" for x in dec)
     return (f"History of Present Illness\n{hpi}"
             f"{outside}\n\n"
             f"Assessment & Plan\n"
             f"Pre-visit draft for {p['specialty']} (dry-run template — not the model).\n\n"
-            + "\n\n".join(blocks) + "\n")
+            + "\n\n".join(blocks) + dec_txt + "\n")
