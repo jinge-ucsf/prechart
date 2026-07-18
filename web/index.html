@@ -358,7 +358,7 @@ function conflictCard(p){
 
   if(p.reasoning || (p.evidence_dossier && p.evidence_dossier.length)){
     const det = el('details','whybox');
-    det.appendChild(el('summary', null, 'Why'));
+    det.appendChild(el('summary', null, 'Supporting Evidence'));
     const b = el('div','body');
     if(p.reasoning) b.appendChild(el('div','why', p.reasoning));
     if(p.evidence_dossier && p.evidence_dossier.length){
