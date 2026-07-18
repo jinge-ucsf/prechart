@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PreChart — 60s</title>
+<style>
+  :root{--ink:#16283a;--muted:#5b6b7a;--blue:#17557a;--green:#2f855a;--red:#c0392b;--amber:#b26a09;--line:#e2e8ee;--card:#fff;--bg:#f6f8fb}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
+  .wm{position:fixed;top:24px;right:30px;font-size:21px;font-weight:800;z-index:6;letter-spacing:.2px}
+  .wm .gi{color:var(--blue)}
+  .stage{position:fixed;left:0;right:0;top:0;bottom:150px;display:flex;align-items:center;justify-content:center}
+  .scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:22px;opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;
+    pointer-events:none;padding:0 6vw;text-align:center}
+  .scene.on{opacity:1;transform:none}
+
+  .big{font-size:58px;font-weight:800;letter-spacing:-.5px}
+  .sub{font-size:22px;color:var(--muted)}
+  .kicker{font-size:15px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:2px}
+
+  .row{display:flex;gap:20px;align-items:stretch;justify-content:center;flex-wrap:wrap}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;min-width:230px;
+    box-shadow:0 8px 26px rgba(20,40,58,.06);text-align:left}
+  .card h3{margin:0 0 8px;font-size:18px}
+  .card .l{font-size:15px;color:var(--ink);margin:4px 0}
+  .card .dim{color:var(--muted)}
+  .stale{text-decoration:line-through;color:#9aa7b2}
+  .flag{display:inline-block;background:#fbecea;color:var(--red);font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;margin-left:6px}
+  .wrong{background:#fbecea;color:var(--red);font-size:12px;font-weight:800;padding:3px 10px;border-radius:7px;display:inline-block}
+
+  .chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:900px}
+  .chip{background:#eef4fb;color:var(--blue);border:1px solid #d5e2f0;border-radius:20px;padding:8px 15px;font-size:15px;font-weight:600;
+    opacity:0;transform:translateY(10px) scale(.96);transition:opacity .45s ease,transform .45s ease}
+  .scene.on .chip{opacity:1;transform:none}
+  .scene.on .chip:nth-child(1){transition-delay:.15s}.scene.on .chip:nth-child(2){transition-delay:.5s}
+  .scene.on .chip:nth-child(3){transition-delay:.85s}.scene.on .chip:nth-child(4){transition-delay:1.2s}
+  .scene.on .chip:nth-child(5){transition-delay:1.55s}
+
+  .agent{background:var(--blue);color:#fff;border-radius:14px;padding:14px 26px;font-size:20px;font-weight:700;box-shadow:0 8px 26px rgba(23,85,122,.25)}
+  .verdict{background:#eefaf1;border:1.5px solid var(--green);color:#1e5b3b;border-radius:12px;padding:12px 20px;font-size:19px;font-weight:700}
+
+  /* hero comparison */
+  .vs{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap}
+  .wcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;min-width:210px;text-align:left}
+  .wcard .t{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+  .wcard .v{font-size:20px;font-weight:700;margin-top:4px}
+  .arrow{font-size:26px;color:var(--muted)}
+
+  /* override toggle + note */
+  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-weight:700}
+  .seg{padding:10px 26px;font-size:17px;background:#fafbfc;color:var(--muted);transition:all .5s ease}
+  .seg.sel{background:#eefaf1;color:#1e5b3b}
+  #sE.flip .seg.room{background:#fafbfc;color:var(--muted)}
+  #sE.flip .seg.chart{background:#eefaf1;color:#1e5b3b}
+  .note{background:#fbfcfe;border:1px solid var(--line);border-radius:12px;padding:16px 20px;max-width:640px;text-align:left;
+    font-size:16px;line-height:1.5}
+  .note .h{font-size:12px;font-weight:800;color:var(--blue);letter-spacing:.5px}
+  .swap{position:relative;min-height:52px}
+  .planA,.planB{transition:opacity .5s ease;position:absolute;left:0;right:0}
+  .planB{opacity:0}
+  #sE.flip .planA{opacity:0}
+  #sE.flip .planB{opacity:1}
+
+  .capbar{position:fixed;left:0;right:0;bottom:44px;display:flex;justify-content:center;padding:0 7vw;z-index:5}
+  .cap{font-size:27px;line-height:1.42;font-weight:600;text-align:center;max-width:1040px;min-height:76px;transition:opacity .3s}
+  .prog{position:fixed;left:0;right:0;bottom:0;height:6px;background:#e2e8ee;z-index:6}
+  .progbar{height:100%;width:0;background:var(--blue)}
+  .replay{position:fixed;bottom:20px;right:26px;z-index:7;display:none;background:var(--blue);color:#fff;border:0;
+    border-radius:9px;padding:10px 18px;font:inherit;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+  <div class="wm">UCSF <span class="gi">GI</span></div>
+
+  <div class="stage">
+    <!-- A · title -->
+    <div class="scene" id="sA">
+      <div class="kicker">UCSF GI Team · Future of Agentic AI in Healthcare</div>
+      <div class="big">PreChart</div>
+      <div class="sub">cross-examine the chart · steer the truth</div>
+    </div>
+
+    <!-- B · the problem -->
+    <div class="scene" id="sB">
+      <div class="kicker">The problem</div>
+      <div class="card" style="min-width:420px">
+        <h3>Chart <span class="wrong">often wrong</span></h3>
+        <div class="l stale">warfarin 5 mg — active <span class="flag">order 2020</span></div>
+        <div class="l dim">problem list copied forward since 2019</div>
+        <div class="l dim">outside records — incomplete</div>
+      </div>
+      <div class="sub">…and the patient often doesn't know the finer details.</div>
+    </div>
+
+    <!-- C · two witnesses + scan -->
+    <div class="scene" id="sC">
+      <div class="kicker">Two fallible witnesses</div>
+      <div class="row">
+        <div class="card"><h3>CHART <span class="wrong">can be wrong</span></h3><div class="l dim">FHIR · meds · labs · imaging · prior notes</div></div>
+        <div class="agent">the agent scans the record →</div>
+        <div class="card"><h3>ROOM <span class="wrong">can be wrong</span></h3><div class="l dim">ambient transcript of the visit</div></div>
+      </div>
+      <div class="chips">
+        <span class="chip">last ordered 2020</span>
+        <span class="chip">INR 2.4 · drawn Jan</span>
+        <span class="chip">no recent refill</span>
+        <span class="chip">cardiology note</span>
+        <span class="chip">LDL at goal</span>
+      </div>
+      <div class="sub">adjacent clues — weighed for which account to trust</div>
+    </div>
+
+    <!-- D · warfarin hero -->
+    <div class="scene" id="sD">
+      <div class="kicker">Booked for an endoscopy</div>
+      <div class="vs">
+        <div class="wcard"><div class="t">Chart says</div><div class="v" style="color:var(--red)">warfarin — active</div></div>
+        <div class="arrow">vs</div>
+        <div class="wcard"><div class="t">Room says</div><div class="v" style="color:var(--green)">switched to apixaban</div></div>
+      </div>
+      <div class="chips">
+        <span class="chip">warfarin order: old</span>
+        <span class="chip">INR reassuring — but stale, 6 months</span>
+      </div>
+      <div class="verdict">Adjacent evidence backs the room → plan around apixaban</div>
+    </div>
+
+    <!-- E · override + note rewrite -->
+    <div class="scene" id="sE">
+      <div class="kicker">The clinician steers</div>
+      <div class="toggle"><span class="seg room sel">Room ✓</span><span class="seg chart">Chart</span><span class="seg">Unresolved</span></div>
+      <div class="note">
+        <div class="h">ASSESSMENT &amp; PLAN — Anticoagulation</div>
+        <div class="swap">
+          <div class="planA">Off warfarin, on apixaban. Hold apixaban 2 days pre-procedure; resume 24 h post if hemostasis is adequate.</div>
+          <div class="planB">Continue warfarin per chart. Hold 5 days pre-procedure; bridge per risk; confirm INR &lt; 1.5 before endoscopy.</div>
+        </div>
+      </div>
+      <div class="sub">one tap to override — the note rewrites, live</div>
+    </div>
+
+    <!-- F · close -->
+    <div class="scene" id="sF">
+      <div class="big" style="font-size:46px">The agent proposes.<br>The clinician decides.</div>
+      <div class="sub" style="font-size:26px;font-weight:700;color:var(--blue)">PreChart · UCSF GI</div>
+    </div>
+  </div>
+
+  <div class="capbar"><div class="cap" id="cap"></div></div>
+  <div class="prog"><div class="progbar" id="progbar"></div></div>
+  <button class="replay" id="replay">▶ Replay</button>
+
+<script>
+  const beats = [
+    {t:0,     scene:'sA', cap:''},
+    {t:5000,  scene:'sB', cap:'Every clinic note starts from the chart — and the chart is often wrong.'},
+    {t:11000, scene:'sB', cap:'Incorrect entries · stale copy-forward · incomplete records — and the patient often doesn’t know the details.'},
+    {t:17000, scene:'sC', cap:'PreChart treats the chart and the room as two fallible witnesses.'},
+    {t:24000, scene:'sC', cap:'It scans the entire record — the FHIR data — for adjacent clues: last-order dates, related labs, other clinicians’ notes.'},
+    {t:31000, scene:'sC', cap:'…then weighs which account to trust.'},
+    {t:35000, scene:'sD', cap:'This patient’s booked for an endoscopy — the chart says warfarin; the room says apixaban.'},
+    {t:41000, scene:'sD', cap:'The warfarin order is old; the reassuring INR is stale — drawn six months ago.'},
+    {t:47000, scene:'sD', cap:'The adjacent evidence backs the room, so it plans around apixaban — not warfarin.'},
+    {t:51000, scene:'sE', cap:'The clinician stays in control — accept the agent’s call, or override it, and the note rewrites, live.'},
+    {t:57000, scene:'sF', cap:'The agent proposes. The clinician decides.'},
+    {t:60000, scene:'sF', cap:''},
+  ];
+  const cap = document.getElementById('cap'), progbar = document.getElementById('progbar'), replay = document.getElementById('replay');
+  let timers = [];
+  function show(id){ document.querySelectorAll('.scene').forEach(s=>s.classList.toggle('on', s.id===id)); }
+  function start(){
+    timers.forEach(clearTimeout); timers=[]; replay.style.display='none';
+    document.getElementById('sE').classList.remove('flip');
+    progbar.style.transition='none'; progbar.style.width='0';
+    void progbar.offsetWidth;                     // reflow
+    progbar.style.transition='width 60s linear'; progbar.style.width='100%';
+    beats.forEach(b=> timers.push(setTimeout(()=>{ show(b.scene); cap.textContent=b.cap; }, b.t)) );
+    timers.push(setTimeout(()=>document.getElementById('sE').classList.add('flip'), 54500)); // override rewrites the note
+    timers.push(setTimeout(()=>{ replay.style.display='block'; }, 60000));
+  }
+  replay.addEventListener('click', start);
+  window.addEventListener('load', start);
+</script>
+</body>
+</html>
