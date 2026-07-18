@@ -20,6 +20,7 @@
   .big{font-size:58px;font-weight:800;letter-spacing:-.5px}
   .sub{font-size:22px;color:var(--muted)}
   .kicker{font-size:15px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:2px}
+  .shot{max-width:min(1120px,88vw);max-height:60vh;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 44px rgba(20,40,58,.16)}
 
   .row{display:flex;gap:20px;align-items:stretch;justify-content:center;flex-wrap:wrap}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;min-width:230px;
@@ -128,17 +129,10 @@
       <div class="verdict">Adjacent evidence backs the room → plan around apixaban</div>
     </div>
 
-    <!-- E · override + note rewrite -->
+    <!-- E · override + note rewrite (REAL app footage) -->
     <div class="scene" id="sE">
-      <div class="kicker">The clinician steers</div>
-      <div class="toggle"><span class="seg room sel">Room ✓</span><span class="seg chart">Chart</span><span class="seg">Unresolved</span></div>
-      <div class="note">
-        <div class="h">ASSESSMENT &amp; PLAN — Anticoagulation</div>
-        <div class="swap">
-          <div class="planA">Off warfarin, on apixaban. Hold apixaban 2 days pre-procedure; resume 24 h post if hemostasis is adequate.</div>
-          <div class="planB">Continue warfarin per chart. Hold 5 days pre-procedure; bridge per risk; confirm INR &lt; 1.5 before endoscopy.</div>
-        </div>
-      </div>
+      <div class="kicker">The clinician steers — the real app</div>
+      <img class="shot" src="shots/override.gif" alt="Overriding a conflict rewrites the working note live">
       <div class="sub">one tap to override — the note rewrites, live</div>
     </div>
 
