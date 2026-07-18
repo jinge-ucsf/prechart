@@ -192,7 +192,7 @@ function render(d){
   //  ① note (literal plain text, Epic-paste faithful)
   const nd = el('div','panel');
   const nh = el('div','sechead');
-  nh.innerHTML = '<span class="secnum">1</span>Pre-charted note <span class="hint">from the record</span>';
+  nh.innerHTML = '<span class="secnum">1</span>Pre-charted note <span class="hint">chart + this visit</span>';
   const copy = el('button','copybtn','Copy note');
   copy.onclick = () => { navigator.clipboard.writeText(d.note||''); copy.textContent='Copied'; setTimeout(()=>copy.textContent='Copy note',1200); };
   nh.appendChild(copy); nd.appendChild(nh);

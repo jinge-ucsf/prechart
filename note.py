@@ -1,14 +1,16 @@
-"""Pre-charting: draft the office-visit note from the chart BEFORE the room.
+"""Pre-charting: draft the office-visit note from the encounter material.
 
-This is the "pre-chart" — a specialty-styled draft the clinician reads before the
-patient walks in. It is built from the CHART ONLY (problems, meds, labs, prior
-notes); the ambient transcript is deliberately excluded, because verifying this
-draft against the room is exactly what the reconciliation step does next.
+PreChart drafts a specialty-styled consultation note from the chart (problems,
+meds, labs, imaging, prior/outside notes) AND the ambient transcript of the visit,
+so the Assessment & Plan is the best approximation of the ACTUAL management — not a
+chart-only guess. The separate reconciliation step surfaces where the chart and the
+room disagreed.
 
-Live path drafts with the model; --dry-run assembles a deterministic template so
-the skeleton renders with no key. Both return Markdown.
+Live path drafts with the model (streamed); --dry-run assembles a deterministic
+template so the skeleton renders with no key.
 """
 import json
+import re
 
 MODEL = "claude-opus-4-8"
 
@@ -57,29 +59,71 @@ def _procedures(rr):
     return out
 
 
-def _chart_payload(rec, chart_items, specialty):
+# Strip coded-terminology qualifiers (anywhere) so the note doesn't read like a code dump.
+_SNOMED_QUAL = re.compile(
+    r"\s*\((disorder|finding|situation|procedure|morphologic abnormality|observable entity|"
+    r"regime/therapy|substance|product|qualifier value)\)", re.I)
+
+
+def _clean(label):
+    s = _SNOMED_QUAL.sub("", (label or ""))
+    s = re.sub(r"\s+,", ",", s)      # "esophagus , C2M4" -> "esophagus, C2M4"
+    s = re.sub(r"\s{2,}", " ", s)    # collapse doubled spaces
+    return s.strip()
+
+
+def _dedupe(items):
+    seen, out = set(), []
+    for x in items:
+        k = x.lower().strip()
+        if k and k not in seen:
+            seen.add(k)
+            out.append(x)
+    return out
+
+
+def _age_sex(rec):
+    pat = (rec.get("patient_context", {}) or {}).get("patient") or {}
+    dob = (pat.get("birthDate") or "")[:10]
+    enc = (rec.get("metadata", {}).get("date") or "")[:10]
+    age = None
+    if dob[:4].isdigit() and enc[:4].isdigit():
+        try:
+            by, bm, bd = (int(x) for x in dob.split("-"))
+            ey, em, ed = (int(x) for x in enc.split("-"))
+            age = ey - by - ((em, ed) < (bm, bd))
+        except ValueError:
+            age = None
+    return age, pat.get("gender", "")
+
+
+def _note_payload(rec, chart_items, specialty):
     rr = rec.get("encounter_fhir", {}).get("related_resources", {}) or {}
+    age, sex = _age_sex(rec)
     return {
         "reason_for_visit": rec.get("metadata", {}).get("visit_title", ""),
+        "patient": {"age": age, "sex": sex},
         "specialty": (specialty or {}).get("name", "General"),
         "specialty_focus": (specialty or {}).get("visit_framing", ""),
         "high_significance": (specialty or {}).get("high_significance_flags", []),
-        "active_problems": [it["label"] for it in chart_items if it["kind"] == "problem"],
-        "medications": [it["label"] for it in chart_items if it["kind"] == "medication"],
-        "allergies": [it["label"] for it in chart_items if it["kind"] == "allergy"],
+        "active_problems": _dedupe([_clean(it["label"]) for it in chart_items if it["kind"] == "problem"]),
+        "medications": _dedupe([it["label"] for it in chart_items if it["kind"] == "medication"]),
+        "allergies": _dedupe([_clean(it["label"]) for it in chart_items if it["kind"] == "allergy"]),
         "recent_labs": _labs(rec),
         "imaging_and_diagnostics": _diagnostics(rr),
         "procedures": _procedures(rr),
         "prior_notes": [
             {"type": n.get("document_type"), "date": n.get("date"),
-             "specialty": n.get("provider_specialty"), "text": (n.get("text") or "")[:1500]}
+             "specialty": n.get("provider_specialty"), "text": (n.get("text") or "")[:2000]}
             for n in rec.get("patient_context", {}).get("prior_notes", []) or []
         ],
+        # the ambient recording of THIS visit — drives the interval history and the A/P
+        "ambient_transcript": rec.get("transcript", ""),
     }
 
 
 def draft_note(rec, chart_items, specialty=None, dry_run=False):
-    payload = _chart_payload(rec, chart_items, specialty)
+    payload = _note_payload(rec, chart_items, specialty)
     if dry_run:
         return _template_note(payload)
     system = (specialty or {}).get("note_prompt") or SYSTEM   # the specialty's Epic-style spec
@@ -89,8 +133,11 @@ def draft_note(rec, chart_items, specialty=None, dry_run=False):
 def _model_note(payload, system):
     import anthropic  # lazy: live path only
     client = anthropic.Anthropic()
-    user = ("Draft the note from this pre-visit chart material (problems, medications, labs, "
-            "imaging/diagnostics, and prior/outside notes are included where available):\n\n"
+    user = ("Draft the note from this encounter material. The chart (problems, medications, labs, "
+            "imaging/diagnostics, prior/outside notes) AND the ambient transcript of today's visit "
+            "are provided — use BOTH: the transcript drives the interval history and the Assessment "
+            "& Plan (the actual management discussed), the chart supplies background and objective "
+            "data. Where they conflict, reason to the most likely truth and flag it.\n\n"
             + json.dumps(payload, indent=1))
     # Stream with a generous budget: adaptive thinking AND the full note (HPI + Outside Data +
     # the complete Assessment & Plan) must both fit under max_tokens, or the A/P is truncated.
