@@ -15,6 +15,7 @@ The browser calls two endpoints:
 import argparse
 import json
 import os
+import re
 import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -34,6 +35,29 @@ _CACHE = {}
 def _records():
     with open(DEFAULT_DATASET) as fh:
         return [json.loads(l) for l in fh]
+
+
+def _demographics(rec):
+    """Name / DOB / age / sex / MRN for the header. Records have no real MRN, so we
+    derive a stable synthetic one from the record id (clearly synthetic data)."""
+    pat = (rec.get("patient_context", {}) or {}).get("patient") \
+        or (rec.get("patient_context", {}) or {}).get("Patient") or {}
+    nm = (pat.get("name") or [{}])[0]
+    given = " ".join(nm.get("given", []))
+    name = (", ".join(p for p in (nm.get("family", ""), given) if p) or nm.get("text") or "Unknown")
+    dob = (pat.get("birthDate") or "")[:10]
+    enc = (rec.get("metadata", {}).get("date") or "")[:10]
+    age = None
+    if dob[:4].isdigit() and enc[:4].isdigit():
+        try:
+            by, bm, bd = (int(x) for x in dob.split("-"))
+            ey, em, ed = (int(x) for x in enc.split("-"))
+            age = ey - by - ((em, ed) < (bm, bd))
+        except ValueError:
+            age = None
+    digits = re.findall(r"\d+", rec.get("id", "").split("::")[0])
+    mrn = f"{7000000 + int(digits[-1])}" if digits else "—"
+    return {"name": name, "dob": dob, "age": age, "sex": pat.get("gender", ""), "mrn": mrn}
 
 
 def patients():
@@ -80,6 +104,7 @@ def run_prechart(index, specialty_key, live):
         "meta": {
             "id": rec["id"],
             "index": index,
+            "patient": _demographics(rec),
             "visit_title": rec["metadata"].get("visit_title", ""),
             "date": (rec["metadata"].get("date") or "")[:10],
             "specialty": spec["name"],

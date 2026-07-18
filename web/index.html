@@ -43,6 +43,17 @@
   .counts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
   .cchip{font-size:11px;font-weight:700;color:#fff;padding:3px 8px;border-radius:6px}
 
+  /* demographics header */
+  .demo{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:14px}
+  .namerow{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .pname{font-size:21px;font-weight:800}
+  .pids{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .vmeta{color:var(--muted);font-size:13px;margin:4px 0 10px}
+  /* note ‖ transcript */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;align-items:start}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px 14px;min-width:0}
+  @media (max-width:880px){ .split{grid-template-columns:1fr} }
+
   details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:14px}
   summary{cursor:pointer;padding:12px 16px;font-weight:700;font-size:14px;list-style:none}
   summary::-webkit-details-marker{display:none}
@@ -83,11 +94,11 @@
   .sechead{font-size:15px;font-weight:700;margin:2px 0 8px;display:flex;align-items:center}
   .sechead .hint{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
   .note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 20px 16px;margin-bottom:14px}
-  .noteprose{white-space:pre-wrap;word-wrap:break-word;font:13.5px/1.55 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-    color:var(--ink);margin:0;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:14px 16px;max-height:560px;overflow:auto}
+  .noteprose{white-space:pre-wrap;word-wrap:break-word;font:13px/1.5 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);margin:0;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:14px 16px;height:520px;overflow:auto}
   .copybtn{margin-left:auto;background:#eef2f6;color:var(--blue);border:1px solid #d7dee6;border-radius:6px;
     font-size:11px;font-weight:700;padding:4px 11px;cursor:pointer}
-  .transcript{max-height:320px;overflow:auto;font-size:13px}
+  .transcript{height:520px;overflow:auto;font-size:13px;line-height:1.5;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:14px 16px}
   .transcript>div{margin:3px 0} .transcript .sp{font-weight:700;color:var(--blue)}
 </style>
 </head>
@@ -158,57 +169,67 @@ async function run(){
 function render(d){
   const out = $('#out'); out.innerHTML='';
 
-  // summary
-  const s = el('div','summary');
-  s.appendChild(el('div','title', d.meta.visit_title));
-  s.appendChild(el('div','meta', `${d.meta.id}  ·  ${d.meta.date}  ·  ${d.meta.specialty}`));
+  const m = d.meta, pt = m.patient || {};
+
+  // TOP — patient demographics
+  const demo = el('div','demo');
+  const nr = el('div','namerow');
+  nr.appendChild(el('span','pname', pt.name || m.id));
+  nr.appendChild(el('span','pids',
+    `MRN ${pt.mrn||'—'}   ·   DOB ${pt.dob||'—'}` + (pt.age!=null?`  (${pt.age} y)`:'') + (pt.sex?`   ·   ${pt.sex}`:'')));
+  demo.appendChild(nr);
+  demo.appendChild(el('div','vmeta', `${m.visit_title}   ·   ${m.date}   ·   ${m.specialty}`));
   const badges = el('div','badges');
-  badges.appendChild(el('span','badge '+(d.meta.is_dry?'dry':'agent'), d.meta.mode));
-  if(d.meta.temporal_removed>0) badges.appendChild(el('span','badge guard', `Temporal guard: ${d.meta.temporal_removed} future artifact(s) withheld`));
-  if(d.meta.warning) badges.appendChild(el('span','badge warn', d.meta.warning));
-  s.appendChild(badges);
-  const counts = el('div','counts');
-  ORDER.forEach(st=>{ if(d.counts[st]){ const c=el('span','cchip', `${d.counts[st]} ${st.toLowerCase()}`); c.style.background=`var(--${st})`; counts.appendChild(c);} });
-  s.appendChild(counts);
-  out.appendChild(s);
+  badges.appendChild(el('span','badge '+(m.is_dry?'dry':'agent'), m.mode));
+  if(m.temporal_removed>0) badges.appendChild(el('span','badge guard', `Temporal guard: ${m.temporal_removed} future artifact(s) withheld`));
+  if(m.warning) badges.appendChild(el('span','badge warn', m.warning));
+  ORDER.forEach(st=>{ if(d.counts[st]){ const c=el('span','cchip', `${d.counts[st]} ${st.toLowerCase()}`); c.style.background=`var(--${st})`; badges.appendChild(c);} });
+  demo.appendChild(badges);
+  out.appendChild(demo);
 
-  // ① pre-charted note (from the chart, before the room) — rendered as literal plain
-  // text (Epic-style: the ** / - / *** are literal characters, copy-pasteable as-is)
-  if(d.note){
-    const nd = el('div','note');
-    const h = el('div','sechead');
-    h.innerHTML = '<span class="secnum">1</span>Pre-charted note <span class="hint">— drafted from the chart, before the room</span>';
-    const copy = el('button','copybtn','Copy note');
-    copy.onclick = () => { navigator.clipboard.writeText(d.note); copy.textContent='Copied'; setTimeout(()=>copy.textContent='Copy note',1200); };
-    h.appendChild(copy);
-    nd.appendChild(h);
-    const body = el('pre','noteprose'); body.textContent = d.note; nd.appendChild(body);
-    out.appendChild(nd);
-  }
+  // MIDDLE — pre-charted note ‖ transcript, side by side
+  const split = el('div','split');
+  //  ① note (literal plain text, Epic-paste faithful)
+  const nd = el('div','panel');
+  const nh = el('div','sechead');
+  nh.innerHTML = '<span class="secnum">1</span>Pre-charted note <span class="hint">from the record</span>';
+  const copy = el('button','copybtn','Copy note');
+  copy.onclick = () => { navigator.clipboard.writeText(d.note||''); copy.textContent='Copied'; setTimeout(()=>copy.textContent='Copy note',1200); };
+  nh.appendChild(copy); nd.appendChild(nh);
+  const nbody = el('pre','noteprose'); nbody.textContent = d.note || '(no note)'; nd.appendChild(nbody);
+  split.appendChild(nd);
+  //  ② transcript
+  const td = el('div','panel');
+  const th = el('div','sechead');
+  th.innerHTML = '<span class="secnum">2</span>Conversation transcript <span class="hint">the room</span>';
+  td.appendChild(th);
+  const tbody = el('div','transcript');
+  (d.transcript||'').split('\n').forEach(line=>{
+    const p = el('div'); const i = line.indexOf(':');
+    if(i>0 && i<40){ p.appendChild(el('span','sp', line.slice(0,i+1))); p.appendChild(document.createTextNode(line.slice(i+1))); }
+    else p.textContent = line;
+    tbody.appendChild(p);
+  });
+  td.appendChild(tbody);
+  split.appendChild(td);
+  out.appendChild(split);
 
-  // ② the room — ambient transcript
-  if(d.transcript){
-    const det = el('details');
-    const sm = el('summary'); sm.innerHTML = '<span class="secnum">2</span>The room — ambient transcript';
-    det.appendChild(sm);
-    const b = el('div','body'); const t = el('div','transcript');
-    d.transcript.split('\n').forEach(line=>{
-      const p = el('div'); const i = line.indexOf(':');
-      if(i>0 && i<40){ p.appendChild(el('span','sp', line.slice(0,i+1))); p.appendChild(document.createTextNode(line.slice(i+1))); }
-      else p.textContent = line;
-      t.appendChild(p);
-    });
-    b.appendChild(t); det.appendChild(b); out.appendChild(det);
-  }
-
-  // ③ reconciliation — discrepancies + agentic resolution
+  // BOTTOM — conflicting issues + the evidence behind each adjudication
   const rh = el('div','sechead'); rh.style.marginTop = '4px';
-  rh.innerHTML = '<span class="secnum">3</span>Reconciliation <span class="hint">— discrepancies surfaced against the note, with the agent\'s resolution</span>';
+  rh.innerHTML = '<span class="secnum">3</span>Conflicts &amp; adjudication <span class="hint">— each discrepancy with the evidence behind the agent\'s call</span>';
   out.appendChild(rh);
 
-  // investigation trace
+  // ledger — conflicts first (ORDER puts CONTRADICTED/UNRESOLVED on top)
+  const byState = {}; ORDER.forEach(st=>byState[st]=[]);
+  d.proposals.forEach(p=>{ (byState[p.state]||(byState[p.state]=[])).push(p); });
+  ORDER.forEach(st=>{
+    byState[st].sort((a,b)=> (a.topic||'').localeCompare(b.topic||''));
+    byState[st].forEach(p=> out.appendChild(rowFor(p, st)));
+  });
+
+  // investigation trace (the tool calls the agent made — secondary evidence)
   if(d.trace && d.trace.length){
-    const det = el('details'); det.open=true;
+    const det = el('details');
     const sm = el('summary'); sm.innerHTML = `Investigation trace <span class="hint">— ${d.trace.length} tool call(s) the agent made</span>`;
     det.appendChild(sm);
     const b = el('div','body'); const t = el('div','trace');
@@ -221,28 +242,20 @@ function render(d){
     b.appendChild(t); det.appendChild(b); out.appendChild(det);
   }
 
-  // witnesses
+  // extracted witnesses (secondary)
   const wd = el('details');
-  const wsm = el('summary'); wsm.innerHTML = `The two witnesses <span class="hint">— ${d.chart_items.length} chart items · ${d.spoken.length} spoken assertions (both may be wrong)</span>`;
+  const wsm = el('summary'); wsm.innerHTML = `Extracted witnesses <span class="hint">— ${d.chart_items.length} chart items · ${d.spoken.length} spoken assertions</span>`;
   wd.appendChild(wsm);
   const wb = el('div','body'); const cols = el('div','cols');
   const cc = el('div'); cc.appendChild(el('h4',null,'Chart'));
   const cul = el('ul','witlist');
-  d.chart_items.forEach(it=>{ const li=el('li'); li.textContent=`${it.kind}: ${it.label} `; const t=el('span','tier',it.tier); li.appendChild(t); cul.appendChild(li); });
+  d.chart_items.forEach(it=>{ const li=el('li'); li.textContent=`${it.kind}: ${it.label} `; li.appendChild(el('span','tier',it.tier)); cul.appendChild(li); });
   cc.appendChild(cul);
   const rc = el('div'); rc.appendChild(el('h4',null,'Room'));
   const rul = el('ul','witlist');
-  d.spoken.forEach(sp=>{ const li=el('li',null,`${sp.speaker}: ${sp.quote}`); rul.appendChild(li); });
+  d.spoken.forEach(sp=>{ rul.appendChild(el('li',null,`${sp.speaker}: ${sp.quote}`)); });
   rc.appendChild(rul);
   cols.appendChild(cc); cols.appendChild(rc); wb.appendChild(cols); wd.appendChild(wb); out.appendChild(wd);
-
-  // ledger
-  const byState = {}; ORDER.forEach(st=>byState[st]=[]);
-  d.proposals.forEach(p=>{ (byState[p.state]||(byState[p.state]=[])).push(p); });
-  ORDER.forEach(st=>{
-    byState[st].sort((a,b)=> (a.topic||'').localeCompare(b.topic||''));
-    byState[st].forEach(p=> out.appendChild(rowFor(p, st)));
-  });
 
   // ground truth
   if(d.planted && d.planted.length){
