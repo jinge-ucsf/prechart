@@ -142,6 +142,21 @@
   .segopt.sel .segtop{color:#2f855a}
   .agenttag{background:#2f855a;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;text-transform:none;letter-spacing:0}
   .segval{font-size:12px;color:var(--ink);margin-top:3px;line-height:1.35}
+  /* compact conflict card: horizontal toggle + one detail line */
+  .cc-compact{padding:9px 11px;margin-bottom:9px}
+  .cc-compact .chd{margin-bottom:7px;gap:6px}
+  .cc-compact .ctopic{font-size:12.5px}
+  .segbar{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .segbtn{flex:1;background:#fafbfc;border:0;border-right:1px solid var(--line);padding:6px 4px;
+    font:inherit;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:4px}
+  .segbtn:last-child{border-right:0}
+  .segbtn:hover{background:#eef2f6}
+  .segbtn.sel{background:#eefaf1;color:#22543d;font-weight:700}
+  .segbtn[data-key="unresolved"].sel{background:#fdf3e3;color:#7a5b00}
+  .adot{color:#2f855a;font-size:8px;line-height:1}
+  .segdetail{font-size:11.5px;color:var(--ink);margin-top:6px;line-height:1.35;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 </style>
 </head>
 <body>
@@ -315,30 +330,36 @@ function conflictsMenu(d){
 }
 
 function conflictSelect(p, def){
-  const card = el('div','ccard'); card.style.borderLeftColor = `var(--${p.state})`;
+  const card = el('div','ccard cc-compact'); card.style.borderLeftColor = `var(--${p.state})`;
   const hd = el('div','chd');
   const chip = el('span','chip', p.state); chip.style.background=`var(--${p.state})`; hd.appendChild(chip);
   hd.appendChild(el('span','ctopic', p.topic||''));
   if((p.clinical_significance||'')==='high') hd.appendChild(el('span','sigflag','high'));
   card.appendChild(hd);
 
-  const seg = el('div','seg');
   const opts = [
     {key:'room',       label:'Room',       val:p.spoken_side, agent:p.likely_correct==='patient'},
     {key:'chart',      label:'Chart',      val:p.chart_side,  agent:p.likely_correct==='chart'},
     {key:'unresolved', label:'Unresolved', val:'defer — ' + (p.recommended_next_data||'gather more data first'),
                        agent:(p.likely_correct!=='patient' && p.likely_correct!=='chart')},
   ];
+  const detail = el('div','segdetail');
+  const setDetail = o => { detail.textContent = o.val || (o.key==='chart' ? '— not in chart' : o.key==='room' ? '— not mentioned' : ''); };
+  const seg = el('div','segbar');   // compact horizontal toggle; detail line below shows the selection
   opts.forEach(o=>{
-    const b = el('button','segopt' + (def===o.key?' sel':''));
-    const t = el('div','segtop'); t.appendChild(el('span','seglbl', o.label));
-    if(o.agent) t.appendChild(el('span','agenttag','agent’s pick'));
-    b.appendChild(t);
-    b.appendChild(el('div','segval', o.val || (o.key==='chart' ? '— not in chart' : o.key==='room' ? '— not mentioned' : '')));
-    b.onclick = () => selectResolution(p.topic, o.key, seg, b);
+    const b = el('button','segbtn' + (def===o.key?' sel':'')); b.dataset.key = o.key;
+    if(o.agent) b.appendChild(el('span','adot','●'));
+    b.appendChild(document.createTextNode(o.label));
+    b.onclick = () => {
+      window.__resolutions[p.topic] = o.key;
+      [...seg.querySelectorAll('.segbtn')].forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel'); setDetail(o); regenNote();
+    };
     seg.appendChild(b);
   });
   card.appendChild(seg);
+  setDetail(opts.find(o=>o.key===def) || opts[0]);
+  card.appendChild(detail);
 
   if(p.reasoning || (p.evidence_dossier && p.evidence_dossier.length)){
     const det = el('details','whybox'); det.appendChild(el('summary', null, 'Supporting Evidence'));
@@ -352,13 +373,6 @@ function conflictSelect(p, def){
     det.appendChild(b); card.appendChild(det);
   }
   return card;
-}
-
-function selectResolution(topic, key, seg, btn){
-  window.__resolutions[topic] = key;
-  [...seg.querySelectorAll('.segopt')].forEach(x=>x.classList.remove('sel'));
-  btn.classList.add('sel');
-  regenNote();
 }
 
 function currentDecisions(){
