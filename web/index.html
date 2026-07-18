@@ -105,6 +105,7 @@
   .routinelist{margin:0;padding:0;list-style:none;font-size:13px}
   .routinelist li{padding:4px 0;border-bottom:1px solid var(--line)}
   .minichip{color:#fff;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:5px;margin-right:6px;text-transform:lowercase}
+  .miniact{color:var(--muted);font-size:12px}
   .empty{color:var(--muted);padding:40px 0;text-align:center}
   .spinner{width:16px;height:16px;border:2px solid #cbd5e1;border-top-color:var(--blue);border-radius:50%;
     display:inline-block;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:8px}
@@ -246,24 +247,30 @@ function render(d){
   // conflicts shown as cards; routine (agreed / not discussed) collapsed — streamlined
   const byState = {}; ORDER.forEach(st=>byState[st]=[]);
   d.proposals.forEach(p=>{ (byState[p.state]||(byState[p.state]=[])).push(p); });
-  const CONFLICTS = ["CONTRADICTED","UNRESOLVED","ELABORATED","NEW"];
-  const conflicts = CONFLICTS.flatMap(st => byState[st].sort((a,b)=>(a.topic||'').localeCompare(b.topic||'')));
-  if(conflicts.length){
-    conflicts.forEach(p => out.appendChild(conflictCard(p)));
+  // CONTRADICTED + UNRESOLVED — surfaced as open cards (the calls that need attention)
+  const CRITICAL = ["CONTRADICTED","UNRESOLVED"];
+  const critical = CRITICAL.flatMap(st => byState[st].sort((a,b)=>(a.topic||'').localeCompare(b.topic||'')));
+  if(critical.length){
+    critical.forEach(p => out.appendChild(conflictCard(p)));
   } else {
-    out.appendChild(el('div','empty','No conflicts — the chart and the room agree.'));
+    out.appendChild(el('div','empty','No contradictions or unresolved conflicts — nothing needs adjudication.'));
   }
-  const routine = [...byState.CONFIRMED, ...byState.UNADDRESSED];
-  if(routine.length){
+  // NEW / ELABORATED / CONFIRMED / UNADDRESSED — lower-risk, collapsed
+  const OTHER = ["NEW","ELABORATED","CONFIRMED","UNADDRESSED"];
+  const other = OTHER.flatMap(st => byState[st]);
+  if(other.length){
+    const parts = OTHER.filter(st=>byState[st].length).map(st=>`${byState[st].length} ${st.toLowerCase()}`);
     const det = el('details');
     const sm = el('summary');
-    sm.innerHTML = `Routine <span class="hint">— ${byState.CONFIRMED.length} confirmed · ${byState.UNADDRESSED.length} charted but not discussed</span>`;
+    sm.innerHTML = `Other findings <span class="hint">— ${parts.join(' · ')}</span>`;
     det.appendChild(sm);
     const b = el('div','body'); const ul = el('ul','routinelist');
-    routine.forEach(p=>{
+    other.forEach(p=>{
       const li = el('li');
       const chip = el('span','minichip', p.state.toLowerCase()); chip.style.background=`var(--${p.state})`;
-      li.appendChild(chip); li.appendChild(document.createTextNode(' ' + (p.topic||'')));
+      li.appendChild(chip);
+      li.appendChild(document.createTextNode(' ' + (p.topic||'')));
+      if(p.state==='NEW' || p.state==='ELABORATED') li.appendChild(el('span','miniact', ' → '+(p.proposed_action||'review')));
       ul.appendChild(li);
     });
     b.appendChild(ul); det.appendChild(b); out.appendChild(det);
