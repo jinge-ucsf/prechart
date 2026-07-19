@@ -121,7 +121,13 @@
   .note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 20px 16px;margin-bottom:14px}
   .noteprose{white-space:pre-wrap;word-wrap:break-word;font:13px/1.5 -apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
     color:var(--ink);margin:0;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:14px 16px;height:620px;overflow:auto;transition:opacity .15s}
-  .noteprose.updating{opacity:.4}
+  .noteprose.updating{opacity:.35}
+  .notewrap{position:relative}
+  .noteoverlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:9px;
+    background:rgba(251,252,254,.66);color:var(--blue);font-weight:700;font-size:13.5px;border-radius:8px}
+  .noteoverlay.show{display:flex}
+  .noteprose.flash{animation:noteflash 1.1s ease}
+  @keyframes noteflash{0%{background:#e6f0fb}55%{background:#eef5fc}100%{background:#fbfcfe}}
   .copybtn{margin-left:auto;background:#eef2f6;color:var(--blue);border:1px solid #d7dee6;border-radius:6px;
     font-size:11px;font-weight:700;padding:4px 11px;cursor:pointer}
   .transcript{height:620px;overflow:auto;font-size:13px;line-height:1.5;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:14px 16px}
@@ -271,8 +277,12 @@ function render(d){
   const copy = el('button','copybtn','Copy');
   copy.onclick = () => { navigator.clipboard.writeText($('#noteBox').textContent||''); copy.textContent='Copied'; setTimeout(()=>copy.textContent='Copy',1200); };
   ch.appendChild(copy); C.appendChild(ch);
+  const wrap = el('div','notewrap');
   const noteBox = el('pre','noteprose'); noteBox.id='noteBox'; noteBox.textContent = d.note || '(no note)';
-  C.appendChild(noteBox); grid.appendChild(C);
+  const overlay = el('div','noteoverlay'); overlay.id='noteOverlay';
+  overlay.innerHTML = '<span class="spinner"></span> rewriting the note to your decision…';
+  wrap.appendChild(noteBox); wrap.appendChild(overlay);
+  C.appendChild(wrap); grid.appendChild(C);
 
   // RIGHT: conflicts menu (selectable)
   const R = el('div','col');
@@ -405,19 +415,31 @@ async function prefetchOverrides(){
 }
 
 let __regenTimer = null;
+function setRewriting(on){
+  const box = $('#noteBox'), ov = $('#noteOverlay');
+  if(box) box.classList.toggle('updating', on);
+  if(ov) ov.classList.toggle('show', on);
+}
+function revealNote(note){
+  const box = $('#noteBox'); if(!box) return;
+  if(note) box.textContent = note;
+  setRewriting(false);
+  box.classList.remove('flash'); void box.offsetWidth; box.classList.add('flash');  // cue that the note changed
+}
 function regenNote(){
   const box = $('#noteBox'); if(!box) return;
   const decisions = currentDecisions(), key = decisionsKey(decisions);
-  if(window.__noteCache && window.__noteCache.has(key)){   // instant — already computed
-    box.textContent = window.__noteCache.get(key); box.classList.remove('updating'); return;
-  }
-  box.classList.add('updating');
+  setRewriting(true);                     // always show the note dynamically rewriting
   clearTimeout(__regenTimer);
-  __regenTimer = setTimeout(async ()=>{
-    try{ const note = await fetchNote(decisions); if(note) box.textContent = note; }
-    catch(e){ /* keep the current note on failure */ }
-    box.classList.remove('updating');
-  }, 250);
+  if(window.__noteCache && window.__noteCache.has(key)){
+    // pre-fetched — still play a brief rewrite beat so the audience sees it regenerate live
+    __regenTimer = setTimeout(() => revealNote(window.__noteCache.get(key)), 650);
+    return;
+  }
+  __regenTimer = setTimeout(async () => {
+    try{ const note = await fetchNote(decisions); revealNote(note); }
+    catch(e){ setRewriting(false); }
+  }, 150);
 }
 
 function traceDetails(d){

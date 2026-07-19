@@ -142,11 +142,18 @@ def _model_note(payload, system, decisions=None):
             "data. Where they conflict, reason to the most likely truth and flag it.\n\n"
             + json.dumps(payload, indent=1))
     if decisions:
-        user += ("\n\nCLINICIAN DECISIONS — the clinician has adjudicated the conflicts below; write the "
-                 "HPI and Assessment & Plan to reflect each decision AS THE TRUTH, even where the raw "
-                 "evidence is mixed. room = the patient's account is correct; chart = the chart is correct; "
-                 "unresolved = state the uncertainty and the plan to resolve it before acting:\n"
-                 + json.dumps(decisions, indent=1))
+        user += ("\n\nCLINICIAN ADJUDICATION — the clinician has decided the truth for each conflict below. "
+                 "These decisions are FINAL and OVERRIDE the raw evidence. For EVERY decision you must make "
+                 "the change unmistakable in the note:\n"
+                 " • treat the chosen account as established fact throughout the HPI and A/P;\n"
+                 " • the corresponding Assessment & Plan problem must explicitly state the adjudicated fact "
+                 "AND the concrete management change that follows from it, so the clinician plainly sees their "
+                 "decision reflected (e.g., if they choose the room over the chart for an anticoagulant, the "
+                 "plan must change accordingly);\n"
+                 " • room = the patient's account is correct; chart = the chart is correct; "
+                 "unresolved = do NOT assume either; state the uncertainty and the single step to resolve it "
+                 "before acting.\n"
+                 "Decisions:\n" + json.dumps(decisions, indent=1))
     # Stream with a generous budget: adaptive thinking AND the full note (HPI + Outside Data +
     # the complete Assessment & Plan) must both fit under max_tokens, or the A/P is truncated.
     # Streaming also avoids the SDK's non-streaming timeout on large outputs.
